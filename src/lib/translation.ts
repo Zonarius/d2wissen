@@ -66,7 +66,7 @@ function createItemTypeTranslations(): D2Translations {
         ...t("spea", "Spears", "Speere"),
         ...t("necr", "Necromancer Heads", "Schrumpfköpfe"),
         ...t("barb", "Barbarian Helmets", "Barbaren-Helme"),
-        ...t("drui", "Druid Helmets", "Felle"),
+        ...t("drui", "Pelts", "Felle"),
         ...t("orb",  "Orbs", "Zauberinnen-Kugeln"),
         ...t("knif", "Knives", "Dolche"),
         ...t("aspe", "Amazon Spears", "Amazon-Speere"),
