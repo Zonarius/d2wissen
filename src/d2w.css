@@ -1,0 +1,37 @@
+h3, .h3l { color:#C0B090; font-family:Verdana,Arial,Helvetica,sans-serif; font-size:12pt; font-weight:bold; margin-bottom:8mm; width:100%; filter:Shadow(color=#504838, direction=135); }
+h4 { color:#C0B090; font-family:Verdana,Arial,Helvetica,sans-serif; font-size:11pt; font-weight:bold; margin-top:1cm; }
+h5 { color:#C0B090; font-family:Verdana,Arial,Helvetica,sans-serif; font-size:10pt; font-weight:bold; margin-top:5mm; }
+
+body {
+ background:#000000 url("http://d2wissen.d2chars.de/pentagramm.jpg") center fixed no-repeat;
+ color:#D0D0D0;
+ font-family:Verdana,Arial,Helvetica,sans-serif;
+ font-size:10pt;
+ font-weight:normal;
+ scrollbar-face-color:#606060;
+ scrollbar-3dlight-color:#808080;
+ scrollbar-highlight-color:#808080;
+ scrollbar-shadow-color:#404040;
+ scrollbar-darkshadow-color:#000000;
+ scrollbar-track-color:#101020;
+ scrollbar-arrow-color:#FFFFC0;
+}
+
+a { color:#E6E6E6; font-weight:bold; text-decoration:none; }
+a:hover { text-decoration:underline; }
+
+table.d2w { background-color:#C0C0C0; border:solid 1px; border-collapse:collapse; margin-top: 5px; margin-bottom: 5px; }
+table.d2w th { background-color:#400000; font-family:Verdana,Arial,Helvetica,sans-serif; color:#D0D0D0; font-size:10pt; border:solid 1px #C0C0C0; padding:6px; text-align:center; }
+table.d2w th.blue { background-color:#000040; text-align:left; }
+table.d2w td { background-color:#202020; font-family:Verdana,Arial,Helvetica,sans-serif; color:#D0D0D0; font-size:10pt; border:solid 1px #C0C0C0; padding:4px; text-align:center; }
+table.d2w td.head { background-color:#400000; font-family:Verdana,Arial,Helvetica,sans-serif; color:#D0D0D0; font-size:10pt; border:solid 1px #C0C0C0; padding:6px; text-align:center; }
+table.d2w td.tdr { text-align: right; }
+table.d2w tr * td { font-family:Verdana,Arial,Helvetica,sans-serif; color:#D0D0D0; font-size:10pt; border-style:none; padding:1px; }
+table.d2w tr.blue td { background-color:#000040; }
+
+td,th { font-family:Verdana,Arial,Helvetica,sans-serif; color:#D0D0D0; font-size:10pt; }
+
+div.tooltip { position: absolute; left: 0px; top: 0px; border: none 0px; width: auto; visibility: hidden; }
+table.tooltip {	border: solid 1px #000000; background-color: #ffffff; padding: 5px; border-collapse: collapse; }
+table.tooltip td { font-family:Verdana,Arial,Helvetica,sans-serif; text-align: left; color: #000000; background-color: #ffffff; font-size: x-small; }
+table.tooltip th { font-family:Verdana,Arial,Helvetica,sans-serif; text-align: left; color: #ffffff; background-color: #000000; font-size: xx-small; }
