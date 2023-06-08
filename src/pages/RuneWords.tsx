@@ -1,14 +1,14 @@
 import { useContext } from "react";
 import { D2Context } from "../D2Context";
 import { Runeword } from "../lib/d2Parser";
-import { getTableArray } from "../lib/util";
+import { getTableArray, getTableModifiers, range } from "../lib/util";
 import React from "react";
-import { TFunc, useItemTypeT, useT } from "../lib/translation";
+import { ModifierTFunc, TFunc, useItemTypeT, useModifierT, useT } from "../lib/translation";
 
 function RuneWords() {
     const d2 = useContext(D2Context);
     const rws: Runeword[] = d2.data.global.excel.runes;
-    rws.sort((a, b) => requiredLevel(d2, a) - requiredLevel(d2, b));
+    rws.sort((a, b) => requiredLevel(d2, a) - requiredLevel(d2, b));    
     return (
         <>
             <h3>Runenw&ouml;rter: &Uuml;bersicht</h3>
@@ -45,6 +45,7 @@ function RuneWordRow({ d2, runeword }: RuneWordRowProps) {
     const t = useT();
     const enT = useT("enUS");
     const itT = useItemTypeT();
+    const modT = useModifierT();
     return (
         <tr>
             <td>{runeCount(runeword)}</td>
@@ -59,8 +60,10 @@ function RuneWordRow({ d2, runeword }: RuneWordRowProps) {
                 <React.Fragment key={type}>{type}<br/></React.Fragment>
             ))}</td>
             <td>{requiredLevel(d2, runeword)}</td>
-            <td></td>
-            <td></td>
+            <td>{modifiers(modT, runeword).map(mod => (
+                <React.Fragment key={mod}>{mod}<br/></React.Fragment>
+            ))}</td>
+            <td>NYI</td>
         </tr>
     )
 }
@@ -81,7 +84,17 @@ function possibleItems(t: TFunc, rw: Runeword): string[] {
         .map(key => t(key))
 }
 
+function modifiers(t: ModifierTFunc, rw: Runeword): string[] {
+    const mods = getTableModifiers(rw, "T1Code", "T1Param", "T1Min", "T1Max");
+    return t(mods);
+}
+
 function requiredLevel(d2: D2Context, rw: Runeword): number {
+    const mods = getTableModifiers(rw, "T1Code", "T1Param", "T1Min", "T1Max");
+    const lreq = mods.find(mod => mod.code === "levelreq");
+    if (lreq) {
+        return Number(lreq.max);
+    }
     return Math.max(
         ...getTableArray(rw, "Rune").map(r => Number(d2.itemsByCode[r].levelreq))
     );

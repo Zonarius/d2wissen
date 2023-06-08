@@ -4,7 +4,7 @@ import './d2wcolor.css'
 import FileChooser from './pages/FileChooser'
 import {D2Files, parseD2 } from './lib/d2Parser';
 import RuneWords from './pages/RuneWords';
-import { D2Context, createItemsByCode } from './D2Context';
+import { D2Context, createItemStatCostsByStat, createItemsByCode, createPropertiesByCode, createSkillsBySkilldesc } from './D2Context';
 import { createTranslations } from './lib/translation';
 
 function App() {
@@ -18,6 +18,9 @@ function App() {
               lang: "deDE",
               translations: createTranslations(d2Files),
               itemsByCode: createItemsByCode(d2Files),
+              propertiesByCode: createPropertiesByCode(d2Files),
+              itemStatCostsByStat: createItemStatCostsByStat(d2Files),
+              skillsBySkilldesc: createSkillsBySkilldesc(d2Files),
               ...d2Files
               }}>
               <RuneWords />
