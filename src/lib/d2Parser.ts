@@ -1,15 +1,14 @@
 import JSON5 from 'json5';
 
 export interface D2Files {
-    data: {
-        global: any;
-        hd: any;
-        local: any;
-    }
+    global: any;
+    hd: any;
+    local: any;
 };
 
 export interface Runeword {
     Name: string;
+    complete: string;
 
     itype1: string;
     itype2: string;
@@ -28,18 +27,26 @@ export interface Runeword {
     
 }
 
-export async function parseD2(files: File[]): Promise<D2Files> {
+export interface FileLike {
+    webkitRelativePath: string;
+    text(): Promise<string>;
+}
+
+export async function parseD2(files: FileLike[]): Promise<D2Files> {
     let d2: any = {};
 
     for (const file of files) {
-        const path = file.webkitRelativePath.split("/");
+        const rp = file.webkitRelativePath
+        const path = rp.substring(rp.indexOf("/") + 1).split("/");
         await mkFile(d2, file, path);
     }
+
+    console.log(d2);
 
     return d2;
 }
 
-async function mkFile(folder: any, file: File, [fileName, ...rest]: string[]) {
+async function mkFile(folder: any, file: FileLike, [fileName, ...rest]: string[]) {
     const mkOrGet = (name: string) => {
         if (!folder[name]) {
             folder[name] = {}
@@ -60,12 +67,12 @@ function stripExt(fileName: string) {
     return fileName.substring(0, fileName.lastIndexOf("."));
 }
 
-async function parseJson(file: File) {
+async function parseJson(file: FileLike) {
     const text = await file.text();
     return JSON5.parse(text);
 }
 
-async function parseExcel(file: File) {
+async function parseExcel(file: FileLike) {
     const text = await file.text();
     const [headerLine, ...entries] = text.split("\n").filter(line => line.length > 0);
     const header = headerLine.split("\t");

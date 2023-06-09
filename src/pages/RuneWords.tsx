@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { D2Context } from "../D2Context";
+import { D2Context } from "../context/D2Context";
 import { Runeword } from "../lib/d2Parser";
 import { getTableArray, getTableModifiers, range } from "../lib/util";
 import React from "react";
@@ -7,7 +7,7 @@ import { ModifierTFunc, TFunc, useItemTypeT, useModifierT, useT } from "../lib/t
 
 function RuneWords() {
     const d2 = useContext(D2Context);
-    const rws: Runeword[] = d2.data.global.excel.runes;
+    const rws: Runeword[] = d2.data.global.excel.runes.filter((rw: Runeword) => rw.complete === "1");
     rws.sort((a, b) => requiredLevel(d2, a) - requiredLevel(d2, b));    
     return (
         <>

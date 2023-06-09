@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { sprintf } from "sprintf-js";
-import { D2Context } from "../D2Context";
+import { D2Context } from "../context/D2Context";
 import { D2Files } from "./d2Parser";
 import { Modifier, getTableStats } from "./util";
 
@@ -22,7 +22,7 @@ export type D2TranslationEntry = {
 export function createTranslations(files: D2Files): D2Translations {
     let output: D2Translations = {};
 
-    const strings = files.data.local.lng.strings;
+    const strings = files.local.lng.strings;
 
     for (const key of Object.keys(strings)) {
         for (const entry of strings[key]) {

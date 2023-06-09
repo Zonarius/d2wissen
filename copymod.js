@@ -18,13 +18,15 @@ async function main(srcDir, dest) {
                 'global/excel/properties.txt',
                 'global/excel/itemstatcost.txt',
                 'global/excel/skills.txt',
+                'global/excel/misc.txt',
                 'global/excel/runes.txt',
                 'local/lng/strings/item-runes.json',
                 'local/lng/strings/item-modifiers.json',
                 'local/lng/strings/skills.json'
-            ]
+            ],
+            overwrite: true
         });
     } catch (err) {
-        console.err(err)
+        console.error(err)
     }
 }

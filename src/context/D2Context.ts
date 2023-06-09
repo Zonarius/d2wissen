@@ -1,6 +1,6 @@
 import { createContext } from "react";
-import { D2Files } from "./lib/d2Parser";
-import { AvailableLanguage, D2Translations } from "./lib/translation";
+import { D2Files } from "../lib/d2Parser";
+import { AvailableLanguage, D2Translations } from "../lib/translation";
 
 export interface D2Context {
     lang: AvailableLanguage;
@@ -9,7 +9,7 @@ export interface D2Context {
     propertiesByCode: Record<string, D2Property>;
     itemStatCostsByStat: Record<string, ItemStatCost>;
     skillsBySkilldesc: Record<string, D2Skill>;
-    data: D2Files["data"];
+    data: D2Files;
 }
 
 export interface D2Item {
@@ -57,7 +57,7 @@ export const D2Context = createContext<D2Context>({ lang: "deDE" } as any);
 export function createItemsByCode(files: D2Files): Record<string, D2Item> {
     let output: Record<string, D2Item> = {};
     ["misc"].forEach(file => {
-        for (const item of files.data.global.excel[file]) {
+        for (const item of files.global.excel[file]) {
             output[item.code] = item;
         }
     })
@@ -67,7 +67,7 @@ export function createItemsByCode(files: D2Files): Record<string, D2Item> {
 
 export function createPropertiesByCode(files: D2Files): Record<string, D2Property> {
     let output: Record<string, D2Property> = {};
-    for (const prop of files.data.global.excel.properties) {
+    for (const prop of files.global.excel.properties) {
         output[prop.code] = prop;
     }
     return output;
@@ -75,7 +75,7 @@ export function createPropertiesByCode(files: D2Files): Record<string, D2Propert
 
 export function createItemStatCostsByStat(files: D2Files): Record<string, ItemStatCost> {
     let output: Record<string, ItemStatCost> = {};
-    for (const stat of files.data.global.excel.itemstatcost) {
+    for (const stat of files.global.excel.itemstatcost) {
         output[stat.Stat] = stat;
     }
     return output;
@@ -83,7 +83,7 @@ export function createItemStatCostsByStat(files: D2Files): Record<string, ItemSt
 
 export function createSkillsBySkilldesc(files: D2Files): Record<string, D2Skill> {
     let output: Record<string, D2Skill> = {};
-    for (const skill of files.data.global.excel.skills) {
+    for (const skill of files.global.excel.skills) {
         output[skill.skilldesc] = skill;
     }
     return output;
