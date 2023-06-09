@@ -3,7 +3,8 @@ import { D2Context } from "../context/D2Context";
 import { Runeword } from "../lib/d2Parser";
 import { getTableArray, getTableModifiers, range } from "../lib/util";
 import React from "react";
-import { ModifierTFunc, TFunc, useItemTypeT, useModifierT, useT } from "../lib/translation";
+import { TFunc, useItemTypeT, useT } from "../lib/translation/translation";
+import { useModifierT, ModifierTFunc } from "../lib/translation/modifier";
 
 function RuneWords() {
     const d2 = useContext(D2Context);
@@ -61,11 +62,23 @@ function RuneWordRow({ d2, runeword }: RuneWordRowProps) {
             ))}</td>
             <td>{requiredLevel(d2, runeword)}</td>
             <td>{modifiers(modT, runeword).map(mod => (
-                <React.Fragment key={mod}>{mod}<br/></React.Fragment>
+                <Modifier key={mod} mod={mod} />
             ))}</td>
             <td>NYI</td>
         </tr>
     )
+}
+
+type ModifierProps = {
+    mod: string;
+}
+
+function Modifier({mod}: ModifierProps) {
+    return (
+        <>
+            {mod} <br/>
+        </>
+    );
 }
 
 

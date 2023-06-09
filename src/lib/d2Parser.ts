@@ -41,8 +41,6 @@ export async function parseD2(files: FileLike[]): Promise<D2Files> {
         await mkFile(d2, file, path);
     }
 
-    console.log(d2);
-
     return d2;
 }
 

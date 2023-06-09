@@ -26,7 +26,10 @@ function ModChooser(props: ModChooserProps) {
                 <StaticMods {...props} />
                 <a href="#" onClick={handleUpload}><li>Upload...</li></a>
             </ul>
-            <input ref={inputRef} style={{display: "none"}} id="modfolderChooser" type="file" webkitdirectory="true" onChange={handleChange}>
+            <input ref={inputRef} style={{display: "none"}} id="modfolderChooser" type="file" 
+            /* @ts-expect-error */
+            directory="" webkitdirectory=""
+            onChange={handleChange}>
             </input>
         </>
     )

@@ -18,8 +18,10 @@ async function main(srcDir, dest) {
                 'global/excel/properties.txt',
                 'global/excel/itemstatcost.txt',
                 'global/excel/skills.txt',
+                'global/excel/skilldesc.txt',
                 'global/excel/misc.txt',
                 'global/excel/runes.txt',
+                'global/excel/charstats.txt',
                 'local/lng/strings/item-runes.json',
                 'local/lng/strings/item-modifiers.json',
                 'local/lng/strings/skills.json'
