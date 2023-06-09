@@ -90,13 +90,13 @@ function modifiers(t: ModifierTFunc, rw: Runeword): string[] {
 }
 
 function requiredLevel(d2: D2Context, rw: Runeword): number {
-    // const mods = getTableModifiers(rw, "T1Code", "T1Param", "T1Min", "T1Max");
-    // const lreq = mods.find(mod => mod.code === "levelreq");
-    // if (lreq) {
-    //     return Number(lreq.max);
-    // }
+    const mods = getTableModifiers(rw, "T1Code", "T1Param", "T1Min", "T1Max");
+    const lreq = mods.find(mod => mod.code === "levelreq");
     return Math.max(
-        ...getTableArray(rw, "Rune").map(r => Number(d2.itemsByCode[r].levelreq))
+        ...[
+            ...[lreq ? Number(lreq.max) : 0],
+            ...getTableArray(rw, "Rune").map(r => Number(d2.itemsByCode[r].levelreq))
+        ]
     );
 }
 
