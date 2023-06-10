@@ -1,6 +1,6 @@
 import { sprintf } from "sprintf-js";
 import { Modifier, getTableStats } from "../util";
-import { AvailableLanguage, TFunc, useLanguage, useT } from "./translation";
+import { AvailableLanguage, TFunc, useT } from "./translation";
 import { useContext } from "react";
 import { D2Context, D2Property, ItemStatCost as D2ItemStatCost } from "../../context/D2Context";
 
