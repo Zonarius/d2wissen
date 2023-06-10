@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { D2Context } from "../context/D2Context";
 import { Runeword } from "../lib/d2Parser";
-import { getTableArray, getTableModifiers, range } from "../lib/util";
+import { getTableArray, getTableModifiers } from "../lib/util";
 import React from "react";
 import { TFunc, useItemTypeT, useT } from "../lib/translation/translation";
 import { useModifierT, ModifierTFunc } from "../lib/translation/modifier";
