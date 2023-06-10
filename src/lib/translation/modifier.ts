@@ -32,9 +32,12 @@ export function useModifierT(lang?: AvailableLanguage): ModifierTFunc {
                 // NYI
                 continue;
             }
-            try {
+            try {                
                 const prop = d2.propertiesByCode[code.toLocaleLowerCase()];
-                for (const statref of getTableStats(prop)) {
+                const stats = prop.func1 in statByFunc
+                    ? [{func: prop.func1, stat: statByFunc[prop.func1]}]
+                    : getTableStats(prop);
+                for (const statref of stats) {
                     const stat = d2.itemStatCostsByStat[statref.stat ?? statByFunc[statref.func]];
 
                     if (["92", "181", "56", "59"].includes(stat["*ID"])) {
@@ -52,7 +55,7 @@ export function useModifierT(lang?: AvailableLanguage): ModifierTFunc {
                         const ctx: DescFuncContext = { d2, prop, stat, tStr, code, param: param!, min, max, tSkill, t };
                         result.push(...descFuncs[stat.descfunc](ctx));
                     } else if (!param) {
-                        push("0", sprintf(strRangeReplace(tStr), numRangeReplace(min, max)));
+                        push(stat.descfunc, sprintf(strRangeReplace(tStr), numRangeReplace(min, max)));
 
                     } else {
                         push("0", `!t-nyi-mod(${code}, ${param}, ${min}, ${max})!`);
