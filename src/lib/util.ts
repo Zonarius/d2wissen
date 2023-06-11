@@ -59,23 +59,25 @@ export function getTableStats(tbl: any): StatRef[] {
 }
 
 export function sprintf(pattern: string, ...params: any[]): string {
-    pattern = pattern.replace("%+d", "+%s")
+    const modPattern = pattern.replace("%+d", "+%s")
         .replace("%d", "%s")
         .replace("%2", "%3$s")
         .replace("%1", "%2$s")
         .replace("%0", "%1$s");
-
-    for (let i = 0; i < params.length; i++) {
-        if (Array.isArray(params[i])) {
-            const [min, max] = params[i];
-            params[i] = min === max ? "" + min : `${min}-${max}`;
+    
+    params = params.map(param => {
+        if (Array.isArray(param)) {
+            const [min, max] = param;
+            return min === max ? "" + min : `${min}-${max}`;
+        } else {
+            return param;
         }
-    }
+    })
 
     try {
-        return spf(pattern, ...params);
+        return spf(modPattern, ...params);
     } catch (err) {
-        console.log(pattern);
-        return spf(pattern, ...params);
+        console.log([pattern, modPattern]);
+        return spf(modPattern, ...params);
     }
 }

@@ -24,7 +24,9 @@ export function createTranslations(files: D2Files): D2Translations {
 
     for (const key of Object.keys(strings)) {
         for (const entry of strings[key]) {
-            output[entry.Key] = entry;
+            if (!output[entry.Key]) {
+                output[entry.Key] = entry;
+            }
         }
     }
 

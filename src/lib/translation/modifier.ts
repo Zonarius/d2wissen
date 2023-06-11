@@ -37,6 +37,10 @@ export function useModifierT(lang?: AvailableLanguage): ModifierTFunc {
                 const stats = prop.func1 in statByFunc
                     ? [{func: prop.func1, stat: statByFunc[prop.func1]}]
                     : getTableStats(prop);
+                if (prop.code === "res-all") {
+                    push("40", sprintf(t("strModAllResistances"), [min, max]))
+                    continue;
+                }
                 for (const statref of stats) {
                     const stat = d2.refs.itemStatCostsByStat[statref.stat ?? statByFunc[statref.func]];
 
