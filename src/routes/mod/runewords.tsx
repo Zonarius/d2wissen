@@ -1,13 +1,16 @@
-import { useContext } from "react";
-import { D2Context } from "../context/D2Context";
-import { D2Runeword } from "../lib/d2Parser";
-import { getTableArray, getTableModifiers } from "../lib/util";
+import { D2Context } from "../../context/D2Context";
+import { D2Runeword } from "../../lib/d2Parser";
+import { getTableArray, getTableModifiers } from "../../lib/util";
 import React from "react";
-import { TFunc, useItemTypeT, useT } from "../lib/translation/translation";
-import { useModifierT, ModifierTFunc } from "../lib/translation/modifier";
+import { TFunc, useItemTypeT, useT } from "../../lib/translation/translation";
+import { useModifierT, ModifierTFunc } from "../../lib/translation/modifier";
+import { useRouteLoaderData } from "react-router-dom";
 
 function RuneWords() {
-    const d2 = useContext(D2Context);
+    const d2 = useRouteLoaderData("mod") as D2Context;
+    if (!d2) {
+        return "loading..."
+    }
     const rws: D2Runeword[] = d2.data.global.excel.runes.filter((rw: D2Runeword) => rw.complete === "1");
     rws.sort((a, b) => requiredLevel(d2, a) - requiredLevel(d2, b));    
     return (

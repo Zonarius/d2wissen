@@ -1,6 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import ErrorPage from './routes/error-page.tsx';
+import Root from './routes/root.tsx';
+import Mod from './routes/mod/mod.tsx';
+import RuneWords from './routes/mod/runewords.tsx';
+import { modLoader } from './context/D2Context.ts';
 
 if (import.meta.hot) {
   import.meta.hot.on(
@@ -9,8 +14,30 @@ if (import.meta.hot) {
   );
 }
 
+const router = createBrowserRouter([
+  {
+    path: "/",
+    errorElement: <ErrorPage />,
+    children: [
+      { index: true, element: <Root />},
+      {
+        path: ":mod",
+        id: "mod",
+        loader: ({ params }) => modLoader(params.mod!),
+        children: [
+          { index: true, element: <Mod />},
+          {
+            path: "runewords",
+            children: [{ index: true, element: <RuneWords />}]
+          }
+        ]
+      }
+    ]
+  }
+], {basename: "/d2wissen"})
+
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </React.StrictMode>,
 )

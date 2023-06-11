@@ -1,6 +1,6 @@
-import { useContext } from "react";
 import { D2Context } from "../../context/D2Context";
 import { D2Files } from "../d2Parser";
+import { useRouteLoaderData } from "react-router-dom";
 
 const itemTypeTranslations = createItemTypeTranslations();
 
@@ -76,7 +76,7 @@ function createItemTypeTranslations(): D2Translations {
 export type TFunc = (key: string, ...params: string[]) => string;
 
 export function useT(lang?: AvailableLanguage): TFunc {
-    const d2 = useContext(D2Context);
+    const d2 = useRouteLoaderData("mod") as D2Context;
     const defLang = useLanguage(lang);
     return (key: string) => d2.translations[key]
         ? d2.translations[key][defLang]
@@ -91,7 +91,7 @@ export function useItemTypeT(lang?: AvailableLanguage): TFunc {
 }
 
 export function useLanguage(lang?: AvailableLanguage): AvailableLanguage {
-    const d2 = useContext(D2Context);
+    const d2 = useRouteLoaderData("mod") as D2Context;
     if (isAvailableLanguage(lang)) {
         return lang;
     } else {

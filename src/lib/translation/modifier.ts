@@ -1,8 +1,8 @@
 import { Modifier, getTableStats, sprintf } from "../util";
 import { AvailableLanguage, TFunc, useT } from "./translation";
-import { useContext } from "react";
 import { D2Context } from "../../context/D2Context";
 import { D2Property, D2ItemStatCost } from "../d2Parser";
+import { useRouteLoaderData } from "react-router-dom";
 
 type PrioMod = {
     prio: number,
@@ -11,7 +11,7 @@ type PrioMod = {
 
 export type ModifierTFunc = (mods: Modifier[]) => string[];
 export function useModifierT(lang?: AvailableLanguage): ModifierTFunc {
-    const d2 = useContext(D2Context);
+    const d2 = useRouteLoaderData("mod") as D2Context;
     const t = useT(lang);
     const tSkill = (skill: string) => {
         const skilldescref = d2.refs.skillsBySkillId[skill]?.skilldesc

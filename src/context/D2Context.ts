@@ -1,6 +1,7 @@
 import { createContext } from "react";
-import { D2Charstat, D2Files, D2Misc, D2ItemStatCost, D2Monster, D2Property, D2Skill, D2Skilldesc } from "../lib/d2Parser";
-import { AvailableLanguage, D2Translations } from "../lib/translation/translation";
+import { D2Charstat, D2Files, D2Misc, D2ItemStatCost, D2Monster, D2Property, D2Skill, D2Skilldesc, parseD2 } from "../lib/d2Parser";
+import { AvailableLanguage, D2Translations, createTranslations } from "../lib/translation/translation";
+import { getModFiles } from "./staticContext";
 
 export interface D2Context {
     lang: AvailableLanguage;
@@ -43,4 +44,14 @@ function createRef<T>(file: T[], key: string): Record<string, T> {
         output[(row as any)[key]] = row;
     }
     return output;
+}
+
+export async function modLoader(mod: string): Promise<D2Context> {
+    const d2Files = await parseD2(getModFiles(mod));
+    return {
+        lang: "deDE",
+        translations: createTranslations(d2Files),
+        refs: createRefs(d2Files),
+        data: d2Files
+    };
 }

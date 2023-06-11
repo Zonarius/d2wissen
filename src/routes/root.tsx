@@ -1,13 +1,13 @@
 import { useState } from 'react'
-import './d2w.css'
-import './d2wcolor.css'
-import ModChooser from './pages/ModChooser'
-import {D2Files, parseD2 } from './lib/d2Parser';
-import RuneWords from './pages/RuneWords';
-import { D2Context, createRefs } from './context/D2Context';
-import { createTranslations } from './lib/translation/translation';
+import '../assets/d2w.css'
+import '../assets/d2wcolor.css'
+import ModChooser from '../pages/ModChooser'
+import {D2Files, parseD2 } from '../lib/d2Parser';
+import RuneWords from './mod/runewords';
+import { D2Context, createRefs } from '../context/D2Context';
+import { createTranslations } from '../lib/translation/translation';
 
-function App() {
+function Root() {
   const [d2Files, setD2Files] = useState<D2Files | undefined>(undefined);
   return (
     <>
@@ -31,4 +31,4 @@ function App() {
   )
 }
 
-export default App
+export default Root
