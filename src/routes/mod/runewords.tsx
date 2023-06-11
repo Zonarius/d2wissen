@@ -8,9 +8,7 @@ import { useRouteLoaderData } from "react-router-dom";
 
 function RuneWords() {
     const d2 = useRouteLoaderData("mod") as D2Context;
-    if (!d2) {
-        return "loading..."
-    }
+
     const rws: D2Runeword[] = d2.data.global.excel.runes.filter((rw: D2Runeword) => rw.complete === "1");
     rws.sort((a, b) => requiredLevel(d2, a) - requiredLevel(d2, b));    
     return (

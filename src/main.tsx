@@ -6,6 +6,7 @@ import Root from './routes/root.tsx';
 import Mod from './routes/mod/mod.tsx';
 import RuneWords from './routes/mod/runewords.tsx';
 import { modLoader } from './context/D2Context.ts';
+import GlobalLoader from './routes/global-loader.tsx';
 
 if (import.meta.hot) {
   import.meta.hot.on(
@@ -18,6 +19,7 @@ const router = createBrowserRouter([
   {
     path: "/",
     errorElement: <ErrorPage />,
+    element: <GlobalLoader />,
     children: [
       { index: true, element: <Root />},
       {
