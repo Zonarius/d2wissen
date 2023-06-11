@@ -1,3 +1,5 @@
+import { sprintf as spf } from "sprintf-js";
+
 export function range(end: number): number[];
 export function range(start: number, end: number): number[];
 
@@ -54,4 +56,26 @@ export function getTableStats(tbl: any): StatRef[] {
             val: tbl["val" + n],
         }))
         .filter(mod => mod.stat);
+}
+
+export function sprintf(pattern: string, ...params: any[]): string {
+    pattern = pattern.replace("%+d", "+%s")
+        .replace("%d", "%s")
+        .replace("%2", "%3$s")
+        .replace("%1", "%2$s")
+        .replace("%0", "%1$s");
+
+    for (let i = 0; i < params.length; i++) {
+        if (Array.isArray(params[i])) {
+            const [min, max] = params[i];
+            params[i] = min === max ? "" + min : `${min}-${max}`;
+        }
+    }
+
+    try {
+        return spf(pattern, ...params);
+    } catch (err) {
+        console.log(pattern);
+        return spf(pattern, ...params);
+    }
 }

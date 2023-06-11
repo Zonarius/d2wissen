@@ -1,12 +1,23 @@
 import JSON5 from 'json5';
 
 export interface D2Files {
-    global: any;
+    global: {
+        excel: {
+            charstats: D2Charstat[];
+            itemstatcost: D2ItemStatCost[];
+            misc: D2Misc[];
+            monstats: D2Monster[];
+            properties: D2Property[];
+            runes: D2Runeword[];
+            skills: D2Skill[];
+            skilldesc: D2Skilldesc[];
+        }
+    };
     hd: any;
     local: any;
 };
 
-export interface Runeword {
+export interface D2Runeword {
     Name: string;
     complete: string;
 
@@ -23,8 +34,92 @@ export interface Runeword {
     Rune4: string;
     Rune5: string;
     Rune6: string;
+}
 
-    
+
+
+export interface D2Misc {
+    name: string;
+    levelreq: string;
+}
+
+export interface D2Property {
+    code: string;
+    func1: string;
+    stat1: string;
+    set1: string;
+    val1: string;
+
+    func2: string;
+    stat2: string;
+    set2: string;
+    val2: string;
+
+    func3: string;
+    stat3: string;
+    set3: string;
+    val3: string;
+
+    func4: string;
+    stat4: string;
+    set4: string;
+    val4: string;
+
+    func5: string;
+    stat5: string;
+    set5: string;
+    val5: string;
+
+    func6: string;
+    stat6: string;
+    set6: string;
+    val6: string;
+
+    func7: string;
+    stat7: string;
+    set7: string;
+    val7: string;
+}
+
+export interface D2ItemStatCost {
+    Stat: string;
+    "*ID": string;
+    descpriority: string;
+    descfunc: string;
+    descstrpos: string;
+    descstrneg: string;
+    descstr2: string;
+}
+
+export interface D2Skill {
+    skill: string;
+    "*Id": string;
+    skilldesc: string;
+    charclass: string;
+}
+
+export interface D2Charstat {
+    class: string;
+    StrAllSkills: string;
+    StrSkillTab1: string;
+    StrSkillTab2: string;
+    StrSkillTab3: string;
+}
+
+export interface D2Skilldesc {
+    skilldesc: string;
+    "str name": string;
+    desctexta1: string;
+    desctextb1: string;
+    desctexta2: string;
+    desctextb2: string;
+    "item proc text": string;
+}
+
+export interface D2Monster {
+    Id: string;
+    "*hcIdx": string;
+    NameStr: string;
 }
 
 export interface FileLike {

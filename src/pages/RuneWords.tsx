@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { D2Context } from "../context/D2Context";
-import { Runeword } from "../lib/d2Parser";
+import { D2Runeword } from "../lib/d2Parser";
 import { getTableArray, getTableModifiers } from "../lib/util";
 import React from "react";
 import { TFunc, useItemTypeT, useT } from "../lib/translation/translation";
@@ -8,7 +8,7 @@ import { useModifierT, ModifierTFunc } from "../lib/translation/modifier";
 
 function RuneWords() {
     const d2 = useContext(D2Context);
-    const rws: Runeword[] = d2.data.global.excel.runes.filter((rw: Runeword) => rw.complete === "1");
+    const rws: D2Runeword[] = d2.data.global.excel.runes.filter((rw: D2Runeword) => rw.complete === "1");
     rws.sort((a, b) => requiredLevel(d2, a) - requiredLevel(d2, b));    
     return (
         <>
@@ -28,7 +28,7 @@ function RuneWords() {
                     </tr>
                 </thead>
                 <tbody>
-                    {rws.map((rw: Runeword) => (
+                    {rws.map((rw: D2Runeword) => (
                         <RuneWordRow key={rw.Name} d2={d2} runeword={rw} />
                     ))}
                 </tbody>
@@ -39,7 +39,7 @@ function RuneWords() {
 
 interface RuneWordRowProps {
     d2: D2Context;
-    runeword: Runeword;
+    runeword: D2Runeword;
 }
 
 function RuneWordRow({ d2, runeword }: RuneWordRowProps) {
@@ -82,33 +82,33 @@ function Modifier({mod}: ModifierProps) {
 }
 
 
-function runeCount(rw: Runeword) {
+function runeCount(rw: D2Runeword) {
     return getTableArray(rw, "Rune").length;
 }
 
-function combinedRuneWord(t: TFunc, rw: Runeword): string {
+function combinedRuneWord(t: TFunc, rw: D2Runeword): string {
     return getTableArray(rw, "Rune")
         .map(key => t(key + "L"))
         .join("");
 }
 
-function possibleItems(t: TFunc, rw: Runeword): string[] {
+function possibleItems(t: TFunc, rw: D2Runeword): string[] {
     return getTableArray(rw, "itype")
         .map(key => t(key))
 }
 
-function modifiers(t: ModifierTFunc, rw: Runeword): string[] {
+function modifiers(t: ModifierTFunc, rw: D2Runeword): string[] {
     const mods = getTableModifiers(rw, "T1Code", "T1Param", "T1Min", "T1Max");
     return t(mods);
 }
 
-function requiredLevel(d2: D2Context, rw: Runeword): number {
+function requiredLevel(d2: D2Context, rw: D2Runeword): number {
     const mods = getTableModifiers(rw, "T1Code", "T1Param", "T1Min", "T1Max");
     const lreq = mods.find(mod => mod.code === "levelreq");
     return Math.max(
         ...[
             ...[lreq ? Number(lreq.max) : 0],
-            ...getTableArray(rw, "Rune").map(r => Number(d2.itemsByCode[r].levelreq))
+            ...getTableArray(rw, "Rune").map(r => Number(d2.refs.itemsByCode[r].levelreq))
         ]
     );
 }

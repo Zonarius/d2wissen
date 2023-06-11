@@ -1,8 +1,8 @@
-import { sprintf } from "sprintf-js";
-import { Modifier, getTableStats } from "../util";
+import { Modifier, getTableStats, sprintf } from "../util";
 import { AvailableLanguage, TFunc, useT } from "./translation";
 import { useContext } from "react";
-import { D2Context, D2Property, ItemStatCost as D2ItemStatCost } from "../../context/D2Context";
+import { D2Context } from "../../context/D2Context";
+import { D2Property, D2ItemStatCost } from "../d2Parser";
 
 type PrioMod = {
     prio: number,
@@ -14,10 +14,10 @@ export function useModifierT(lang?: AvailableLanguage): ModifierTFunc {
     const d2 = useContext(D2Context);
     const t = useT(lang);
     const tSkill = (skill: string) => {
-        const skilldescref = d2.skillsBySkillId[skill]?.skilldesc
-            ?? d2.skillBySkill[skill]?.skilldesc
+        const skilldescref = d2.refs.skillsBySkillId[skill]?.skilldesc
+            ?? d2.refs.skillBySkill[skill]?.skilldesc
             ?? skill;
-        const skilldesc = d2.skilldescBySkilldesc[skilldescref];
+        const skilldesc = d2.refs.skilldescBySkilldesc[skilldescref];
         if (skilldesc) {
             return t(skilldesc["str name"]);
         } else {
@@ -33,12 +33,12 @@ export function useModifierT(lang?: AvailableLanguage): ModifierTFunc {
                 continue;
             }
             try {                
-                const prop = d2.propertiesByCode[code.toLocaleLowerCase()];
+                const prop = d2.refs.propertiesByCode[code.toLocaleLowerCase()];
                 const stats = prop.func1 in statByFunc
                     ? [{func: prop.func1, stat: statByFunc[prop.func1]}]
                     : getTableStats(prop);
                 for (const statref of stats) {
-                    const stat = d2.itemStatCostsByStat[statref.stat ?? statByFunc[statref.func]];
+                    const stat = d2.refs.itemStatCostsByStat[statref.stat ?? statByFunc[statref.func]];
 
                     if (["92", "181", "56", "59"].includes(stat["*ID"])) {
                         // Skip these stats 
@@ -55,7 +55,7 @@ export function useModifierT(lang?: AvailableLanguage): ModifierTFunc {
                         const ctx: DescFuncContext = { d2, prop, stat, tStr, code, param: param!, min, max, tSkill, t };
                         result.push(...descFuncs[stat.descfunc](ctx));
                     } else if (!param) {
-                        push(stat.descfunc, sprintf(strRangeReplace(tStr), numRangeReplace(min, max)));
+                        push(stat.descfunc, sprintf(tStr, [min, max]));
 
                     } else {
                         push("0", `!t-nyi-mod(${code}, ${param}, ${min}, ${max})!`);
@@ -102,9 +102,10 @@ const descFuncs: Record<string, DescFunc> = {
     "13": classSkills,
     "14": skillTab,
     "15": skillOn,
-    "16": offSkill,
+    "16": offSkill, // Aura
     "28": offSkill,
     "19": general,
+    "23": reanimate,
     "24": charges,
     "27": charSkill
 }
@@ -122,7 +123,7 @@ function skillOn({stat, param, tStr, min, max, tSkill }: DescFuncContext): PrioM
 }
 
 function offSkill({stat, tStr, min, max, tSkill, param}: DescFuncContext): PrioMod[] {
-    return prioMod(stat.descpriority, sprintf(strRangeReplace(tStr), numRangeReplace(min, max), tSkill(param)));
+    return prioMod(stat.descpriority, sprintf(tStr, [min, max], tSkill(param)));
 }
 
 function general({prop, stat, tStr, t, param, min, max}: DescFuncContext): PrioMod[] {
@@ -133,7 +134,7 @@ function general({prop, stat, tStr, t, param, min, max}: DescFuncContext): PrioM
     if (param) {
         return prioMod(stat.descpriority, sprintf(tStr.replace("%+d", "%+3f"), Number(param) / 8) + ` ${t("ModStre10c")}`);
     } else {
-        return prioMod(stat.descpriority, sprintf(strRangeReplace(tStr), numRangeReplace(min, max)));
+        return prioMod(stat.descpriority, sprintf(tStr, [min, max]));
     }
 }
 
@@ -142,11 +143,11 @@ function charges({stat, tStr, min, max, tSkill, param}: DescFuncContext): PrioMo
 }
 
 function charSkill({d2, stat, tStr, min, max, t, tSkill, param}: DescFuncContext): PrioMod[] {
-    const cls = d2.skillsBySkillId[param].charclass
+    const cls = d2.refs.skillsBySkillId[param].charclass
     const classStr = t(`${cls.charAt(0).toLocaleUpperCase()}${cls.substring(1)}Only`)
     const skill = tSkill(param);
 
-    return prioMod(stat.descpriority, sprintf(strRangeReplace(tStr), numRangeReplace(min, max), skill, classStr));
+    return prioMod(stat.descpriority, sprintf(tStr, [min, max], skill, classStr));
 }
 
 const classOrder = ["Amazon", "Sorceress", "Necromancer", "Paladin", "Barbarian", "Druid", "Assassin"]
@@ -155,20 +156,17 @@ function skillTab({d2, stat, min, max, param, t}: DescFuncContext): PrioMod[] {
     const p = Number(param);
     const clsName = classOrder[Math.floor(p / 3)];
     const tabI = (p % 3) + 1 as 1 | 2 | 3 ;
-    const tStr = t(d2.charstatByClassname[clsName][`StrSkillTab${tabI}`]);
-    return prioMod(stat.descpriority, sprintf(strRangeReplace(tStr), numRangeReplace(min, max)));
+    const tStr = t(d2.refs.charstatByClassname[clsName][`StrSkillTab${tabI}`]);
+    return prioMod(stat.descpriority, sprintf(tStr, [min, max]));
 }
 
 function classSkills({d2, prop, stat, min, max, t}: DescFuncContext): PrioMod[] {
     const clsName = classOrder[Number(prop.val1)]
-    const tStr = t(d2.charstatByClassname[clsName].StrAllSkills);
-    return prioMod(stat.descpriority, sprintf(strRangeReplace(tStr), numRangeReplace(min, max)));
+    const tStr = t(d2.refs.charstatByClassname[clsName].StrAllSkills);
+    return prioMod(stat.descpriority, sprintf(tStr, [min, max]));
 }
 
-function strRangeReplace(str: string): string {
-    return str.replace("%+d", "+%s").replace("%d", "%s");
-}
-
-function numRangeReplace(min?: number, max?: number): string {
-    return min === max ? "" + min : `${min}-${max}`;
+function reanimate({d2, tStr, param, stat, min, max, t}: DescFuncContext): PrioMod[] {
+    const monsterName = t(d2.refs.monsterByIdx[param].NameStr);
+    return prioMod(stat.descpriority, sprintf(tStr, [min, max], monsterName));
 }
