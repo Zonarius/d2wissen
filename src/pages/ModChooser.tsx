@@ -1,5 +1,5 @@
 import { useCallback, useRef } from "react";
-import { getModFiles, listMods } from "../context/staticContext";
+import { listMods } from "../context/staticContext";
 import { FileLike } from "../lib/d2Parser";
 import { Link } from "react-router-dom";
 
@@ -24,7 +24,7 @@ function ModChooser(props: ModChooserProps) {
         <>
             <h1>Mods</h1>
             <ul>
-                <StaticMods {...props} />
+                <StaticMods />
                 <a href="__loaded" onClick={handleUpload}><li>Load...</li></a>
             </ul>
             <input ref={inputRef} style={{display: "none"}} id="modfolderChooser" type="file" 
@@ -36,10 +36,7 @@ function ModChooser(props: ModChooserProps) {
     )
 }
 
-function StaticMods(props: ModChooserProps) {
-    const loadMod = useCallback((mod: string) => {
-        props.onChange(getModFiles(mod));
-    }, []);
+function StaticMods() {
     const mods = listMods();
     return (
         <>
