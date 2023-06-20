@@ -22,6 +22,9 @@ async function main(srcDir, dest) {
             'global/excel/misc.txt',
             'global/excel/runes.txt',
             'global/excel/charstats.txt',
+            'local/LNG/ENG/string.tbl',
+            'local/LNG/ENG/expansionstring.tbl',
+            'local/LNG/ENG/patchstring.tbl',
             'local/lng/strings/item-runes.json',
             'local/lng/strings/item-modifiers.json',
             'local/lng/strings/monsters.json',
@@ -29,12 +32,18 @@ async function main(srcDir, dest) {
         ];
 
         await Promise.all(files.map(async file => {
+            const joinedSrc = path.join(srcDir, file)
             const joinedDest = path.join(dest, file)
             await fs.mkdir(path.dirname(joinedDest), { recursive: true })
-            await fs.copyFile(
-                path.join(srcDir, file),
-                joinedDest
-            )
+            try {
+                await fs.copyFile(joinedSrc, joinedDest);
+            } catch (err) {
+                if (err && err.code === "ENOENT") {
+                    console.warn(`Could not find source file: ${joinedSrc}`)
+                } else {
+                    throw err;
+                }
+            }
         }));
         
     } catch (err) {
