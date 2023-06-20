@@ -47,7 +47,7 @@ function createRef<T>(file: T[], key: string): Record<string, T> {
 }
 
 export async function modLoader(mod: string): Promise<D2Context> {
-    const d2Files = await parseD2(getModFiles(mod));
+    const d2Files = await parseD2(await getModFiles(mod));
     return {
         lang: "deDE",
         translations: createTranslations(d2Files),
