@@ -20,12 +20,30 @@ export type D2TranslationEntry = {
 export function createTranslations(files: D2Files): D2Translations {
     let output: D2Translations = {};
 
-    const strings = files.local.lng.strings;
+    console.log(files);
 
-    for (const key of Object.keys(strings)) {
-        for (const entry of strings[key]) {
-            if (!output[entry.Key]) {
-                output[entry.Key] = entry;
+    const strings = files.local.lng?.strings;
+
+    if (strings) {
+        for (const key of Object.keys(strings)) {
+            for (const entry of strings[key]) {
+                if (!output[entry.Key]) {
+                    output[entry.Key] = entry;
+                }
+            }
+        }
+    } else {
+        const languages = files.local.LNG;
+        // TODO support other languages
+        for (const file of ["string", "expansionstring", "patchstring"]) {
+            for (const [key, value] of Object.entries(languages.ENG[file])) {
+                if (!output[key]) {
+                    output[key] = {
+                        id: 0,
+                        Key: key,
+                        ...Object.fromEntries(availableLanguages.map(lang => [lang, value]))
+                    } as D2TranslationEntry;
+                }
             }
         }
     }

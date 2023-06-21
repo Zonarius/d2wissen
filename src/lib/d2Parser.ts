@@ -1,4 +1,5 @@
 import JSON5 from 'json5';
+import { readTbl } from './tblParser';
 
 export interface D2Files {
     global: {
@@ -125,6 +126,7 @@ export interface D2Monster {
 export interface FileLike {
     webkitRelativePath: string;
     text(): Promise<string>;
+    arrayBuffer(): Promise<Uint8Array>;
 }
 
 export async function parseD2(files: FileLike[]): Promise<D2Files> {
@@ -153,6 +155,8 @@ async function mkFile(folder: any, file: FileLike, [fileName, ...rest]: string[]
         mkOrGet(fileName)[stripExt(rest[0])] = await parseExcel(file)
     } else if (rest[0].endsWith(".json")){
         mkOrGet(fileName)[stripExt(rest[0])] = await parseJson(file)
+    } else if (rest[0].endsWith(".tbl")){
+        mkOrGet(fileName)[stripExt(rest[0])] = await parseTbl(file)
     }
 }
 
@@ -180,4 +184,9 @@ async function parseExcel(file: FileLike) {
         }
         return entryObj;
     })
+}
+
+async function parseTbl(file: FileLike) {
+    const bin = await file.arrayBuffer();
+    return readTbl(bin);
 }

@@ -13,7 +13,9 @@ function ModChooser(props: ModChooserProps) {
         if (!ev.target.files) {
             return;
         }
-        props.onChange([...ev.target.files]);
+        // TODO FIX THIS
+        throw new Error("NYI");
+        // props.onChange([...ev.target.files]);
     }, []);
     const handleUpload = useCallback(() => {
         if (inputRef.current) {

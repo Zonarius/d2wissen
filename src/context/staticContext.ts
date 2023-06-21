@@ -1,7 +1,7 @@
 import { FileLike } from "../lib/d2Parser";
 
 type modType = {
-    default: Record<string, string>;
+    default: Record<string, any>;
 }
 
 const knownMods: Record<string, () => Promise<modType>> = {
@@ -20,6 +20,7 @@ export async function getModFiles(modname: string): Promise<FileLike[]> {
         .map(([filename, content]) => ({
             // Prepending data to behave similar to folder upload
             webkitRelativePath: "data/" + filename,
-            text: () => Promise.resolve(content)
+            text: () => Promise.resolve(content),
+            arrayBuffer: () => Promise.resolve(content)
         }))
 }

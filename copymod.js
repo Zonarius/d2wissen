@@ -63,7 +63,9 @@ function createIndex(files) {
     let result = "";
     let i = 0;
     for (const file of files) {
-        result += `import file${i} from './${file}?raw';\n`
+        const loader = file.endsWith(".tbl")
+            ? "bin" : "raw";
+        result += `import file${i} from './${file}?${loader}';\n`
         i++;
     }
     result += "\nexport default {\n";
