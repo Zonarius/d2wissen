@@ -1,6 +1,6 @@
 import { D2Context } from "../../context/D2Context";
 import { D2Runeword } from "../../lib/d2Parser";
-import { getTableArray, getTableModifiers } from "../../lib/util";
+import { getTableArray, getTableModifiers, range } from "../../lib/util";
 import React from "react";
 import { TFunc, useItemTypeT, useT } from "../../lib/translation/translation";
 import { useModifierT, ModifierTFunc } from "../../lib/translation/modifier";
@@ -29,8 +29,8 @@ function RuneWords() {
                     </tr>
                 </thead>
                 <tbody>
-                    {rws.map((rw: D2Runeword) => (
-                        <RuneWordRow key={rw.Name} d2={d2} runeword={rw} />
+                    {rws.filter(rw => rw.Name).map((rw: D2Runeword) => (
+                        <RuneWordRow key={runewordKey(rw)} d2={d2} runeword={rw} />
                     ))}
                 </tbody>
             </table>
@@ -41,6 +41,10 @@ function RuneWords() {
 interface RuneWordRowProps {
     d2: D2Context;
     runeword: D2Runeword;
+}
+
+function runewordKey(rw: D2Runeword): string {
+    return rw.Name + range(1, 5).map(i => (rw as any)["itype" + i]).join("");
 }
 
 function RuneWordRow({ d2, runeword }: RuneWordRowProps) {
@@ -65,7 +69,7 @@ function RuneWordRow({ d2, runeword }: RuneWordRowProps) {
             <td>{modifiers(modT, runeword).map(mod => (
                 <Modifier key={mod} mod={mod} />
             ))}</td>
-            <td>NYI</td>
+            <td>{runeword.Name} - NYI</td>
         </tr>
     )
 }

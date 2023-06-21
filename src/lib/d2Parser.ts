@@ -85,8 +85,10 @@ export interface D2Property {
 export interface D2ItemStatCost {
     Stat: string;
     "*ID": string;
+    ID: string;
     descpriority: string;
     descfunc: string;
+    descval: "0" | "1" | "2";
     descstrpos: string;
     descstrneg: string;
     descstr2: string;
@@ -110,6 +112,7 @@ export interface D2Charstat {
 export interface D2Skilldesc {
     skilldesc: string;
     "str name": string;
+    "str alt": string;
     desctexta1: string;
     desctextb1: string;
     desctexta2: string;

@@ -30,26 +30,47 @@ export function createRefs(files: D2Files): D2ContextRefs {
         propertiesByCode: createRef(files.global.excel.properties, "code"),
         itemStatCostsByStat: createRef(files.global.excel.itemstatcost, "Stat"),
         skillsBySkilldesc: createRef(files.global.excel.skills, "skilldesc"),
-        skillsBySkillId: createRef(files.global.excel.skills, "*Id"),
+        skillsBySkillId: createRef(files.global.excel.skills, "*Id", "Id"),
         skillBySkill: createRef(files.global.excel.skills, "skill"),
         charstatByClassname: createRef(files.global.excel.charstats, "class"),
-        skilldescBySkilldesc: createRef(files.global.excel.skilldesc, "skilldesc"),
-        monsterByIdx: createRef(files.global.excel.monstats, "*hcIdx")
+        skilldescBySkilldesc: createRefLower(files.global.excel.skilldesc, "skilldesc"),
+        monsterByIdx: createRef(files.global.excel.monstats, "*hcIdx", "hcIdx")
     }
 }
 
-function createRef<T>(file: T[], key: string): Record<string, T> {
+function createRef<T>(file: T[], ...keys: string[]): Record<string, T> {
     let output: Record<string, T> = {};
     for (const row of file) {
-        output[(row as any)[key]] = row;
+        for (const key of keys) {
+            const newKey = (row as any)[key];
+            if (newKey) {
+                output[newKey] = row;
+                break;
+            }
+        }
     }
     return output;
 }
 
+function createRefLower<T>(file: T[], ...keys: string[]): Record<string, T> {
+    let output: Record<string, T> = {};
+    for (const row of file) {
+        for (const key of keys) {
+            const newKey = (row as any)[key];
+            if (newKey) {
+                output[newKey.toLocaleLowerCase()] = row;
+                break;
+            }
+        }
+    }
+    return output;
+}
+
+
 export async function modLoader(mod: string): Promise<D2Context> {
     const d2Files = await parseD2(await getModFiles(mod));
     return {
-        lang: "deDE",
+        lang: "enUS",
         translations: createTranslations(d2Files),
         refs: createRefs(d2Files),
         data: d2Files

@@ -59,16 +59,15 @@ export function getTableStats(tbl: any): StatRef[] {
 }
 
 export function sprintf(pattern: string, ...params: any[]): string {
-    const modPattern = pattern.replace("%+d", "+%s")
-        .replace("%d", "%s")
+    const modPattern = pattern.replace(/%\+d/g, "+%s")
+        .replace(/%d/g, "%s")
         .replace("%2", "%3$s")
         .replace("%1", "%2$s")
         .replace("%0", "%1$s");
     
     params = params.map(param => {
-        if (Array.isArray(param)) {
-            const [min, max] = param;
-            return min === max ? "" + min : `${min}-${max}`;
+        if (isRange(param)) {
+            return showRange(param);
         } else {
             return param;
         }
@@ -80,4 +79,14 @@ export function sprintf(pattern: string, ...params: any[]): string {
         console.log([pattern, modPattern]);
         return spf(modPattern, ...params);
     }
+}
+
+export type Range = [number, number]
+
+export function showRange([min, max]: Range): string {
+    return min === max ? "" + Math.abs(min) : `${Math.abs(min)}-${Math.abs(max)}`;
+}
+
+export function isRange(x: any): x is Range {
+    return Array.isArray(x) && x.length === 2 && typeof x[0] === "number" && typeof x[1] === "number";
 }
