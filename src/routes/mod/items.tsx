@@ -25,10 +25,14 @@ function Items() {
   const combined = [
     ...rws,
     ...unis
-  ].sort((a, b) => a.reqs.lvl - b.reqs.lvl)
+  ];
+  
+  if (itemFilter?.sort) {
+    combined.sort(itemFilter.sort);
+  }
 
-  const filtered = itemFilter
-    ? combined.filter(itemFilter)
+  const filtered = itemFilter?.filter
+    ? combined.filter(itemFilter.filter)
     : combined;
 
   return (
@@ -129,11 +133,6 @@ function Modifier({mod}: ModifierProps) {
 function possibleItems(t: TFunc, rw: D2Runeword): string[] {
   return getTableArray(rw, "itype")
     .map(key => t(key))
-}
-
-function modifiers(t: ModifierTFunc, rw: D2Runeword): string[] {
-  const mods = getTableModifiers(rw, "T1Code", "T1Param", "T1Min", "T1Max");
-  return t(mods);
 }
 
 const questItemCodes = new Set(["vip", "msf", "hst", "hfh", "qf1", "qf2"])

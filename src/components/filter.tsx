@@ -13,11 +13,20 @@ const editorProps: EditorProps = {
 };
 
 const defaultFilterCode = 'import { Item } from "filter";\n\n' + 
-`export default function filter(item: Item): boolean {
+`export function filter(item: Item): boolean {
   return true;
-}`
+}
 
-export type ItemFilter = (item: Item) => boolean
+export function sort(a: Item, b: Item): number {
+  return a.reqs.lvl - b.reqs.lvl;
+}
+`
+
+export type ItemFilter = {
+  filter(item: Item): boolean;
+  sort(a: Item, b: Item): number;
+}
+
 export interface FilterProps {
   onChange?(filter: ItemFilter): void;
 }
@@ -76,5 +85,5 @@ export function Filter(props: FilterProps) {
 function compileFilter(code: string): ItemFilter {
   const program = ts.transpileModule(code, { compilerOptions: { module: ts.ModuleKind.None } });
   const mod = eval(`(() => { const exports = {};\n${program.outputText}\nreturn exports; })()`);
-  return mod.default;
+  return mod;
 }

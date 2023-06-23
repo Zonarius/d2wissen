@@ -19,7 +19,7 @@ function RuneWords() {
         .sort((a, b) => a.reqs.lvl - b.reqs.lvl);
 
     const filtered = itemFilter
-        ? rws.filter(itemFilter)
+        ? rws.filter(itemFilter.filter)
         : rws;
 
     return (
