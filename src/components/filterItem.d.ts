@@ -1,0 +1,47 @@
+export interface Item {
+  /**
+   * The name of the item.
+   */
+  name: string;
+  /**
+   * The number of sockets.
+   * 
+   * For runewords, this is equal to the amount of runes needed.
+   * 
+   * For normal items, this is the maximum amount of sockets possible.
+   * 
+   * For everything else, this is the amount of sockets added by modifiers.
+   */
+  sockets: number;
+
+  /**
+   * The requirements to equip the item.
+   */
+  reqs: Requirements;
+
+  /**
+   * The rarity of the item (magic, rare, etc.)
+   */
+  rarity: Rarity;
+
+  /** 
+   * Applies to runewords only.
+   * 
+   * The runes required to create the runeword, in order.
+   */
+  runes?: Rune[];
+
+  /**
+   * Reference to the original item object.
+   */
+  __original: any;
+}
+
+export type Rarity = "normal" | "magic" | "rare" | "set" | "unique" | "runeword"
+
+export interface Requirements {
+  lvl: number;
+}
+
+export const runes = ["El", "Eld", "Tir", "Nef", "Eth", "Ith", "Tal", "Ral", "Ort", "Thul", "Amn", "Sol", "Shael", "Dol", "Hel", "Io", "Lum", "Ko", "Fal", "Lem", "Pul", "Um", "Mal", "Ist", "Gul", "Vex", "Ohm", "Lo", "Sur", "Ber", "Jah", "Cham", "Zod"] as const;
+export type Rune = typeof runes[number];

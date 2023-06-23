@@ -1,19 +1,31 @@
 import { D2Context } from "../../context/D2Context";
 import { D2Runeword } from "../../lib/d2Parser";
 import { getTableArray, getTableModifiers, range } from "../../lib/util";
-import React from "react";
+import React, { useState } from "react";
 import { TFunc, useItemTypeT, useT } from "../../lib/translation/translation";
 import { useModifierT, ModifierTFunc } from "../../lib/translation/modifier";
-import { useRouteLoaderData } from "react-router-dom";
+import { FilterPopout, ItemFilter } from "../../components/filter";
+import { useItemMapper } from "../../lib/itemMapper";
+import { Item } from "../../components/filterItem";
+import { useD2 } from "../../lib/hooks";
 
 function RuneWords() {
-    const d2 = useRouteLoaderData("mod") as D2Context;
+    const d2 = useD2();
+    const [itemFilter, setItemFilter] = useState<ItemFilter | undefined>(undefined);
+    const itemMapper = useItemMapper();
+    const rws = d2.data.global.excel.runes
+        .filter((rw: D2Runeword) => rw.complete === "1")
+        .map(itemMapper.fromRuneword)
+        .sort((a, b) => a.reqs.lvl - b.reqs.lvl);
 
-    const rws: D2Runeword[] = d2.data.global.excel.runes.filter((rw: D2Runeword) => rw.complete === "1");
-    rws.sort((a, b) => requiredLevel(d2, a) - requiredLevel(d2, b));    
+    const filtered = itemFilter
+        ? rws.filter(itemFilter)
+        : rws;
+
     return (
         <>
             <h3>Runenw&ouml;rter: &Uuml;bersicht</h3>
+            <FilterPopout onChange={filter => setItemFilter(() => filter)}/>
             <table className="d2w">
                 <thead>
                     <tr>
@@ -29,8 +41,8 @@ function RuneWords() {
                     </tr>
                 </thead>
                 <tbody>
-                    {rws.filter(rw => rw.Name).map((rw: D2Runeword) => (
-                        <RuneWordRow key={runewordKey(rw)} d2={d2} runeword={rw} />
+                    {filtered.map((rw: Item) => (
+                        <RuneWordRow key={runewordKey(rw.__original)} d2={d2} runeword={rw.__original} />
                     ))}
                 </tbody>
             </table>
