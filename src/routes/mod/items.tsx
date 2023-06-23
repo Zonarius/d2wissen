@@ -74,6 +74,7 @@ const itemNameColorByRarity = {
 } as any;
 
 function ItemRow({ d2, item }: RuneWordRowProps) {
+  const modT = useModifierT();
   if (item.quality === "runeword") {
     return <RunewordRow {...{d2, item}}/>
   }
@@ -84,7 +85,9 @@ function ItemRow({ d2, item }: RuneWordRowProps) {
       </td>
       <td>TYPE</td>
       <td>{item.reqs.lvl}</td>
-      <td>MODS</td>
+      <td>{modT(item.props).map(mod => (
+        <Modifier key={mod} mod={mod} />
+      ))}</td>
     </tr>
   )
 }
@@ -104,7 +107,7 @@ function RunewordRow({ item }: RuneWordRowProps) {
         <React.Fragment key={type}>{type}<br/></React.Fragment>
       ))}</td>
       <td>{item.reqs.lvl}</td>
-      <td>{modifiers(modT, item.__original).map(mod => (
+      <td>{modT(item.props).map(mod => (
         <Modifier key={mod} mod={mod} />
       ))}</td>
     </tr>

@@ -1,4 +1,5 @@
 import { sprintf as spf } from "sprintf-js";
+import { Property } from "../components/filterItem";
 
 export function range(end: number): number[];
 export function range(start: number, end: number): number[];
@@ -22,13 +23,6 @@ export function getTableArray(tbl: any, prefix: string, maxCount = 6): string[] 
         .filter(Boolean);
 }
 
-export interface Modifier {
-    code: string;
-    param?: string;
-    min?: number;
-    max?: number;
-}
-
 export interface StatRef {
     func: string;
     stat: string;
@@ -36,7 +30,7 @@ export interface StatRef {
     val?: string;
 }
 
-export function getTableModifiers(tbl: any, codePref: string, paramPref: string, minPref: string, maxPref: string, maxCount = 7): Modifier[] {
+export function getTableModifiers(tbl: any, codePref: string, paramPref: string, minPref: string, maxPref: string, maxCount = 7): Property[] {
     return range(1, maxCount + 1)
         .map(n => ({
             code: tbl[codePref + n],

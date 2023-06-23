@@ -1,4 +1,4 @@
-import { Item, Rune } from "../components/filterItem";
+import { Item, Property, Rune } from "../components/filterItem";
 import { D2Context } from "../context/D2Context";
 import { D2Runeword, D2UniqueItem } from "./d2Parser";
 import { useD2 } from "./hooks";
@@ -16,9 +16,11 @@ export function useItemMapper() {
 }
 
 function fromUnique(t: TFunc, item: D2UniqueItem): Item {
+  const props = getTableModifiers(item, "prop", "par", "min", "max");
   return {
     name: t(item.index),
     quality: "unique",
+    props,
     sockets: 0,
     reqs: {
       lvl: Number(item["lvl req"])
@@ -29,13 +31,15 @@ function fromUnique(t: TFunc, item: D2UniqueItem): Item {
 
 function fromRuneword(d2: D2Context, t: TFunc, rw: D2Runeword): Item {
   const runes = getRunes(t, rw);
+  const props = getTableModifiers(rw, "T1Code", "T1Param", "T1Min", "T1Max");
   return {
     name: t(rw.Name),
     quality: "runeword",
     sockets: runes.length,
+    props,
     runes,
     reqs: {
-      lvl: requiredLevel(d2, rw)
+      lvl: requiredLevel(d2, rw, props)
     },
     __original: rw
   }
@@ -47,9 +51,8 @@ function getRunes(t: TFunc, rw: D2Runeword): Rune[] {
     .map(code => t(code + "L")) as Rune[];
 }
 
-function requiredLevel(d2: D2Context, rw: D2Runeword): number {
-  const mods = getTableModifiers(rw, "T1Code", "T1Param", "T1Min", "T1Max");
-  const lreq = mods.find(mod => mod.code === "levelreq");
+function requiredLevel(d2: D2Context, rw: D2Runeword, props: Property[]): number {
+  const lreq = props.find(prop => prop.code === "levelreq");
   return Math.max(
       ...[
           ...[lreq ? Number(lreq.max) : 0],

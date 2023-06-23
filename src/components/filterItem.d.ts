@@ -24,6 +24,11 @@ export interface Item {
    */
   quality: Quality;
 
+  /**
+   * The properties of the item.
+   */
+  props: Property[];
+
   /** 
    * Applies to runewords only.
    * 
@@ -45,3 +50,10 @@ export interface Requirements {
 
 export const runes = ["El", "Eld", "Tir", "Nef", "Eth", "Ith", "Tal", "Ral", "Ort", "Thul", "Amn", "Sol", "Shael", "Dol", "Hel", "Io", "Lum", "Ko", "Fal", "Lem", "Pul", "Um", "Mal", "Ist", "Gul", "Vex", "Ohm", "Lo", "Sur", "Ber", "Jah", "Cham", "Zod"] as const;
 export type Rune = typeof runes[number];
+
+export interface Property {
+  code: string;
+  param?: string;
+  min?: number;
+  max?: number;
+}
