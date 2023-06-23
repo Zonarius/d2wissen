@@ -27,9 +27,9 @@ async function main(srcDir, dest) {
             'global/excel/UniqueItems.txt',
             'global/excel/SetItems.txt',
             'global/excel/Sets.txt',
-            'local/LNG/ENG/string.tbl',
-            'local/LNG/ENG/expansionstring.tbl',
-            'local/LNG/ENG/patchstring.tbl',
+            'local/lng/eng/string.tbl',
+            'local/lng/eng/expansionstring.tbl',
+            'local/lng/eng/patchstring.tbl',
             'local/lng/strings/item-runes.json',
             'local/lng/strings/item-modifiers.json',
             'local/lng/strings/monsters.json',
@@ -46,8 +46,8 @@ async function main(srcDir, dest) {
 async function copyAll(srcDir, dest, files) {
     let copied = [];
     await Promise.all(files.map(async file => {
-        const joinedSrc = path.join(srcDir, file)
-        const joinedDest = path.join(dest, file)
+        const joinedSrc = path.join(srcDir, file).toLocaleLowerCase();
+        const joinedDest = path.join(dest, file).toLocaleLowerCase();
         await fs.mkdir(path.dirname(joinedDest), { recursive: true })
         try {
             await fs.copyFile(joinedSrc, joinedDest);
@@ -70,13 +70,13 @@ function createIndex(files) {
     for (const file of files) {
         const loader = file.endsWith(".tbl")
             ? "bin" : "raw";
-        result += `import file${i} from './${file}?${loader}';\n`
+        result += `import file${i} from './${file.toLocaleLowerCase()}?${loader}';\n`
         i++;
     }
     result += "\nexport default {\n";
     i = 0;
     for (const file of files) {
-        result += `  "${file}": file${i},\n`
+        result += `  "${file.toLocaleLowerCase()}": file${i},\n`
         i++;
     }
     result += "}";
