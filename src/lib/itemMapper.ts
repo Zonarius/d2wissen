@@ -1,6 +1,6 @@
 import { Item, Rune } from "../components/filterItem";
 import { D2Context } from "../context/D2Context";
-import { D2Runeword } from "./d2Parser";
+import { D2Runeword, D2UniqueItem } from "./d2Parser";
 import { useD2 } from "./hooks";
 import { TFunc, useT } from "./translation/translation";
 import { getTableArray, getTableModifiers, range } from "./util";
@@ -10,7 +10,20 @@ export function useItemMapper() {
   const t = useT("enUS");
 
   return {
-    fromRuneword: (rw: D2Runeword) => fromRuneword(d2, t, rw)
+    fromRuneword: (item: D2Runeword) => fromRuneword(d2, t, item),
+    fromUnique: (item: D2UniqueItem) => fromUnique(t, item)
+  }
+}
+
+function fromUnique(t: TFunc, item: D2UniqueItem): Item {
+  return {
+    name: t(item.index),
+    quality: "unique",
+    sockets: 0,
+    reqs: {
+      lvl: Number(item["lvl req"])
+    },
+    __original: item
   }
 }
 
@@ -18,7 +31,7 @@ function fromRuneword(d2: D2Context, t: TFunc, rw: D2Runeword): Item {
   const runes = getRunes(t, rw);
   return {
     name: t(rw.Name),
-    rarity: "runeword",
+    quality: "runeword",
     sockets: runes.length,
     runes,
     reqs: {

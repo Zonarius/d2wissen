@@ -20,9 +20,9 @@ export interface Item {
   reqs: Requirements;
 
   /**
-   * The rarity of the item (magic, rare, etc.)
+   * The quality of the item (magic, rare, etc.)
    */
-  rarity: Rarity;
+  quality: Quality;
 
   /** 
    * Applies to runewords only.
@@ -37,7 +37,7 @@ export interface Item {
   __original: any;
 }
 
-export type Rarity = "normal" | "magic" | "rare" | "set" | "unique" | "runeword"
+export type Quality = "normal" | "magic" | "rare" | "set" | "unique" | "runeword"
 
 export interface Requirements {
   lvl: number;

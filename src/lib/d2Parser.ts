@@ -39,7 +39,10 @@ export interface D2Runeword {
 }
 
 export interface D2UniqueItem {
-	index: string
+	index: string;
+  enabled: string;
+  code: string;
+  "lvl req": string;
 }
 
 export interface D2Misc {
