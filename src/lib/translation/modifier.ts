@@ -1,15 +1,16 @@
-import { Modifier, StatRef, getTableStats, showRange, sprintf } from "../util";
+import { StatRef, getTableStats, showRange, sprintf } from "../util";
 import { AvailableLanguage, TFunc, useT } from "./translation";
 import { D2Context } from "../../context/D2Context";
 import { D2Property, D2ItemStatCost } from "../d2Parser";
 import { useRouteLoaderData } from "react-router-dom";
+import { Property } from "../../components/filterItem";
 
 export type PrioMod = {
     prio: number,
     mod: string;
 }
 
-export type ModifierTFunc = (mods: Modifier[]) => string[];
+export type ModifierTFunc = (mods: Property[]) => string[];
 export function useModifierT(lang?: AvailableLanguage): ModifierTFunc {
     const d2 = useRouteLoaderData("mod") as D2Context;
     const t = useT(lang);
@@ -29,12 +30,16 @@ export function useModifierT(lang?: AvailableLanguage): ModifierTFunc {
     return mods => {
         const result: PrioMod[] = [];
         const push = (prio: string, mod: string) => result.push({prio: Number(prio), mod})
-        for (const {code, param, min, max} of mods) {
+        for (let {code, param, min, max} of mods) {
             if (param?.startsWith("Mark of the")) {
                 // NYI
                 continue;
             }
-            try {                
+            if (code.startsWith("*")) {
+                // Commented out
+                continue;
+            }
+            try {
                 const prop = d2.refs.propertiesByCode[code.toLocaleLowerCase()];
                 const stats = prop.func1 in statByFunc
                     ? [{func: prop.func1, stat: statByFunc[prop.func1]}]
@@ -46,15 +51,37 @@ export function useModifierT(lang?: AvailableLanguage): ModifierTFunc {
                 for (const statref of stats) {
                     const stat = d2.refs.itemStatCostsByStat[statref.stat ?? statByFunc[statref.func]];
 
-                    if (["92", "181", "56", "59", "126"].includes(stat["*ID"] || stat["ID"])) {
+                    if (["92", "181", "56", "59", "126", "140", "479"].includes(stat["*ID"] || stat["ID"])) {
                         // Skip these stats 
                         // * fixed level requirement
-                        // * visual effects (fade)
+                        // * visual effects (fade, extra blood)
                         // * Cold length
                         // * Poison length
                         // * General skill category
+                        // * Socket text only
                         continue;
                     }
+
+                    if (stat.Stat === "maxdurability") {
+                        stat.descfunc = "1";
+                        stat.descval = "2";
+                        stat.descstrpos = "ModStr2i";
+                    }
+
+                    if (stat.Stat === "item_numsockets") {
+                        if (!min) {
+                            min = max = Number(param);
+                        }
+                        stat.descfunc = "3";
+                        stat.descval = "2";
+                        stat.descstrpos = "Socketable";
+                    }
+
+                    if (stat.descstr2 === "increaseswithplaylevelX") {
+                        stat.descstr2 = "ModStre10c";
+                    }
+                    
+                    [param, min, max] = adjustParams(prop, param, min, max);
 
                     const tStr = t(stat.descstrpos ?? tKeyByStatCostId[stat["*ID"] || stat["ID"]]);
 
@@ -78,8 +105,72 @@ export function useModifierT(lang?: AvailableLanguage): ModifierTFunc {
             }            
         }
         return result.sort((a, b) => b.prio - a.prio)
-            .map(x => x.mod);
+            .map(x => stripColorCode(x.mod));
     };
+}
+
+const factorsByPropCode = {
+    "ac/lvl": 0.125,
+    "ac%/lvl": 0.125,
+    "hp/lvl": 0.125,
+    "mana/lvl": 0.125,
+    "dmg/lvl": 0.125,
+    "dmg%/lvl": 0.125,
+    "str/lvl": 0.125,
+    "dex/lvl": 0.125,
+    "enr/lvl": 0.125,
+    "vit/lvl": 0.125,
+    "att%/lvl": 0.125,
+    "dmg-cold/lvl": 0.125,
+    "dmg-fire/lvl": 0.125,
+    "dmg-ltng/lvl": 0.125,
+    "dmg-pois/lvl": 0.125,
+    "res-cold/lvl": 0.125,
+    "res-fire/lvl": 0.125,
+    "res-ltng/lvl": 0.125,
+    "res-pois/lvl": 0.125,
+    "abs-cold/lvl": 0.125,
+    "abs-fire/lvl": 0.125,
+    "abs-ltng/lvl": 0.125,
+    "abs-pois/lvl": 0.125,
+    "thorns/lvl": 0.125,
+    "gold%/lvl": 0.125,
+    "mag%/lvl": 0.125,
+    "regen-stam/lvl": 0.125,
+    "stam/lvl": 0.125,
+    "dmg-dem/lvl": 0.125,
+    "dmg-und/lvl": 0.125,
+    "crush/lvl": 0.125,
+    "wounds/lvl": 0.125,
+    "kick/lvl": 0.125,
+    "deadly/lvl": 0.125,
+    "gems%/lvl": 0.125,
+    "dmg%/eth": 0.125,
+} as any;
+
+function paramFactor(propCode: string): number {
+    return factorsByPropCode[propCode]
+        ? factorsByPropCode[propCode]
+        : 1;
+}
+
+function adjustParams(prop: D2Property, param: string | undefined, min: number | undefined, max: number | undefined): [string | undefined, number | undefined, number | undefined] {
+    const factor = paramFactor(prop.code);
+    if (!isNaN(Number(param))) {
+        param = String(Number(param) * factor);
+    }
+    if (min) {
+        min = min * factor;
+    }
+    if (max) {
+        max = max * factor;
+    }
+    return [param, min, max];
+}
+
+
+function stripColorCode(s: string): string {
+    return s.replace(/Ã¿c./g, "");
 }
 
 const statByFunc: any = {
@@ -129,6 +220,10 @@ function sign(x: number | undefined): "+" | "-" {
     return !x || x > 0 ? "+" : "-";
 }
 
+function negSign(x: number | undefined): "" | "-" {
+    return !x || x > 0 ? "" : "-";
+}
+
 function addValue(str: string, value: string, descval: string) {
     if (descval === "0") {
         return str;
@@ -146,20 +241,23 @@ const descFuncs: Record<string, DescFunc> = {
     "3": statStr,
     "4": plusPercent,
     "6": plusMinusPerLevel,
+    "7": percentPerLevel,
+    "8": plusPercentPerLevel,
     "9": statStrMiddle,
     "11": replenishDurability,
     "13": classSkills,
     "14": skillTab,
     "15": skillOn,
     "16": offSkill, // Aura
-    "28": offSkill,
     "19": general,
+    "20": minusPercent,
     "23": reanimate,
     "24": charges,
-    "27": charSkill
+    "27": charSkill,
+    "28": offSkill
 }
 
-function plusMinus({statref, stat, min, max, t, tStr}: DescFuncContext) {
+function plusMinus({statref, stat, min, max, t, tStr, old}: DescFuncContext) {
     if (statref.func === "16") {
         // Ignore separate max dmg stat
         return [];
@@ -170,23 +268,48 @@ function plusMinus({statref, stat, min, max, t, tStr}: DescFuncContext) {
         tStr = t(rangeModByStat[stat.Stat])
         return prioMod(stat.descpriority, sprintf(tStr, min, max))
     }
-    return prioMod(stat.descpriority, `${sign(min)}${showRange([min!, max!])} ${tStr}`)
+
+    if (old) {
+        return prioMod(stat.descpriority, addValue(`${tStr}`, `${sign(min)}${showRange([min!, max!])}`, stat.descval))
+    } else {
+        return prioMod(stat.descpriority, `${sign(min)}${showRange([min!, max!])} ${tStr}`)
+    }
 }
 
 function percent({stat, min, max, tStr}: DescFuncContext) {
     return prioMod(stat.descpriority, `${showRange([min!, max!])}% ${tStr}`)
 }
 
-function statStrMiddle({stat, min, max, t, tStr}: DescFuncContext) {
+function statStrMiddle({stat, param, min, max, t, tStr}: DescFuncContext) {
+    if (!min) {
+        min = max = Number(param);
+    }
     return prioMod(stat.descpriority, `${tStr} ${showRange([min!, max!])} ${t(stat.descstr2)}`)
 }
 
 function plusPercent({stat, min, max, tStr}: DescFuncContext) {
-    return prioMod(stat.descpriority, `+${showRange([min!, max!])}% ${tStr}`)
+    return prioMod(stat.descpriority, addValue(`${tStr}`, `+${showRange([min!, max!])}%`, stat.descval))
 }
 
-function plusMinusPerLevel({stat, min, max, tStr, t}: DescFuncContext) {
-    return prioMod(stat.descpriority, `${sign(min)}${showRange([min!, max!])} ${tStr} ${t(stat.descstr2)}`)
+function plusMinusPerLevel({stat, param, min, max, tStr, t}: DescFuncContext) {
+    if (!min) {
+        min = max = Number(param);
+    }
+    return prioMod(stat.descpriority, addValue(`${tStr} ${t(stat.descstr2)}`, `${sign(min)}${showRange([min!, max!])}`, stat.descval))
+}
+
+function percentPerLevel({stat, param, min, max, tStr, t}: DescFuncContext) {
+    if (!min) {
+        min = max = Number(param);
+    }    
+    return prioMod(stat.descpriority, addValue(`${tStr} ${t(stat.descstr2)}`, `${negSign(min)}${showRange([min!, max!])}%`, stat.descval))
+}
+
+function plusPercentPerLevel({stat, param, min, max, tStr, t}: DescFuncContext) {
+    if (!min) {
+        min = max = Number(param);
+    }
+    return prioMod(stat.descpriority, addValue(`${tStr} ${t(stat.descstr2)}`, `+${showRange([min!, max!])}%`, stat.descval))
 }
 
 function statStr({stat, min, max, tStr}: DescFuncContext) {
@@ -224,6 +347,10 @@ function general({prop, stat, tStr, t, param, min, max}: DescFuncContext): PrioM
     }
 }
 
+function minusPercent({stat, min, max, tStr}: DescFuncContext) {
+    return prioMod(stat.descpriority, addValue(`${tStr}`, `-${showRange([min!, max!])}%`, stat.descval))
+}
+
 function charges({stat, tStr, min, max, t, tSkill, param, old }: DescFuncContext): PrioMod[] {
     if (old) {
         return prioMod(stat.descpriority, `${t("ModStre10b")} ${max} ${tSkill(param)} ${sprintf(tStr, min, min)}`);
@@ -232,8 +359,11 @@ function charges({stat, tStr, min, max, t, tSkill, param, old }: DescFuncContext
     }
 }
 
-function charSkill({d2, stat, tStr, min, max, t, tSkill, param, old}: DescFuncContext): PrioMod[] {
-    const skillRow = d2.refs.skillsBySkillId[param] ?? d2.refs.skillBySkill[param]
+function charSkill({d2, code, stat, tStr, min, max, t, tSkill, param, old}: DescFuncContext): PrioMod[] {
+    if (code === "skill-rand") {
+        return skillRand(stat, param, min!, max!);
+    }
+    const skillRow = d2.refs.skillsBySkillId[param] ?? d2.refs.skillsBySkilldesc[param] ?? d2.refs.skillBySkill[param]
     const cls = skillRow.charclass
     const classStr = t(`${cls.charAt(0).toLocaleUpperCase()}${cls.substring(1)}Only`)
     const skill = tSkill(param);
@@ -246,6 +376,15 @@ function charSkill({d2, stat, tStr, min, max, t, tSkill, param, old}: DescFuncCo
     }
 }
 
+const skillRandByRange = {
+    "221-250": "Druid"
+} as any;
+
+function skillRand(stat: D2ItemStatCost, param: string, min: number, max: number): PrioMod[] {
+    const skillRand = skillRandByRange[`${min}-${max}`];
+    return prioMod(stat.descpriority, `+${param} to Random ${skillRand} Skill`)
+}
+
 const classOrder = ["Amazon", "Sorceress", "Necromancer", "Paladin", "Barbarian", "Druid", "Assassin"]
 
 function skillTab({d2, stat, min, max, param, t}: DescFuncContext): PrioMod[] {
@@ -256,10 +395,14 @@ function skillTab({d2, stat, min, max, param, t}: DescFuncContext): PrioMod[] {
     return prioMod(stat.descpriority, sprintf(tStr, [min, max]));
 }
 
-function classSkills({d2, prop, stat, min, max, t}: DescFuncContext): PrioMod[] {
+function classSkills({d2, prop, stat, min, max, t, old}: DescFuncContext): PrioMod[] {
     const clsName = classOrder[Number(prop.val1)]
     const tStr = t(d2.refs.charstatByClassname[clsName].StrAllSkills);
-    return prioMod(stat.descpriority, sprintf(tStr, [min, max]));
+    if (old) {
+        return prioMod(stat.descpriority, addValue(sprintf(tStr), `+${showRange([min!, max!])}`, stat.descval));
+    } else {
+        return prioMod(stat.descpriority, sprintf(tStr, [min, max]));
+    }
 }
 
 function reanimate({d2, tStr, param, stat, min, max, t, old}: DescFuncContext): PrioMod[] {

@@ -43,7 +43,7 @@ function createRef<T>(file: T[], ...keys: string[]): Record<string, T> {
     for (const row of file) {
         for (const key of keys) {
             const newKey = (row as any)[key];
-            if (newKey) {
+            if (newKey && !output[newKey]) {
                 output[newKey] = row;
                 break;
             }
