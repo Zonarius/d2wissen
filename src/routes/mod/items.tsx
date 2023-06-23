@@ -16,11 +16,11 @@ function Items() {
     .filter((rw: D2Runeword) => rw.complete === "1")
     .map(itemMapper.fromRuneword)
 
-  const unis = d2.data.global.excel.UniqueItems
+  const unis = d2.data.global.excel.uniqueitems
     .filter(item => item.enabled === "1" && !isQuestItem(item))
     .map(itemMapper.fromUnique);
 
-  const setItems = d2.data.global.excel.SetItems
+  const setItems = d2.data.global.excel.setitems
     .filter(item => item.set)
     .map(itemMapper.fromSetItem);
 

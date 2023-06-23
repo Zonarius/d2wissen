@@ -37,10 +37,10 @@ export function createTranslations(files: D2Files): D2Translations {
             strings: output
         }
     } else {
-        const languages = files.local.LNG;
+        const languages = files.local.lng;
         // TODO support other languages
         for (const file of ["patchstring", "expansionstring", "string"]) {
-            for (const [key, value] of Object.entries(languages.ENG[file])) {
+            for (const [key, value] of Object.entries(languages.eng[file])) {
                 if (!output[key]) {
                     output[key] = {
                         id: 0,

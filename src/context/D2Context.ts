@@ -28,8 +28,8 @@ export function createRefs(files: D2Files): D2ContextRefs {
     return {
         itemsByCode: {
             ...createRef(files.global.excel.misc, "code"),
-            ...createRef(files.global.excel.Armor, "code"),
-            ...createRef(files.global.excel.Weapons, "code"),
+            ...createRef(files.global.excel.armor, "code"),
+            ...createRef(files.global.excel.weapons, "code"),
         },
         propertiesByCode: createRef(files.global.excel.properties, "code"),
         itemStatCostsByStat: createRef(files.global.excel.itemstatcost, "Stat"),

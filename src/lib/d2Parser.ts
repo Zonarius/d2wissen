@@ -12,10 +12,10 @@ export interface D2Files {
 			runes: D2Runeword[];
 			skills: D2Skill[];
 			skilldesc: D2Skilldesc[];
-			UniqueItems: D2UniqueItem[];
-      SetItems: D2SetItem[];
-      Weapons: D2Weapon[];
-      Armor: D2Armor[];
+			uniqueitems: D2UniqueItem[];
+      setitems: D2SetItem[];
+      weapons: D2Weapon[];
+      armor: D2Armor[];
 		}
 	};
 	hd: any;
