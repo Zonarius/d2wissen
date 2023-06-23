@@ -30,13 +30,13 @@ export interface StatRef {
     val?: string;
 }
 
-export function getTableModifiers(tbl: any, codePref: string, paramPref: string, minPref: string, maxPref: string, maxCount = 10): Property[] {
+export function getTableModifiers(tbl: any, codePref: string, paramPref: string, minPref: string, maxPref: string, suffix: string = "", maxCount = 10): Property[] {
     return range(1, maxCount + 1)
         .map(n => ({
-            code: tbl[codePref + n],
-            param: tbl[paramPref + n],
-            min: Number(tbl[minPref + n]),
-            max: Number(tbl[maxPref + n])
+            code: tbl[codePref + n + suffix],
+            param: tbl[paramPref + n + suffix],
+            min: Number(tbl[minPref + n + suffix]),
+            max: Number(tbl[maxPref + n + suffix])
         }))
         .filter(mod => mod.code);
 }

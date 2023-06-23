@@ -13,6 +13,7 @@ export interface D2Files {
 			skills: D2Skill[];
 			skilldesc: D2Skilldesc[];
 			UniqueItems: D2UniqueItem[];
+      SetItems: D2SetItem[];
 		}
 	};
 	hd: any;
@@ -42,6 +43,13 @@ export interface D2UniqueItem {
 	index: string;
   enabled: string;
   code: string;
+  "lvl req": string;
+}
+
+export interface D2SetItem {
+  index: string;
+  set: string;
+  item: string;
   "lvl req": string;
 }
 

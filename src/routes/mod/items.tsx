@@ -10,7 +10,6 @@ import { useD2 } from "../../lib/hooks";
 
 function Items() {
   const d2 = useD2();
-  console.log(d2);
   const [itemFilter, setItemFilter] = useState<ItemFilter | undefined>(undefined);
   const itemMapper = useItemMapper();
   const rws = d2.data.global.excel.runes
@@ -21,9 +20,14 @@ function Items() {
     .filter(item => item.enabled === "1" && !isQuestItem(item))
     .map(itemMapper.fromUnique);
 
+  const setItems = d2.data.global.excel.SetItems
+    .filter(item => item.set)
+    .map(itemMapper.fromSetItem);
+
   const combined = [
     ...rws,
-    ...unis
+    ...unis,
+    ...setItems,
   ];
   
   if (itemFilter?.sort) {
@@ -90,7 +94,16 @@ function ItemRow({ d2, item }: RuneWordRowProps) {
       <td>{item.reqs.lvl}</td>
       <td>{modT(item.props).map(mod => (
         <Modifier key={mod} mod={mod} />
-      ))}</td>
+      ))}
+      {
+        item.setProps.map(setProp => {
+          const prop = modT([setProp.prop])[0];
+          return (
+            <Modifier requiredParts={setProp.requiredParts} key={prop} mod={prop} />
+          )
+        })
+      }
+      </td>
     </tr>
   )
 }
@@ -118,11 +131,16 @@ function RunewordRow({ item }: RuneWordRowProps) {
 
 type ModifierProps = {
     mod: string;
+    requiredParts?: number;
 }
 
-function Modifier({mod}: ModifierProps) {
+function Modifier({ mod, requiredParts }: ModifierProps) {
   return (
     <>
+      {requiredParts
+        ? <>[<span className="set">{requiredParts}</span>] </>
+        : null
+      }
       {mod} <br/>
     </>
   );

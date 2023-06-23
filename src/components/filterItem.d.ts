@@ -29,6 +29,11 @@ export interface Item {
    */
   props: Property[];
 
+  /**
+   * The properites that are active on this item when enough parts of the set are equipped.
+   */
+  setProps: SetProperty[];
+
   /** 
    * Applies to runewords only.
    * 
@@ -68,4 +73,9 @@ export interface Property {
   param?: string;
   min?: number;
   max?: number;
+}
+
+export interface SetProperty {
+  requiredParts: number;
+  prop: Property;
 }

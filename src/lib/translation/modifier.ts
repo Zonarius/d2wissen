@@ -23,7 +23,6 @@ export function useModifierT(lang?: AvailableLanguage): ModifierTFunc {
             const ret = t(skilldesc["str name"]);
             return ret.startsWith("!t-err") ? t(skilldesc["str alt"]) : ret;
         } else {
-            console.log(d2);
             return `!t-err-skill(${skill})!`
         }
     };
