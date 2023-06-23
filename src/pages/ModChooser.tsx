@@ -10,11 +10,9 @@ interface ModChooserProps {
 function ModChooser(props: ModChooserProps) {
     const inputRef = useRef<HTMLInputElement>(null);
     const handleChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(ev => {
-        if (!ev.target.files) {
+        if (!ev.target.files || !props.onChange) {
             return;
         }
-        // TODO FIX THIS
-        throw new Error("NYI");
         // props.onChange([...ev.target.files]);
     }, []);
     const handleUpload = useCallback(() => {
