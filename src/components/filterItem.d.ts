@@ -34,7 +34,7 @@ export interface Item {
    * 
    * The runes required to create the runeword, in order.
    */
-  runes?: Rune[];
+  runes: Rune[];
 
   /**
    * Reference to the original item object.

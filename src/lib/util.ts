@@ -30,7 +30,7 @@ export interface StatRef {
     val?: string;
 }
 
-export function getTableModifiers(tbl: any, codePref: string, paramPref: string, minPref: string, maxPref: string, maxCount = 7): Property[] {
+export function getTableModifiers(tbl: any, codePref: string, paramPref: string, minPref: string, maxPref: string, maxCount = 10): Property[] {
     return range(1, maxCount + 1)
         .map(n => ({
             code: tbl[codePref + n],

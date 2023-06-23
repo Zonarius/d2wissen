@@ -22,6 +22,7 @@ function fromUnique(t: TFunc, item: D2UniqueItem): Item {
     quality: "unique",
     props,
     sockets: 0,
+    runes: [],
     reqs: {
       lvl: Number(item["lvl req"])
     },

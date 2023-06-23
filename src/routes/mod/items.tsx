@@ -67,7 +67,7 @@ function itemKey(item: Item): string {
   if (item.quality === "runeword") {
     return item.name + range(1, 5).map(i => item.__original["itype" + i]).join("");
   } else {
-    return item.name;
+    return item.name + item.props.map(prop => prop.code).join("");
   }
 }
 
