@@ -2,7 +2,7 @@ import { Item, Property, Rune } from "../components/filterItem";
 import { D2Context } from "../context/D2Context";
 import { D2Runeword, D2UniqueItem } from "./d2Parser";
 import { useD2 } from "./hooks";
-import { TFunc, useT } from "./translation/translation";
+import { TFunc, useItemTypeT, useT } from "./translation/translation";
 import { getTableArray, getTableModifiers, range } from "./util";
 
 export function useItemMapper() {
@@ -26,6 +26,8 @@ function fromUnique(t: TFunc, item: D2UniqueItem): Item {
     reqs: {
       lvl: Number(item["lvl req"])
     },
+    baseItem: t(item.code),
+    baseTypes: [],    
     __original: item
   }
 }
@@ -33,6 +35,7 @@ function fromUnique(t: TFunc, item: D2UniqueItem): Item {
 function fromRuneword(d2: D2Context, t: TFunc, rw: D2Runeword): Item {
   const runes = getRunes(t, rw);
   const props = getTableModifiers(rw, "T1Code", "T1Param", "T1Min", "T1Max");
+  const itT = useItemTypeT();
   return {
     name: t(rw.Name),
     quality: "runeword",
@@ -42,6 +45,8 @@ function fromRuneword(d2: D2Context, t: TFunc, rw: D2Runeword): Item {
     reqs: {
       lvl: requiredLevel(d2, rw, props)
     },
+    baseItem: "",
+    baseTypes: getTableArray(rw, "itype").map(key => itT(key)),
     __original: rw
   }
 }

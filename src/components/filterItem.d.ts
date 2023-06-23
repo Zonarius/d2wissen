@@ -37,6 +37,18 @@ export interface Item {
   runes: Rune[];
 
   /**
+   * The base of the item. (eg. "Crystal Sword")
+   * 
+   * For runewords, this is empty.
+   */
+  baseItem: string;
+
+  /**
+   * The possible item types of the base items for runewords.
+   */
+  baseTypes: string[];
+
+  /**
    * Reference to the original item object.
    */
   __original: any;

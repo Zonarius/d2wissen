@@ -1,9 +1,8 @@
 import { D2Context } from "../../context/D2Context";
 import { D2Runeword, D2UniqueItem } from "../../lib/d2Parser";
-import { getTableArray, getTableModifiers, range } from "../../lib/util";
+import { range } from "../../lib/util";
 import React, { useState } from "react";
-import { TFunc, useItemTypeT } from "../../lib/translation/translation";
-import { useModifierT, ModifierTFunc } from "../../lib/translation/modifier";
+import { useModifierT } from "../../lib/translation/modifier";
 import { FilterPopout, ItemFilter } from "../../components/filter";
 import { useItemMapper } from "../../lib/itemMapper";
 import { Item } from "../../components/filterItem";
@@ -43,7 +42,7 @@ function Items() {
         <thead>
           <tr>
             <th>Name</th>
-            <th>Type</th>
+            <th>Base Item</th>
             <th>Level</th>
             <th>Properties</th>
           </tr>
@@ -87,7 +86,7 @@ function ItemRow({ d2, item }: RuneWordRowProps) {
       <td>
         <b className={itemNameColorByRarity[item.quality]}>{item.name}</b>
       </td>
-      <td>TYPE</td>
+      <td>{item.baseItem}</td>
       <td>{item.reqs.lvl}</td>
       <td>{modT(item.props).map(mod => (
         <Modifier key={mod} mod={mod} />
@@ -97,7 +96,6 @@ function ItemRow({ d2, item }: RuneWordRowProps) {
 }
 
 function RunewordRow({ item }: RuneWordRowProps) {
-  const itT = useItemTypeT();
   const modT = useModifierT();
   return (
     <tr>
@@ -107,8 +105,8 @@ function RunewordRow({ item }: RuneWordRowProps) {
           <span className="rw">&quot;{item.runes?.join("")}&quot;</span>
         </p>
       </td>
-      <td>{possibleItems(itT, item.__original).map(type => (
-        <React.Fragment key={type}>{type}<br/></React.Fragment>
+      <td>{item.baseTypes.map(type => (
+        <React.Fragment key={type}> {type} <br /> </React.Fragment>
       ))}</td>
       <td>{item.reqs.lvl}</td>
       <td>{modT(item.props).map(mod => (
@@ -128,11 +126,6 @@ function Modifier({mod}: ModifierProps) {
       {mod} <br/>
     </>
   );
-}
-
-function possibleItems(t: TFunc, rw: D2Runeword): string[] {
-  return getTableArray(rw, "itype")
-    .map(key => t(key))
 }
 
 const questItemCodes = new Set(["vip", "msf", "hst", "hfh", "qf1", "qf2"])
