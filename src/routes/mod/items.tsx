@@ -96,12 +96,11 @@ function ItemRow({ d2, item }: RuneWordRowProps) {
         <Modifier key={mod} mod={mod} />
       ))}
       {
-        item.setProps.map(setProp => {
-          const prop = modT([setProp.prop])[0];
-          return (
-            <Modifier requiredParts={setProp.requiredParts} key={prop} mod={prop} />
+        item.setProps.flatMap(setProp => modT([setProp.prop])
+          .map(prop => 
+            <Modifier requiredParts={setProp.requiredParts} key={setProp.requiredParts + "-" + prop} mod={prop} />
           )
-        })
+        )
       }
       </td>
     </tr>

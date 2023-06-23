@@ -11,12 +11,12 @@ export function useItemMapper() {
 
   return {
     fromRuneword: (item: D2Runeword) => fromRuneword(d2, t, item),
-    fromUnique: (item: D2UniqueItem) => fromUnique(t, item),
-    fromSetItem: (item: D2SetItem) => fromSetItem(t, item),
+    fromUnique: (item: D2UniqueItem) => fromUnique(d2, t, item),
+    fromSetItem: (item: D2SetItem) => fromSetItem(d2, t, item),
   }
 }
 
-function fromUnique(t: TFunc, item: D2UniqueItem): Item {
+function fromUnique(d2: D2Context, t: TFunc, item: D2UniqueItem): Item {
   const props = getTableModifiers(item, "prop", "par", "min", "max");
   return {
     name: t(item.index),
@@ -28,13 +28,13 @@ function fromUnique(t: TFunc, item: D2UniqueItem): Item {
     reqs: {
       lvl: Number(item["lvl req"])
     },
-    baseItem: t(item.code),
+    baseItem: t(d2.refs.itemsByCode[item.code].namestr),
     baseTypes: [],    
     __original: item
   }
 }
 
-function fromSetItem(t: TFunc, item: D2SetItem): Item {
+function fromSetItem(d2: D2Context, t: TFunc, item: D2SetItem): Item {
   const props = getTableModifiers(item, "prop", "par", "min", "max");
   return {
     name: t(item.index),
@@ -46,7 +46,7 @@ function fromSetItem(t: TFunc, item: D2SetItem): Item {
     reqs: {
       lvl: Number(item["lvl req"])
     },
-    baseItem: t(item.item),
+    baseItem: t(d2.refs.itemsByCode[item.item].namestr),
     baseTypes: [],    
     __original: item
   }

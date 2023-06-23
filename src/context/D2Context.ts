@@ -26,7 +26,11 @@ export const D2Context = createContext<D2Context>({ lang: "deDE" } as any);
 
 export function createRefs(files: D2Files): D2ContextRefs {
     return {
-        itemsByCode: createRef(files.global.excel.misc, "code"),
+        itemsByCode: {
+            ...createRef(files.global.excel.misc, "code"),
+            ...createRef(files.global.excel.Armor, "code"),
+            ...createRef(files.global.excel.Weapons, "code"),
+        },
         propertiesByCode: createRef(files.global.excel.properties, "code"),
         itemStatCostsByStat: createRef(files.global.excel.itemstatcost, "Stat"),
         skillsBySkilldesc: createRef(files.global.excel.skills, "skilldesc"),

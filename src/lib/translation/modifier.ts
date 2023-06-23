@@ -47,6 +47,10 @@ export function useModifierT(lang?: AvailableLanguage): ModifierTFunc {
                     push("40", sprintf(t("strModAllResistances"), [min, max]))
                     continue;
                 }
+                if (prop.code === "splash") {
+                    // Referenced, but does not exist
+                    continue;
+                }
                 for (const statref of stats) {
                     const stat = d2.refs.itemStatCostsByStat[statref.stat ?? statByFunc[statref.func]];
 
@@ -74,6 +78,15 @@ export function useModifierT(lang?: AvailableLanguage): ModifierTFunc {
                         stat.descfunc = "3";
                         stat.descval = "2";
                         stat.descstrpos = "Socketable";
+                    }
+
+                    if (stat.Stat === "damagepercent") {
+                        if (!min) {
+                            min = max = Number(param);
+                        }
+                        stat.descfunc = "4";
+                        stat.descval = "1";
+                        stat.descstrpos = "strModEnhancedDamage";
                     }
 
                     if (stat.descstr2 === "increaseswithplaylevelX") {

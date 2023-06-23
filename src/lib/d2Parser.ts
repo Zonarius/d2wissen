@@ -14,6 +14,8 @@ export interface D2Files {
 			skilldesc: D2Skilldesc[];
 			UniqueItems: D2UniqueItem[];
       SetItems: D2SetItem[];
+      Weapons: D2Weapon[];
+      Armor: D2Armor[];
 		}
 	};
 	hd: any;
@@ -55,7 +57,23 @@ export interface D2SetItem {
 
 export interface D2Misc {
 	name: string;
+  code: string;
 	levelreq: string;
+  namestr: string;
+}
+
+export interface D2Weapon {
+	name: string;
+  code: string;
+	levelreq: string;
+  namestr: string;
+}
+
+export interface D2Armor {
+	name: string;
+  code: string;
+	levelreq: string;
+  namestr: string;
 }
 
 export interface D2Property {

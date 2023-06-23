@@ -20,6 +20,8 @@ async function main(srcDir, dest) {
             'global/excel/skills.txt',
             'global/excel/skilldesc.txt',
             'global/excel/misc.txt',
+            'global/excel/Weapons.txt',
+            'global/excel/Armor.txt',
             'global/excel/runes.txt',
             'global/excel/charstats.txt',
             'global/excel/UniqueItems.txt',
