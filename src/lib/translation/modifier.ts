@@ -159,7 +159,7 @@ const descFuncs: Record<string, DescFunc> = {
     "27": charSkill
 }
 
-function plusMinus({statref, stat, min, max, t, tStr, prop}: DescFuncContext) {
+function plusMinus({statref, stat, min, max, t, tStr}: DescFuncContext) {
     if (statref.func === "16") {
         // Ignore separate max dmg stat
         return [];
