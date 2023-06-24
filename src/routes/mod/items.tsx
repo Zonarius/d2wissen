@@ -1,47 +1,37 @@
 import { D2Context } from "../../context/D2Context";
-import { D2Runeword, D2UniqueItem } from "../../lib/d2Parser";
 import { range } from "../../lib/util";
 import React, { useState } from "react";
 import { useModifierT } from "../../lib/translation/modifier";
 import { FilterPopout, ItemFilter } from "../../components/filter";
-import { useItemMapper } from "../../lib/itemMapper";
 import { Item } from "../../components/filterItem";
-import { useD2 } from "../../lib/hooks";
+import { useD2, useItems } from "../../lib/hooks";
 
 function Items() {
   const d2 = useD2();
+  const items = useItems();
   const [itemFilter, setItemFilter] = useState<ItemFilter | undefined>(undefined);
-  const itemMapper = useItemMapper();
-  const rws = d2.data.global.excel.runes
-    .filter((rw: D2Runeword) => rw.complete === "1")
-    .map(itemMapper.fromRuneword)
 
-  const unis = d2.data.global.excel.uniqueitems
-    .filter(item => item.enabled === "1" && !isQuestItem(item))
-    .map(itemMapper.fromUnique);
+  let errorText: string | undefined;
+  let filtered: Item[];
+  try {
+    if (itemFilter?.sort) {
+      items.sort(itemFilter.sort);
+    }
 
-  const setItems = d2.data.global.excel.setitems
-    .filter(item => item.set)
-    .map(itemMapper.fromSetItem);
-
-  const combined = [
-    ...rws,
-    ...unis,
-    ...setItems,
-  ];
-  
-  if (itemFilter?.sort) {
-    combined.sort(itemFilter.sort);
+    filtered = itemFilter?.filter
+      ? items.filter(itemFilter.filter)
+      : items;
+  } catch (err) {
+    const e = err as any;
+    errorText = e.message;
+    filtered = items;
   }
-
-  const filtered = itemFilter?.filter
-    ? combined.filter(itemFilter.filter)
-    : combined;
 
   return (
     <>
       <h3>All items</h3>
       <FilterPopout onChange={filter => setItemFilter(() => filter)}/>
+      <FilterError message={errorText} />
       <table className="d2w">
         <thead>
           <tr>
@@ -58,6 +48,19 @@ function Items() {
         </tbody>
       </table>
     </>
+  )
+}
+
+interface FilterErrorProps {
+  message: string | undefined;
+}
+
+function FilterError({ message }: FilterErrorProps) {
+  if (!message) {
+    return null;
+  }
+  return (
+    <div className="error">Error: {message}</div>
   )
 }
 
@@ -143,11 +146,6 @@ function Modifier({ mod, requiredParts }: ModifierProps) {
       {mod} <br/>
     </>
   );
-}
-
-const questItemCodes = new Set(["vip", "msf", "hst", "hfh", "qf1", "qf2"])
-function isQuestItem(item: D2UniqueItem) {
-  return questItemCodes.has(item.code);
 }
 
 export default Items;

@@ -9,3 +9,8 @@
     background-position: center;
     background-repeat: no-repeat;
 }
+
+.error {
+    margin-bottom: 20px;
+    color: rgb(228, 24, 24);
+}

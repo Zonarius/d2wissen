@@ -8,9 +8,10 @@ import { getTableArray, getTableModifiers, range } from "./util";
 export function useItemMapper() {
   const d2 = useD2();
   const t = useT("enUS");
+  const itT = useItemTypeT();
 
   return {
-    fromRuneword: (item: D2Runeword) => fromRuneword(d2, t, item),
+    fromRuneword: (item: D2Runeword) => fromRuneword(d2, t, itT, item),
     fromUnique: (item: D2UniqueItem) => fromUnique(d2, t, item),
     fromSetItem: (item: D2SetItem) => fromSetItem(d2, t, item),
   }
@@ -76,10 +77,9 @@ function setProps(item: D2SetItem): SetProperty[] {
 }
 
 
-function fromRuneword(d2: D2Context, t: TFunc, rw: D2Runeword): Item {
+function fromRuneword(d2: D2Context, t: TFunc, itT: TFunc, rw: D2Runeword): Item {
   const runes = getRunes(t, rw);
   const props = getTableModifiers(rw, "T1Code", "T1Param", "T1Min", "T1Max");
-  const itT = useItemTypeT();
   return {
     name: t(rw.Name),
     quality: "runeword",

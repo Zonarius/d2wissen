@@ -1,20 +1,19 @@
 import { BeforeMount, Editor, EditorProps, OnMount } from "@monaco-editor/react";
-import { MarkerSeverity, editor } from 'monaco-editor';
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import filterItemCode from "./filterItem.d.ts?raw";
 import { Item } from "./filterItem";
 import ts from 'typescript';
+import { useDebounce } from "../lib/hooks";
 
 const editorProps: EditorProps = {
   height: "200px",
   theme: "vs-dark",
   defaultLanguage: "typescript",
-  line: 6
 };
 
 const defaultFilterCode = 'import { Item } from "filter";\n\n' + 
 `export function filter(item: Item): boolean {
-  return true;
+  return item.name.toLocaleLowerCase().includes("");
 }
 
 export function sort(a: Item, b: Item): number {
@@ -54,36 +53,40 @@ const monacoSetup: BeforeMount = (monaco) => {
 }
 
 const editorSetup: OnMount = (editor, monaco) => {
-  editor.setSelection(new monaco.Range(4, 10, 4, 14));
+  editor.setPosition(new monaco.Position(4, 50));
   editor.focus();
 }
 
 export function Filter(props: FilterProps) {
-  const [code, setCode] = useState<string | undefined>(defaultFilterCode);
-  const handleValidate = useCallback<(markers: editor.IMarker[], code: string) => void>((markers, code) => {
+  const [value, setValue] = useState<string>(defaultFilterCode)
+  const debouncedValue = useDebounce<string>(value, 500)
+
+  useEffect(() => {
     if (!props.onChange) {
       return;
     }
 
-    if (markers.some(marker => marker.severity === MarkerSeverity.Error)) {
-      return;
+    const filter = compileFilter(value!);
+    if (filter) {
+      props.onChange(filter);
     }
+  }, [debouncedValue]);
 
-    const filter = compileFilter(code!);
-    props.onChange(filter);
-  }, [props.onChange])
   return <Editor 
     {...editorProps}
-    value={code}
+    defaultValue={defaultFilterCode}
     beforeMount={monacoSetup}
     onMount={editorSetup}
-    onValidate={markers => handleValidate(markers, code!)}
-    onChange={setCode}
+    onChange={val => typeof val === "string" ? setValue(val) : null}
   />;
 }
 
-function compileFilter(code: string): ItemFilter {
+function compileFilter(code: string): ItemFilter | undefined {
   const program = ts.transpileModule(code, { compilerOptions: { module: ts.ModuleKind.None } });
-  const mod = eval(`(() => { const exports = {};\n${program.outputText}\nreturn exports; })()`);
-  return mod;
+  try {
+    const mod = eval(`(() => { const exports = {};\n${program.outputText}\nreturn exports; })()`);
+    return mod;
+  } catch (err) {
+    return undefined;
+  }
 }

@@ -79,3 +79,23 @@ export interface SetProperty {
   requiredParts: number;
   prop: Property;
 }
+
+
+export function comparing(cFunc: (item: Item) => any): (a: Item, b: Item) => number {
+  return (a, b) => comparer(a, b);
+}
+
+export function comparingDesc(cFunc: (item: Item) => any): (a: Item, b: Item) => number {
+  return (a, b) => comparer(b, a);
+}
+
+function comparer(a: any, b: any): number {
+  const aVal = cFunc(a);
+  const bVal = cFunc(b);
+
+  if (typeof aVal === "string" && typeof bVal === "string") {
+    return aVal.localeCompare(bVal);
+  } else {
+    return a - b;
+  }
+}
