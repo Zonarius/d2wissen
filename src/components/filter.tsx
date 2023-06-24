@@ -1,6 +1,6 @@
 import { BeforeMount, Editor, EditorProps, OnMount } from "@monaco-editor/react";
 import { useCallback, useEffect, useState } from "react";
-import filterItemCode from "./filterItem.d.ts?raw";
+import filterItemCode from "./filterItem.ts?raw";
 import { Item } from "./filterItem";
 import ts from 'typescript';
 import { useDebounce } from "../lib/hooks";
@@ -17,7 +17,7 @@ const defaultFilterCode = 'import { Item } from "filter";\n\n' +
 }
 
 export function sort(a: Item, b: Item): number {
-  return a.reqs.lvl - b.reqs.lvl;
+  return b.stats.ias.max - a.stats.ias.max;
 }
 `
 

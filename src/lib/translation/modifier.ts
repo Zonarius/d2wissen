@@ -300,7 +300,7 @@ function statStrMiddle({stat, param, min, max, t, tStr}: DescFuncContext) {
 }
 
 function plusPercent({stat, min, max, tStr}: DescFuncContext) {
-    return prioMod(stat.descpriority, addValue(`${tStr}`, `+${showRange([min!, max!])}%`, stat.descval))
+    return prioMod(stat.descpriority, addValue(`${tStr}`, `${sign(min)}${showRange([min!, max!])}%`, stat.descval))
 }
 
 function plusMinusPerLevel({stat, param, min, max, tStr, t}: DescFuncContext) {

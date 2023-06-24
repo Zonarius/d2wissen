@@ -1,7 +1,8 @@
-import { Item, Property, Rune, SetProperty } from "../components/filterItem";
+import { Item, MinMaxStat, Property, Rune, SetProperty, Stats } from "../components/filterItem";
 import { D2Context } from "../context/D2Context";
 import { D2Runeword, D2SetItem, D2UniqueItem } from "./d2Parser";
 import { useD2 } from "./hooks";
+import { statsFromProps } from "./statMapper";
 import { TFunc, useItemTypeT, useT } from "./translation/translation";
 import { getTableArray, getTableModifiers, range } from "./util";
 
@@ -24,6 +25,7 @@ function fromUnique(d2: D2Context, t: TFunc, item: D2UniqueItem): Item {
     quality: "unique",
     props,
     setProps: [],
+    stats: statsFromProps(props),
     sockets: 0,
     runes: [],
     reqs: {
@@ -42,6 +44,7 @@ function fromSetItem(d2: D2Context, t: TFunc, item: D2SetItem): Item {
     quality: "set",
     props,
     setProps: setProps(item),
+    stats: statsFromProps(props),
     sockets: 0,
     runes: [],
     reqs: {
@@ -86,6 +89,7 @@ function fromRuneword(d2: D2Context, t: TFunc, itT: TFunc, rw: D2Runeword): Item
     sockets: runes.length,
     props,
     setProps: [],
+    stats: statsFromProps(props),
     runes,
     reqs: {
       lvl: requiredLevel(d2, rw, props)
@@ -111,3 +115,4 @@ function requiredLevel(d2: D2Context, rw: D2Runeword, props: Property[]): number
       ]
   );
 }
+
