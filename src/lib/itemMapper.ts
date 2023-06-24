@@ -1,4 +1,4 @@
-import { Item, MinMaxStat, Property, Rune, SetProperty, Stats } from "../components/filterItem";
+import { BaseItem, BaseItemVersion, Item, MinMaxStat, Property, Rune, SetProperty, Stats } from "../components/filterItem";
 import { D2Context } from "../context/D2Context";
 import { D2Runeword, D2SetItem, D2UniqueItem } from "./d2Parser";
 import { useD2 } from "./hooks";
@@ -31,7 +31,7 @@ function fromUnique(d2: D2Context, t: TFunc, item: D2UniqueItem): Item {
     reqs: {
       lvl: Number(item["lvl req"])
     },
-    baseItem: t(d2.refs.itemsByCode[item.code].namestr),
+    baseItem: baseItem(d2, t, item.code),
     baseTypes: [],    
     __original: item
   }
@@ -50,7 +50,7 @@ function fromSetItem(d2: D2Context, t: TFunc, item: D2SetItem): Item {
     reqs: {
       lvl: Number(item["lvl req"])
     },
-    baseItem: t(d2.refs.itemsByCode[item.item].namestr),
+    baseItem: baseItem(d2, t, item.item),
     baseTypes: [],    
     __original: item
   }
@@ -94,7 +94,6 @@ function fromRuneword(d2: D2Context, t: TFunc, itT: TFunc, rw: D2Runeword): Item
     reqs: {
       lvl: requiredLevel(d2, rw, props)
     },
-    baseItem: "",
     baseTypes: getTableArray(rw, "itype").map(key => itT(key)),
     __original: rw
   }
@@ -116,3 +115,15 @@ function requiredLevel(d2: D2Context, rw: D2Runeword, props: Property[]): number
   );
 }
 
+function baseItem(d2: D2Context, t: TFunc, code: string): BaseItem {
+  const item = d2.refs.itemsByCode[code] as any;
+  const [version, versionNum]: [BaseItemVersion, (0 | 1 | 2)] =
+    item.ultracode === code ? ["elite", 2] :
+    item.ubercode === code ? ["exceptional", 1] :
+    ["normal", 0];
+  return {
+    name: t(item.namestr),
+    version,
+    versionNum
+  };
+}

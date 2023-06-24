@@ -14,3 +14,9 @@
     margin-bottom: 20px;
     color: rgb(228, 24, 24);
 }
+
+.base-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

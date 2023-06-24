@@ -48,7 +48,7 @@ export interface Item {
    * 
    * For runewords, this is empty.
    */
-  baseItem: string;
+  baseItem?: BaseItem;
 
   /**
    * The possible item types of the base items for runewords.
@@ -69,6 +69,17 @@ export interface Requirements {
 
 export const runes = ["El", "Eld", "Tir", "Nef", "Eth", "Ith", "Tal", "Ral", "Ort", "Thul", "Amn", "Sol", "Shael", "Dol", "Hel", "Io", "Lum", "Ko", "Fal", "Lem", "Pul", "Um", "Mal", "Ist", "Gul", "Vex", "Ohm", "Lo", "Sur", "Ber", "Jah", "Cham", "Zod"] as const;
 export type Rune = typeof runes[number];
+
+export type BaseItemVersion = "normal" | "exceptional" | "elite";
+
+export interface BaseItem {
+  /** The name of the base item */
+  name: string;
+  /** The version of the base item (normal, exceptional or elite) */
+  version: BaseItemVersion
+  /** Same as version, but as a number. 0 = normal, 1 = exceptional, 2 = elite */
+  versionNum: 0 | 1 | 2;
+}
 
 export interface Property {
   code: string;

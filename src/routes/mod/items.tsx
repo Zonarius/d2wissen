@@ -5,6 +5,7 @@ import { useModifierT } from "../../lib/translation/modifier";
 import { FilterPopout, ItemFilter } from "../../components/filter";
 import { Item } from "../../components/filterItem";
 import { useD2, useItems } from "../../lib/hooks";
+import BaseItem from "../../components/baseItem";
 
 function Items() {
   const d2 = useD2();
@@ -93,7 +94,7 @@ function ItemRow({ d2, item }: RuneWordRowProps) {
       <td>
         <b className={itemNameColorByRarity[item.quality]}>{item.name}</b>
       </td>
-      <td>{item.baseItem}</td>
+      <td><BaseItem item={item.baseItem} /></td>
       <td>{item.reqs.lvl}</td>
       <td>{modT(item.props).map(mod => (
         <Modifier key={mod} mod={mod} />
