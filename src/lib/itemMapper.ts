@@ -1,4 +1,4 @@
-import { BaseItem, BaseItemVersion, Item, MinMaxStat, Property, Rune, SetProperty, Stats } from "../components/filterItem";
+import { BaseItem, BaseItemVersion, Item, Property, Rune, SetProperty } from "../components/filterItem";
 import { D2Context } from "../context/D2Context";
 import { D2Runeword, D2SetItem, D2UniqueItem } from "./d2Parser";
 import { useD2 } from "./hooks";
