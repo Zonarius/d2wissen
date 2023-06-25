@@ -56,6 +56,20 @@ export interface Item {
   baseTypes: string[];
 
   /**
+   * The possible slots in which the items can be equipped.
+   * 
+   * For runewords, this can be multiple.
+   * 
+   * Empty if the item cannot be equipped (charms).
+   * 
+   * 
+   * "mainhand" is defined as all weapons.
+   * 
+   * "offhand" is defined as all items that can be placed in hands but cannot normal attack on its own (shields, paladin shields, shrunken heads, bolts and arrows).
+   */
+  slots: ItemSlot[];
+
+  /**
    * Reference to the original item object.
    */
   __original: any;
@@ -104,6 +118,8 @@ export interface MinMaxStat {
   min: number;
   max: number;
 }
+
+export type ItemSlot = "mainhand" | "offhand" | "helm" | "body" | "ring" | "amulet" | "gloves" | "belt" | "boots"
 
 export type SortProp = string | number | undefined;
 export type SortOrder = "asc" | "desc";

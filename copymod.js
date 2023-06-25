@@ -27,6 +27,7 @@ async function main(srcDir, dest) {
             'global/excel/UniqueItems.txt',
             'global/excel/SetItems.txt',
             'global/excel/Sets.txt',
+            'global/excel/ItemTypes.txt',
             'local/lng/eng/string.tbl',
             'local/lng/eng/expansionstring.tbl',
             'local/lng/eng/patchstring.tbl',

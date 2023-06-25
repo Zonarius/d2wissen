@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { D2Charstat, D2Files, D2Misc, D2ItemStatCost, D2Monster, D2Property, D2Skill, D2Skilldesc, parseD2 } from "../lib/d2Parser";
+import { D2Charstat, D2Files, D2Misc, D2ItemStatCost, D2Monster, D2Property, D2Skill, D2Skilldesc, parseD2, D2Armor, D2Weapon, D2ItemType } from "../lib/d2Parser";
 import { AvailableLanguage, D2Translations, createTranslations } from "../lib/translation/translation";
 import { getModFiles } from "./staticContext";
 
@@ -11,7 +11,7 @@ export interface D2Context {
 }
 
 export interface D2ContextRefs {
-    itemsByCode: Record<string, D2Misc>;
+    itemsByCode: Record<string, D2Misc | D2Armor | D2Weapon>;
     propertiesByCode: Record<string, D2Property>;
     itemStatCostsByStat: Record<string, D2ItemStatCost>;
     skillsBySkilldesc: Record<string, D2Skill>;
@@ -20,6 +20,7 @@ export interface D2ContextRefs {
     charstatByClassname: Record<string, D2Charstat>;
     skilldescBySkilldesc: Record<string, D2Skilldesc>;
     monsterByIdx: Record<string, D2Monster>;
+    itemTypeByCode: Record<string, D2ItemType>;
 }
 
 export const D2Context = createContext<D2Context>({ lang: "deDE" } as any);
@@ -38,7 +39,8 @@ export function createRefs(files: D2Files): D2ContextRefs {
         skillBySkill: createRef(files.global.excel.skills, "skill"),
         charstatByClassname: createRef(files.global.excel.charstats, "class"),
         skilldescBySkilldesc: createRefLower(files.global.excel.skilldesc, "skilldesc"),
-        monsterByIdx: createRef(files.global.excel.monstats, "*hcIdx", "hcIdx")
+        monsterByIdx: createRef(files.global.excel.monstats, "*hcIdx", "hcIdx"),
+        itemTypeByCode: createRef(files.global.excel.itemtypes, "Code")
     }
 }
 

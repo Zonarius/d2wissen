@@ -1,4 +1,4 @@
-import { BaseItem, BaseItemVersion, Item, Property, Rune, SetProperty } from "../components/filterItem";
+import { BaseItem, BaseItemVersion, Item, ItemSlot, Property, Rune, SetProperty } from "../components/filterItem";
 import { D2Context } from "../context/D2Context";
 import { D2Runeword, D2SetItem, D2UniqueItem } from "./d2Parser";
 import { useD2 } from "./hooks";
@@ -32,7 +32,8 @@ function fromUnique(d2: D2Context, t: TFunc, item: D2UniqueItem): Item {
       lvl: Number(item["lvl req"])
     },
     baseItem: baseItem(d2, t, item.code),
-    baseTypes: [],    
+    baseTypes: [],
+    slots: slotsByItemCode(d2, item.code),
     __original: item
   }
 }
@@ -52,9 +53,31 @@ function fromSetItem(d2: D2Context, t: TFunc, item: D2SetItem): Item {
     },
     baseItem: baseItem(d2, t, item.item),
     baseTypes: [],    
+    slots: slotsByItemCode(d2, item.item),
     __original: item
   }
 }
+
+function fromRuneword(d2: D2Context, t: TFunc, itT: TFunc, rw: D2Runeword): Item {
+  const runes = getRunes(t, rw);
+  const props = getTableModifiers(rw, "T1Code", "T1Param", "T1Min", "T1Max");
+  return {
+    name: t(rw.Name),
+    quality: "runeword",
+    sockets: runes.length,
+    props,
+    setProps: [],
+    stats: statsFromProps(props),
+    runes,
+    reqs: {
+      lvl: requiredLevel(d2, rw, props)
+    },
+    baseTypes: getTableArray(rw, "itype").map(key => itT(key)),
+    slots: runewordSlots(d2, rw),
+    __original: rw
+  }
+}
+
 
 function setProps(item: D2SetItem): SetProperty[] {
   const ret: SetProperty[] = [];
@@ -77,26 +100,6 @@ function setProps(item: D2SetItem): SetProperty[] {
   }
 
   return ret;
-}
-
-
-function fromRuneword(d2: D2Context, t: TFunc, itT: TFunc, rw: D2Runeword): Item {
-  const runes = getRunes(t, rw);
-  const props = getTableModifiers(rw, "T1Code", "T1Param", "T1Min", "T1Max");
-  return {
-    name: t(rw.Name),
-    quality: "runeword",
-    sockets: runes.length,
-    props,
-    setProps: [],
-    stats: statsFromProps(props),
-    runes,
-    reqs: {
-      lvl: requiredLevel(d2, rw, props)
-    },
-    baseTypes: getTableArray(rw, "itype").map(key => itT(key)),
-    __original: rw
-  }
 }
 
 function getRunes(t: TFunc, rw: D2Runeword): Rune[] {
@@ -126,4 +129,69 @@ function baseItem(d2: D2Context, t: TFunc, code: string): BaseItem {
     version,
     versionNum
   };
+}
+
+function slotsByItemCode(d2: D2Context, code: string): ItemSlot[] {
+  const typeRef = d2.refs.itemsByCode[code].type;
+  return slotsByItemTypeCode(d2, typeRef);
+}
+
+const slotByCode: Record<string, ItemSlot> = {
+  "shie": "offhand",
+  "head": "offhand",
+  "ashd": "offhand",
+  "bowq": "offhand",
+  "xboq": "offhand",
+  "weap": "mainhand",
+  "mele": "mainhand",
+  "miss": "mainhand",
+  "thro": "mainhand",
+  "comb": "mainhand",
+  "armo": "body",
+  "shld": "offhand",
+
+  "rod": "mainhand",
+  "misl": "mainhand",
+  "blun": "mainhand",
+
+  "amaz": "mainhand",
+  "barb": "helm",
+  "necr": "offhand",
+  "pala": "offhand",
+  "sorc": "mainhand",
+  "assn": "mainhand",
+  "drui": "helm",
+
+  "gen": "mainhand",
+  "pas": "mainhand",
+}
+
+const slotByBodyLoc: Record<string, ItemSlot> = {
+  "rarm": "mainhand",
+  "larm": "mainhand",
+  "tors": "body",
+  "rrin": "ring",
+  "lrin": "ring",
+  "neck": "amulet",
+  "feet": "boots",
+  "glov": "gloves",
+  "belt": "belt",
+  "head": "helm",
+}
+
+function slotsByItemTypeCode(d2: D2Context, code: string): ItemSlot[] {
+  const type = d2.refs.itemTypeByCode[code];
+  const slot = slotByCode[code] ??
+    slotByBodyLoc[type.BodyLoc1] ??
+    slotByBodyLoc[type.BodyLoc2];
+  return slot ? [slot] : [];
+}
+
+function runewordSlots(d2: D2Context, rw: D2Runeword): ItemSlot[] {
+  const included = range(1, 7).map(i => (rw as any)["itype"] + i).filter(Boolean);
+  const excluded = range(1, 4).map(i => (rw as any)["etype"] + i).filter(Boolean);
+
+  const slots = new Set(included.flatMap(t => slotsByItemTypeCode(d2, t)));
+  excluded.flatMap(t => slotsByItemTypeCode(d2, t)).forEach(slot => slots.delete(slot));
+  return [...slots];
 }

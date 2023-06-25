@@ -16,6 +16,7 @@ export interface D2Files {
       setitems: D2SetItem[];
       weapons: D2Weapon[];
       armor: D2Armor[];
+			itemtypes: D2ItemType[];
 		}
 	};
 	hd: any;
@@ -60,6 +61,7 @@ export interface D2Misc {
   code: string;
 	levelreq: string;
   namestr: string;
+	type: string;
 }
 
 export interface D2Weapon {
@@ -67,6 +69,7 @@ export interface D2Weapon {
   code: string;
 	levelreq: string;
   namestr: string;
+	type: string;
 }
 
 export interface D2Armor {
@@ -74,6 +77,7 @@ export interface D2Armor {
   code: string;
 	levelreq: string;
   namestr: string;
+	type: string;
 }
 
 export interface D2Property {
@@ -156,6 +160,15 @@ export interface D2Monster {
 	Id: string;
 	"*hcIdx": string;
 	NameStr: string;
+}
+
+export interface D2ItemType {
+	ItemType: string;
+	Code: string;
+	Equiv1: string;
+	Equiv2: string;
+	BodyLoc1: string;
+	BodyLoc2: string;
 }
 
 export interface FileLike {
