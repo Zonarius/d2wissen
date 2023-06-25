@@ -104,3 +104,8 @@ export interface MinMaxStat {
   min: number;
   max: number;
 }
+
+export type SortProp = string | number | undefined;
+export type SortOrder = "asc" | "desc";
+export type Sorter = (item: Item) => SortProp | (SortOrder | SortProp)[];
+export type FilterPredicate = (item: Item) => boolean;

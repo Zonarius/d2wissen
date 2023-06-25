@@ -1,5 +1,5 @@
 import { sprintf as spf } from "sprintf-js";
-import { Property } from "../components/filterItem";
+import { Item, Property, SortOrder, SortProp, Sorter } from "../components/filterItem";
 
 export function range(end: number): number[];
 export function range(start: number, end: number): number[];
@@ -83,4 +83,45 @@ export function showRange([min, max]: Range): string {
 
 export function isRange(x: any): x is Range {
     return Array.isArray(x) && x.length === 2 && typeof x[0] === "number" && typeof x[1] === "number";
+}
+
+export function itemSort(items: Item[], sorter: Sorter): Item[] {
+    return items.sort((a, b) => {
+        const [aS, bS] = [sorter(a) as any, sorter(b) as any];
+        if (!Array.isArray(aS)) {
+            return cmp(aS, bS);
+        }
+
+        let cmpResult = 0;
+        for (let i = 0; i < aS.length && cmpResult === 0; i++) {
+            if (typeof aS[i] === "string") {
+                const order: SortOrder = aS[i++];
+                cmpResult = cmp(aS[i], bS[i], order);
+            } else {
+                cmpResult = cmp(aS[i], bS[i]);
+            }
+        }
+        return cmpResult;
+    })
+}
+
+function cmp(a: SortProp, b: SortProp, order: SortOrder = "asc"): number {
+    const orderSign = order === "desc" ? -1 : 1;
+    const [aDef, bDef] = [typeof a !== "undefined", typeof b !== "undefined"];
+    let result;
+    if (!aDef && !bDef) {
+        result = 0;
+    } else if (!aDef) {
+        result = 1;
+    } else if (!bDef) {
+        result = -1;
+    } else if (typeof a === "number" && typeof b === "number") {
+        result = a - b;
+    } else if (typeof a === "string" && typeof b === "string") {
+        result = a.localeCompare(b);
+    } else {
+        console.warn("Cannot compare", a, b);
+        result = 0;
+    }
+    return result * orderSign;
 }

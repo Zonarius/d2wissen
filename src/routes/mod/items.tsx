@@ -1,5 +1,5 @@
 import { D2Context } from "../../context/D2Context";
-import { range } from "../../lib/util";
+import { itemSort, range } from "../../lib/util";
 import React, { useState } from "react";
 import { useModifierT } from "../../lib/translation/modifier";
 import { FilterPopout, ItemFilter } from "../../components/filter";
@@ -15,13 +15,15 @@ function Items() {
   let errorText: string | undefined;
   let filtered: Item[];
   try {
-    if (itemFilter?.sort) {
-      items.sort(itemFilter.sort);
-    }
-
     filtered = itemFilter?.filter
       ? items.filter(itemFilter.filter)
       : items;
+
+    if (itemFilter?.sort) {
+      filtered.sort(itemFilter.sort);
+    } else if (itemFilter?.sorter) {
+      itemSort(filtered, itemFilter.sorter);
+    }
   } catch (err) {
     const e = err as any;
     errorText = e.message;

@@ -1,7 +1,7 @@
 import { BeforeMount, Editor, EditorProps, OnMount } from "@monaco-editor/react";
 import { useCallback, useEffect, useState } from "react";
 import filterItemCode from "./filterItem.ts?raw";
-import { Item } from "./filterItem";
+import { FilterPredicate, Item, Sorter } from "./filterItem";
 import ts from 'typescript';
 import { useDebounce } from "../lib/hooks";
 
@@ -11,19 +11,19 @@ const editorProps: EditorProps = {
   defaultLanguage: "typescript",
 };
 
-const defaultFilterCode = 'import { Item } from "filter";\n\n' + 
-`export function filter(item: Item): boolean {
-  return item.name.toLocaleLowerCase().includes("");
-}
+const defaultFilterCode = 'import { Sorter, FilterPredicate } from "filter";\n\n' + 
+`export const filter: FilterPredicate = item =>
+  item.name.toLocaleLowerCase().includes("")
 
-export function sort(a: Item, b: Item): number {
-  return b.stats.ias.max - a.stats.ias.max;
-}
+export const sorter: Sorter = item => [
+  item.reqs.lvl
+]
 `
 
 export type ItemFilter = {
-  filter(item: Item): boolean;
-  sort(a: Item, b: Item): number;
+  filter?: FilterPredicate;
+  sort?(a: Item, b: Item): number;
+  sorter?: Sorter;
 }
 
 export interface FilterProps {
