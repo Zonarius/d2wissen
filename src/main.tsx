@@ -4,7 +4,6 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import ErrorPage from './routes/error-page.tsx';
 import Root from './routes/root.tsx';
 import Mod from './routes/mod/mod.tsx';
-import RuneWords from './routes/mod/runewords.tsx';
 import { modLoader } from './context/D2Context.ts';
 import GlobalLoader from './routes/global-loader.tsx';
 import Items from './routes/mod/items.tsx';
@@ -29,10 +28,6 @@ const router = createBrowserRouter([
         loader: ({ params }) => modLoader(params.mod!),
         children: [
           { index: true, element: <Mod />},
-          {
-            path: "runewords",
-            children: [{ index: true, element: <RuneWords />}]
-          },
           {
             path: "items",
             children: [{ index: true, element: <Items />}]
