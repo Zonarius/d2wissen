@@ -28,6 +28,8 @@ async function main(srcDir, dest) {
             'global/excel/SetItems.txt',
             'global/excel/Sets.txt',
             'global/excel/ItemTypes.txt',
+            'global/excel/MagicPrefix.txt',
+            'global/excel/MagicSuffix.txt',
             'local/lng/eng/string.tbl',
             'local/lng/eng/expansionstring.tbl',
             'local/lng/eng/patchstring.tbl',

@@ -125,3 +125,34 @@ function cmp(a: SortProp, b: SortProp, order: SortOrder = "asc"): number {
     }
     return result * orderSign;
 }
+
+export function unique<T>(arr: T[]) : T[] {
+    return [...new Set(arr)]
+}
+
+export function getOrCreateObj<K extends keyof T, T>(orig: T, prop: K): T[K] {
+    if (!orig[prop]) {
+        orig[prop] = {} as any;
+    }
+    return orig[prop];
+}
+
+export function getOrCreateArr<K extends keyof T, T>(orig: T, prop: K): T[K] {
+    if (!orig[prop]) {
+        orig[prop] = [] as any;
+    }
+    return orig[prop];
+}
+
+export function times<T>(amount: number, supplier: () => T): T[];
+export function times<T>(amount: number, supplier: T): T[];
+export function times<T>(amount: number, supplier: any): T[] {
+    let result: T[] = [];
+    for (let i = 0; i < amount; i++) {
+        const t = typeof supplier === "function"
+            ? supplier()
+            : supplier;
+        result.push(t);
+    }
+    return result;
+}

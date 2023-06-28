@@ -1,5 +1,6 @@
 import JSON5 from 'json5';
 import { readTbl } from './tblParser';
+import { Vendor } from './shopsimulator/shopsimulator-model';
 
 export interface D2Files {
 	global: {
@@ -17,6 +18,8 @@ export interface D2Files {
       weapons: D2Weapon[];
       armor: D2Armor[];
 			itemtypes: D2ItemType[];
+			magicprefix: D2Affix[];
+			magicsuffix: D2Affix[];
 		}
 	};
 	hd: any;
@@ -56,28 +59,37 @@ export interface D2SetItem {
   "lvl req": string;
 }
 
-export interface D2Misc {
+type VendorKeys = `${Vendor}${"Min" | "Max" | "MagicMin" | "MagicMax" | "MagicLvl"}`
+interface D2ItemFixed {
 	name: string;
   code: string;
+	level: string;
 	levelreq: string;
   namestr: string;
+	normcode: string;
+	ubercode: string;
+	ultracode: string;
+	invwidth: string;
+	invheight: string;
 	type: string;
+	NightmareUpgrade: string;
+	HellUpgrade: string;
 }
 
-export interface D2Weapon {
-	name: string;
-  code: string;
-	levelreq: string;
-  namestr: string;
-	type: string;
+export type D2Item = D2ItemFixed & {
+	[k in VendorKeys]: string;
 }
 
-export interface D2Armor {
-	name: string;
-  code: string;
-	levelreq: string;
-  namestr: string;
-	type: string;
+export interface D2Misc extends D2Item {
+	
+}
+
+export interface D2Weapon extends D2Item {
+	"magic lvl": string;
+}
+
+export interface D2Armor extends D2Item {
+	"magic lvl": string;
 }
 
 export interface D2Property {
@@ -169,6 +181,30 @@ export interface D2ItemType {
 	Equiv2: string;
 	BodyLoc1: string;
 	BodyLoc2: string;
+}
+
+export interface D2Affix {
+	Name: string;
+	spawnable: string;
+	rare: string;
+	level: string;
+	maxlevel: string;
+	frequency: string;
+	
+	mod1code: string;
+	mod1param: string;
+	mod1min: string;
+	mod1max: string;
+
+	mod2code: string;
+	mod2param: string;
+	mod2min: string;
+	mod2max: string;
+
+	mod3code: string;
+	mod3param: string;
+	mod3min: string;
+	mod3max: string;
 }
 
 export interface FileLike {
