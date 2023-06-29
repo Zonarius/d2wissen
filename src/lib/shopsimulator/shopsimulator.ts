@@ -405,13 +405,6 @@ function generateAffixes(rng: Rng, possibleAffixes: PossibleAffixes, item: D2Ite
     }
   }
 
-  const prefixMod = result.prefix?.modifiers[0];
-  const suffixMod = result.suffix?.modifiers[0];
-  if ((prefixMod && prefixMod.code === "skilltab" && prefixMod.param === "0" && prefixMod.value === 3)
-    && (suffixMod && suffixMod.code === "swing2" && suffixMod.value === 20)) {
-      console.log("here!");
-  }
-
   return result;
 }
 

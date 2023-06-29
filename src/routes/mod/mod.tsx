@@ -2,7 +2,14 @@ import { Link } from "react-router-dom";
 
 function Mod() {
     return (
-        <Link to="runewords">Runenwörter</Link>
+        <div>
+            <div>
+                <Link to="items">Items</Link>
+            </div>
+            <div>
+                <Link to="shop">Shop Simulator</Link>
+            </div>
+        </div>
     )
 }
 

@@ -5,7 +5,8 @@ export class Rng {
   private rng: seedrandom.PRNG;
 
   constructor(seed?: string) {
-    this.rng = seedrandom(seed);
+    seed = seed ?? String(Math.random())
+    this.rng = seedrandom.alea(seed);
   }
 
   rangeInc(min: number, max: number): number {
