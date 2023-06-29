@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useD2 } from "../../lib/hooks";
 import ShopWorker from "./shop-worker?worker"
-import { ShopOptions, ShopResult } from "../../lib/shopsimulator/shopsimulator-model";
+import { ShopOptions } from "../../lib/shopsimulator/shopsimulator-model";
 import { times } from "../../lib/util";
 import { ShopWorkerMessage, StartMessage } from "./shop-worker";
 
 type Result = {
   running: boolean;
-  runs: number;
+  found: number;
   results: {
     [k: string]: number;
   }
@@ -32,39 +32,30 @@ function Shop() {
   const d2 = useD2();
   const [state, setState] = useState<Result>({
     running: false,
-    runs: 0,
+    found: 0,
     results: {}
   });
   const workers = useMemo(() => times(workerCount, () => new ShopWorker()), [d2])
   useEffect(() => {
-    function onResult({ data }: MessageEvent<ShopResult[]>) {
-      for (const result of data) {
-        for (const item of result.items)  {
-          const prefixMod = item.prefix?.modifiers[0];
-          const suffixMod = item.suffix?.modifiers[0];
-          if ((prefixMod && prefixMod.code === "skilltab" && prefixMod.param === "0" && prefixMod.value === 3)
-            && (suffixMod && suffixMod.code === "swing2" && suffixMod.value === 20)) {
-              const key = `${result.clvl}-${result.difficulty}-${result.vendor}`;
-              setState(prev => ({
-                ...prev,
-                results: {
-                  ...prev.results,
-                  [key]: (prev.results[key] ?? 0) + 1
-                }
-              }))
+    function onResult({ data }: MessageEvent<string[]>) {
+      for (const key of data) {
+        setState(prev => ({
+          ...prev,
+          results: {
+            ...prev.results,
+            [key]: (prev.results[key] ?? 0) + 1
           }
-        }
+        }))
       }
       setState(prev => ({
         ...prev,
-        runs: prev.runs + 1
+        found: prev.found + 1
       }))
     }
     for (const worker of workers) {
       worker.addEventListener("message", onResult)
     }
     return () => {
-      console.log("removing...")
       for (const worker of workers) {
         worker.removeEventListener("message", onResult)
       }
@@ -73,7 +64,6 @@ function Shop() {
 
   const handleClick = useCallback(() => {
     if (state.running) {
-      console.log("Stopping...")
       for (const worker of workers) {
         worker.postMessage({
           type: "stop"
@@ -103,7 +93,7 @@ function Shop() {
         }
       </button>
       <div>Workers: {workers.length}</div>
-      <div>Runs: {state.runs} </div>
+      <div>Found: {state.found} </div>
       <div>Running: {String(state.running)}</div>
       <div>Results:</div>
       <div>

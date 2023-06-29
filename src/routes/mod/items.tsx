@@ -12,8 +12,6 @@ function Items() {
   const items = useItems();
   const [itemFilter, setItemFilter] = useState<ItemFilter | undefined>(undefined);
 
-  console.log(d2);
-
   let errorText: string | undefined;
   let filtered: Item[];
   try {
@@ -31,8 +29,6 @@ function Items() {
     errorText = e.message;
     filtered = items;
   }
-
-  console.log(filtered);
 
   return (
     <>

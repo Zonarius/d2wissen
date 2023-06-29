@@ -1,6 +1,6 @@
 import { D2Context } from "../../context/D2Context";
 import { ShopGenerator } from "../../lib/shopsimulator/shopsimulator";
-import { ShopOptions } from "../../lib/shopsimulator/shopsimulator-model";
+import { ShopOptions, ShopResult } from "../../lib/shopsimulator/shopsimulator-model";
 
 export type ShopWorkerMessage = StartMessage | StopMessage;
 
@@ -32,6 +32,26 @@ function run(shop: ShopGenerator) {
   if (!state.running) {
     return;
   }
-  postMessage(shop.generate());
-  setTimeout(() => run(shop));
+  const shopResult = shop.generate();
+  const desiredItems = hasDesiredItem(shopResult);
+  if (desiredItems.length > 0) {
+    postMessage(desiredItems);
+  }
+  setTimeout(() => run(shop), 0);
+}
+
+function hasDesiredItem(data: ShopResult[]): string[] {
+  const shopKeys: string[] = [];
+  for (const result of data) {
+    for (const item of result.items)  {
+      const prefixMod = item.prefix?.modifiers[0];
+      const suffixMod = item.suffix?.modifiers[0];
+      if ((prefixMod && prefixMod.code === "skilltab" && prefixMod.param === "0" && prefixMod.value === 3)
+        && (suffixMod && suffixMod.code === "swing2" && suffixMod.value === 20)) {
+          const key = `${result.clvl}-${result.difficulty}-${result.vendor}`;
+          shopKeys.push(key);
+      }
+    }
+  }
+  return shopKeys;
 }
