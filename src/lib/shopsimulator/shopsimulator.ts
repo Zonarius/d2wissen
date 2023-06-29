@@ -15,15 +15,15 @@ type ItemsByType = {
 type PossibleAffixes = {
   [type: string]: {
     [alvl: number]: {
-      prefixes: D2Affix[];
-      suffixes: D2Affix[];
+      prefix: D2Affix[];
+      suffix: D2Affix[];
     }
   }
 }
 
 type TypeHierarchy = {
   [type: D2ItemTypeCode]: {
-    lowestTypes: D2ItemTypeCode[]
+    selfAndDescendants: D2ItemTypeCode[]
     isAlso: D2ItemTypeCode[];
   }
 }
@@ -75,18 +75,18 @@ export class ShopGenerator {
   }
 
   private getPossibleAffixes(): PossibleAffixes {
-    let result: any = {};
+    let result: PossibleAffixes = {};
     const typeHierarchy = this.createHierarchy();
     for (const affixType of ["prefix", "suffix"] as const) {
       for (const affix of this.d2.data.global.excel[`magic${affixType}`]) {
-        if (affix.spawnable !== "1" || affix.frequency === "0") {
+        if (affix.spawnable !== "1" || affix.frequency === "0" || !affix.frequency) {
           continue;
         }
         const alvl = Number(affix.level);
         for (const type of possibleTypes(typeHierarchy, affix)) {
-          for (let i = 1; i <= alvl; i++) {
-            const ts = getOrCreateObj(result, type)
-            const alvls = getOrCreateObj(ts, alvl)
+          const ts = getOrCreateObj(result, type)
+          for (let i = alvl; i <= 99; i++) {
+            const alvls = getOrCreateObj(ts, i)
             const arr = getOrCreateArr(alvls, affixType);
             const freq = Number(affix.frequency);
             for (let j = 0; j < freq; j++) {
@@ -113,7 +113,7 @@ export class ShopGenerator {
     let result: TypeHierarchy = {}
     for (const code of Object.keys(graph)) {
       result[code] = {
-        lowestTypes: lowestTypesRec(graph, code),
+        selfAndDescendants: selfAndDescendantsRec(graph, code),
         isAlso: isAlsoRec(graph, code)
       };
     }
@@ -122,17 +122,14 @@ export class ShopGenerator {
   }
 }
 
-
-
-
-
-
-
-function lowestTypesRec(graph: ItemNode, code: D2ItemTypeCode): D2ItemTypeCode[] {
-  if (graph[code].children.length === 0) {
+function selfAndDescendantsRec(graph: ItemNode, code: D2ItemTypeCode): D2ItemTypeCode[] {
+  if (!graph[code].children || graph[code].children.length === 0) {
     return [code];
   } else {
-    return graph[code].children.flatMap(c => lowestTypesRec(graph, c));
+    return [
+      code,
+      ...graph[code].children.flatMap(c => selfAndDescendantsRec(graph, c))
+    ];
   }
 }
 
@@ -147,7 +144,11 @@ function possibleTypes(types: TypeHierarchy, affix: D2Affix): D2ItemTypeCode[] {
   const result = new Set<string>();
   const excluded = new Set(getTableArray(affix, "etype", 5));
   for (const type of getTableArray(affix, "itype")) {
-    for (const subType of types[type].lowestTypes) {
+    // Skip erronous item types (ex. affix "of Anima": "amu" instead of "amul")
+    if (!types[type]) {
+      continue;
+    }
+    for (const subType of types[type].selfAndDescendants) {
       if (types[type].isAlso.some(t => excluded.has(t))) {
         continue;
       }
@@ -280,7 +281,7 @@ function reserveSpace(space: PageSpace, item: D2Item): Coordinates | false {
   const itemWidth = Number(item.invwidth);
   const itemHeight = Number(item.invheight);
   const hasSpace = (x: number, y: number) => {
-    for (let i = x; i < itemWidth; i++) {
+    for (let i = x; i < x + itemWidth; i++) {
       if (!space[x][y]) {
         return false;
       }
@@ -290,7 +291,12 @@ function reserveSpace(space: PageSpace, item: D2Item): Coordinates | false {
   for (let x = 0; x <= shopDimensions.width - itemWidth; x++) {
     for (let y = 0; y <= shopDimensions.height - itemHeight; y++) {
       if (hasSpace(x, y)) {
-        return {x,y};
+        for (let i = x; i < x + itemWidth; i++) {
+          for (let j = y; j < y + itemHeight; j++) {
+            space[i][j] = false;
+          }
+        }
+        return {x, y, width: itemWidth, height: itemHeight};
       }
     }
   }
@@ -310,8 +316,8 @@ type ActualItems = {
  * The distribution for the amount of items is derived from empirical evidence. https://docs.google.com/spreadsheets/d/1WmC991S52AvDKce2GYVJWzQs8M2Oucy1rk52ya4QJ6I/edit?usp=sharing
  */
 function generateActualItems(d2: D2Context, rng: Rng, item: D2Item, difficulty: Difficulty, vendor: Vendor, ilvl: number): ActualItems {
-  const magicMin = Number(item[`${vendor}MagicMin`]);
-  const magicMax = Number(item[`${vendor}MagicMax`]);
+  const magicMin = Number(item[`${vendor}MagicMin`] ?? 0);
+  const magicMax = Number(item[`${vendor}MagicMax`] ?? 0);
   if (difficulty === "normal") {
     const normalMin = Number(item[`${vendor}Min`]);
     const normalMax = Number(item[`${vendor}Max`]);
@@ -330,7 +336,13 @@ function generateActualItems(d2: D2Context, rng: Rng, item: D2Item, difficulty: 
       }
     }
   } else {
-    const amount = rng.distribution([...times(magicMax - magicMin + 2, 5), 2])
+    let amount: number;
+    if (magicMax === 0) {
+      amount = 0;
+    } else {
+      const distribution = [...times(magicMax - magicMin + 2, 5), 2]
+      amount = rng.distribution(distribution) + magicMin;
+    }
     const items: D2Item[] = [];
     for (let i = 0; i < amount; i++) {
       if (difficulty === "nightmare") {
@@ -372,17 +384,32 @@ function generateAffixes(rng: Rng, possibleAffixes: PossibleAffixes, item: D2Ite
   const result: Affixes = {};
 
   for (const aType of types) {
-    const affix = rng.choice(possibleAffixes[item.type][alvl][`${aType}es`]);
+    const affix = rng.choice(possibleAffixes[item.type][alvl][aType]);
     let mods: ModifierRoll[] = [];
     for (const i of [1,2,3] as const) {
+      const code = affix[`mod${i}code`];
+      if (!code) {
+        continue;
+      }
       const min = Number(affix[`mod${i}min`])
       const max = Number(affix[`mod${i}max`])
       mods.push({
-        code: affix[`mod${i}code`],
+        code,
         param: affix[`mod${i}param`] ?? undefined,
         value: min ? rng.rangeInc(min, max) : undefined
       })
     }
+    result[aType] = {
+      d2affix: affix,
+      modifiers: mods
+    }
+  }
+
+  const prefixMod = result.prefix?.modifiers[0];
+  const suffixMod = result.suffix?.modifiers[0];
+  if ((prefixMod && prefixMod.code === "skilltab" && prefixMod.param === "0" && prefixMod.value === 3)
+    && (suffixMod && suffixMod.code === "swing2" && suffixMod.value === 20)) {
+      console.log("here!");
   }
 
   return result;

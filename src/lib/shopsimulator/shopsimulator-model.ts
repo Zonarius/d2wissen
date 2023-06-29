@@ -19,6 +19,8 @@ export type D2ItemTypeCode = string
 export interface Coordinates {
   x: number;
   y: number;
+  width: number;
+  height: number;
 }
 
 export interface ShopItem {
