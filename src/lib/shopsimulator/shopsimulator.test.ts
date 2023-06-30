@@ -41,6 +41,11 @@ describe("shop simulator", () => {
       }
     }
   })
+  describe("gheed in nightmare", () => {
+    it.skip("must offer demonhide gloves", () => {
+      throw new Error("NYI");
+    })
+  })
 
   describe("anya in hell", () => {
     let shop: ShopGenerator;

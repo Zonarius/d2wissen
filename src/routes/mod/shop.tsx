@@ -19,12 +19,7 @@ const shopOptions: ShopOptions = {
   clvlRange: [60, 99],
   itemtypes: ["armor"],
   vendors: [
-    ["nightmare", "Gheed"],
-    ["nightmare", "Charsi"],
-    ["nightmare", "Drehya"],
-    ["hell", "Gheed"],
-    ["hell", "Charsi"],
-    ["hell", "Drehya"],
+    ["nightmare", "Gheed"]
   ]
 }
 
