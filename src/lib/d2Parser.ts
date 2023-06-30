@@ -183,6 +183,7 @@ export interface D2ItemType {
 	Code: string;
 	Equiv1: string;
 	Equiv2: string;
+	Body: string;
 	BodyLoc1: string;
 	BodyLoc2: string;
 }

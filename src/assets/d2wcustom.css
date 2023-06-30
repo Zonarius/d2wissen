@@ -48,3 +48,7 @@ html, body {
     margin-right: 5px;
     content: ">";
 }
+
+dt::after {
+    content: ": ";
+}

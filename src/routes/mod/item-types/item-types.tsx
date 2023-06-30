@@ -1,5 +1,5 @@
 import ReactDataGrid from "@inovua/reactdatagrid-community";
-import { useD2 } from "../../lib/hooks";
+import { useD2 } from "../../../lib/hooks";
 import { TypeColumn } from "@inovua/reactdatagrid-community/types";
 import { Link } from "react-router-dom";
 import { useState } from "react";

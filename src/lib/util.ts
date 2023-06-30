@@ -160,3 +160,7 @@ export function times<T>(amount: number, supplier: any): T[] {
 export function lastElement<T>(arr: T[]): T {
     return arr[arr.length - 1];
 }
+
+export function hrBoolean(val: any): string {
+    return val !== "0" && val ? "Yes": "No"
+}

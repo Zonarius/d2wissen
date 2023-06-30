@@ -10,6 +10,7 @@ import Items from './routes/mod/items.tsx';
 import Shop from './routes/mod/shop.tsx';
 import ItemTypes from './routes/mod/item-types/item-types.tsx';
 import { lastElement } from './lib/util.ts';
+import ItemType from './routes/mod/item-types/item-type.tsx';
 
 if (import.meta.hot) {
   import.meta.hot.on(
@@ -18,7 +19,7 @@ if (import.meta.hot) {
   );
 }
 
-const paramHandle = ({ params }: any) => Object.values(params)[0];
+const paramHandle = (id: string) => ({ params }: any) => params[id];
 const pathHandle = ({ pathname }: { pathname: string }) => lastElement(pathname.split("/"))
 
 const router = createBrowserRouter([
@@ -33,7 +34,7 @@ const router = createBrowserRouter([
         path: ":mod",
         id: "mod",
         loader: ({ params }) => modLoader(params.mod!),
-        handle: paramHandle,
+        handle: paramHandle("mod"),
         children: [
           { index: true, element: <Mod />},
           {
@@ -49,7 +50,7 @@ const router = createBrowserRouter([
           {
             path: "itemtypes",
             handle: pathHandle,
-            children: [{ index: true, element: <ItemTypes />}]
+            children: [{ index: true, element: <ItemTypes /> }, { path: ":code", element: <ItemType />, handle: paramHandle("code") }]
           }
         ]
       }
