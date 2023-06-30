@@ -156,3 +156,7 @@ export function times<T>(amount: number, supplier: any): T[] {
     }
     return result;
 }
+
+export function lastElement<T>(arr: T[]): T {
+    return arr[arr.length - 1];
+}

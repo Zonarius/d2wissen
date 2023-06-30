@@ -30,3 +30,21 @@ html, body {
     align-items: center;
     justify-content: center;
 }
+
+.breadcrumb {
+    margin-top: 5px;
+    padding-left: 0px;
+    padding-bottom: 5px;
+    list-style-type: none;
+    border-bottom: 1px solid #D0D0D0;
+}
+
+.breadcrumb li {
+    display: inline;
+}
+
+.breadcrumb li:not(:first-child)::before {
+    margin-left: 5px;
+    margin-right: 5px;
+    content: ">";
+}
