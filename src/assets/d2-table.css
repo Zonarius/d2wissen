@@ -1,0 +1,13 @@
+.d2-table-page {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+
+.d2-table {
+  flex: 1 1 auto;
+}
+
+.comment-column {
+  background-color: rgba(44, 115, 44, 0.34);
+}

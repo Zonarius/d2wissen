@@ -1,6 +1,10 @@
 import '../assets/d2w.css'
 import '../assets/d2wcolor.css'
 import '../assets/d2wcustom.css'
+import '../assets/d2-table.css'
+import '@inovua/reactdatagrid-community/base.css'
+import '@inovua/reactdatagrid-community/theme/default-dark.css'
+
 import ModChooser from '../pages/ModChooser'
 
 function Root() {

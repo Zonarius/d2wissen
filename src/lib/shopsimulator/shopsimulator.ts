@@ -62,7 +62,7 @@ export class ShopGenerator {
     let result: ItemsByVendor = {} as any
     const vendors = unique(this.shopOptions.vendors.map(dv => dv[1]));
     for (const type of this.shopOptions.itemtypes) {
-      for (const item of this.d2.data.global.excel[type]) {
+      for (const item of this.d2.data.global.excel[type].data) {
         for (const vendor of vendors) {
           if (item[`${vendor}Max`]) {
             const v = getOrCreateObj(result, vendor)
@@ -78,7 +78,7 @@ export class ShopGenerator {
     let result: PossibleAffixes = {};
     const typeHierarchy = this.createHierarchy();
     for (const affixType of ["prefix", "suffix"] as const) {
-      for (const affix of this.d2.data.global.excel[`magic${affixType}`]) {
+      for (const affix of this.d2.data.global.excel[`magic${affixType}`].data) {
         if (affix.spawnable !== "1" || affix.frequency === "0" || !affix.frequency) {
           continue;
         }
@@ -101,7 +101,7 @@ export class ShopGenerator {
 
   private createHierarchy(): TypeHierarchy {
     let graph: ItemNode = {};
-    for (const type of this.d2.data.global.excel.itemtypes) {
+    for (const type of this.d2.data.global.excel.itemtypes.data) {
       const node = getOrCreateObj(graph, type.Code);
       node.parents = [type.Equiv1, type.Equiv2].filter(Boolean);
       for (const parent of node.parents) {

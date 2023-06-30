@@ -11,6 +11,8 @@
     "copymod": "node ./copymod"
   },
   "dependencies": {
+    "@babel/runtime": "^7.22.5",
+    "@inovua/reactdatagrid-community": "^5.9.4",
     "@monaco-editor/react": "^4.5.1",
     "json5": "^2.2.3",
     "react": "^18.2.0",

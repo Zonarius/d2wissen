@@ -9,6 +9,9 @@ function Mod() {
             <div>
                 <Link to="shop">Shop Simulator</Link>
             </div>
+            <div>
+                <Link to="itemtypes">Item Types</Link>
+            </div>
         </div>
     )
 }

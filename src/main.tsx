@@ -8,6 +8,7 @@ import { modLoader } from './context/D2Context.ts';
 import GlobalLoader from './routes/global-loader.tsx';
 import Items from './routes/mod/items.tsx';
 import Shop from './routes/mod/shop.tsx';
+import ItemTypes from './routes/mod/item-types.tsx';
 
 if (import.meta.hot) {
   import.meta.hot.on(
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
           {
             path: "shop",
             children: [{ index: true, element: <Shop />}]
+          },
+          {
+            path: "itemtypes",
+            children: [{ index: true, element: <ItemTypes />}]
           }
         ]
       }

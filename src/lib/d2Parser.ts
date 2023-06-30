@@ -2,24 +2,28 @@ import JSON5 from 'json5';
 import { readTbl } from './tblParser';
 import { Vendor } from './shopsimulator/shopsimulator-model';
 
+export type D2Table<T> = {
+	columns: string[];
+	data: T[];
+}
 export interface D2Files {
 	global: {
 		excel: {
-			charstats: D2Charstat[];
-			itemstatcost: D2ItemStatCost[];
-			misc: D2Misc[];
-			monstats: D2Monster[];
-			properties: D2Property[];
-			runes: D2Runeword[];
-			skills: D2Skill[];
-			skilldesc: D2Skilldesc[];
-			uniqueitems: D2UniqueItem[];
-      setitems: D2SetItem[];
-      weapons: D2Weapon[];
-      armor: D2Armor[];
-			itemtypes: D2ItemType[];
-			magicprefix: D2Affix[];
-			magicsuffix: D2Affix[];
+			charstats: D2Table<D2Charstat>;
+			itemstatcost: D2Table<D2ItemStatCost>;
+			misc: D2Table<D2Misc>;
+			monstats: D2Table<D2Monster>;
+			properties: D2Table<D2Property>;
+			runes: D2Table<D2Runeword>;
+			skills: D2Table<D2Skill>;
+			skilldesc: D2Table<D2Skilldesc>;
+			uniqueitems: D2Table<D2UniqueItem>;
+      setitems: D2Table<D2SetItem>;
+      weapons: D2Table<D2Weapon>;
+      armor: D2Table<D2Armor>;
+			itemtypes: D2Table<D2ItemType>;
+			magicprefix: D2Table<D2Affix>;
+			magicsuffix: D2Table<D2Affix>;
 		}
 	};
 	hd: any;
@@ -253,12 +257,12 @@ async function parseJson(file: FileLike) {
 	return JSON5.parse(text);
 }
 
-async function parseExcel(file: FileLike) {
+async function parseExcel(file: FileLike): Promise<D2Table<any>> {
 	const text = await file.text();
 	const [headerLine, ...entries] = text.split("\n").filter(line => line.length > 0);
 	const header = headerLine.split("\t");
 
-	return entries.map(entry => {
+	const data = entries.map(entry => {
 		const cells = entry.split("\t");
 		let entryObj: any = {};
 		for (let i = 0; i < cells.length; i++) {
@@ -268,6 +272,11 @@ async function parseExcel(file: FileLike) {
 		}
 		return entryObj;
 	})
+
+	return {
+		columns: header,
+		data
+	}
 }
 
 async function parseTbl(file: FileLike) {

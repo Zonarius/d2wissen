@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { D2Charstat, D2Files, D2Misc, D2ItemStatCost, D2Monster, D2Property, D2Skill, D2Skilldesc, parseD2, D2Armor, D2Weapon, D2ItemType } from "../lib/d2Parser";
+import { D2Charstat, D2Files, D2Misc, D2ItemStatCost, D2Monster, D2Property, D2Skill, D2Skilldesc, parseD2, D2Armor, D2Weapon, D2ItemType, D2Table } from "../lib/d2Parser";
 import { AvailableLanguage, D2Translations, createTranslations } from "../lib/translation/translation";
 import { getModFiles } from "./staticContext";
 
@@ -44,9 +44,9 @@ export function createRefs(files: D2Files): D2ContextRefs {
     }
 }
 
-function createRef<T>(file: T[], ...keys: string[]): Record<string, T> {
+function createRef<T>(file: D2Table<T>, ...keys: string[]): Record<string, T> {
     let output: Record<string, T> = {};
-    for (const row of file) {
+    for (const row of file.data) {
         for (const key of keys) {
             const newKey = (row as any)[key];
             if (newKey && !output[newKey]) {
@@ -58,9 +58,9 @@ function createRef<T>(file: T[], ...keys: string[]): Record<string, T> {
     return output;
 }
 
-function createRefLower<T>(file: T[], ...keys: string[]): Record<string, T> {
+function createRefLower<T>(file: D2Table<T>, ...keys: string[]): Record<string, T> {
     let output: Record<string, T> = {};
-    for (const row of file) {
+    for (const row of file.data) {
         for (const key of keys) {
             const newKey = (row as any)[key];
             if (newKey) {

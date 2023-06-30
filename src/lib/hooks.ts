@@ -14,15 +14,15 @@ export function useItems(): Item[] {
   const itemMapper = useItemMapper();
 
   return useMemo(() => {
-    const rws = d2.data.global.excel.runes
-    .filter(rw => rw.complete === "1")
+    const rws = d2.data.global.excel.runes.data
+      .filter(rw => rw.complete === "1")
       .map(itemMapper.fromRuneword)
 
-    const unis = d2.data.global.excel.uniqueitems
+    const unis = d2.data.global.excel.uniqueitems.data
       .filter(item => item.enabled === "1" && !isQuestItem(item))
       .map(itemMapper.fromUnique);
 
-    const setItems = d2.data.global.excel.setitems
+    const setItems = d2.data.global.excel.setitems.data
       .filter(item => item.set)
       .map(itemMapper.fromSetItem);
 
