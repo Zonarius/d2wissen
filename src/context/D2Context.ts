@@ -2,7 +2,7 @@ import { createContext } from "react";
 import { D2Charstat, D2Files, D2Misc, D2ItemStatCost, D2Monster, D2Property, D2Skill, D2Skilldesc, parseD2, D2Armor, D2Weapon, D2ItemType, D2Table } from "../lib/d2Parser";
 import { AvailableLanguage, D2Translations, createTranslations } from "../lib/translation/translation";
 import { getModFiles } from "./staticContext";
-import { D2Ref2, createReferences } from "./referenceBuilder";
+import { D2Ref2, ExcelFileName, Reference, Row, createReferences } from "./referenceBuilder";
 
 export interface D2Context {
     lang: AvailableLanguage;
@@ -84,4 +84,8 @@ export async function modLoader(mod: string): Promise<D2Context> {
         data: d2Files,
         refs2: createReferences(d2Files)
     };
+}
+
+export function getRow<F extends ExcelFileName>(d2: D2Context, ref: Reference<F>): Row<F> {
+    return d2.refs2[ref.referencerFile].rowById[ref.referencerId];
 }
