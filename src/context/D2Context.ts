@@ -2,12 +2,14 @@ import { createContext } from "react";
 import { D2Charstat, D2Files, D2Misc, D2ItemStatCost, D2Monster, D2Property, D2Skill, D2Skilldesc, parseD2, D2Armor, D2Weapon, D2ItemType, D2Table } from "../lib/d2Parser";
 import { AvailableLanguage, D2Translations, createTranslations } from "../lib/translation/translation";
 import { getModFiles } from "./staticContext";
+import { D2Ref2, createReferences } from "./referenceBuilder";
 
 export interface D2Context {
     lang: AvailableLanguage;
     translations: D2Translations;
     data: D2Files;
     refs: D2ContextRefs;
+    refs2: D2Ref2;
 }
 
 export interface D2ContextRefs {
@@ -79,6 +81,7 @@ export async function modLoader(mod: string): Promise<D2Context> {
         lang: "enUS",
         translations: createTranslations(d2Files),
         refs: createRefs(d2Files),
-        data: d2Files
+        data: d2Files,
+        refs2: createReferences(d2Files)
     };
 }

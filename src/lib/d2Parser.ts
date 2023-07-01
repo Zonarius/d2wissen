@@ -2,9 +2,10 @@ import JSON5 from 'json5';
 import { readTbl } from './tblParser';
 import { Vendor } from './shopsimulator/shopsimulator-model';
 
+export type IndexedRows<T> = Array<{ _index: number } & T>
 export type D2Table<T> = {
 	columns: string[];
-	data: T[];
+	data: IndexedRows<T>;
 }
 export interface D2Files {
 	global: {
@@ -148,6 +149,7 @@ export interface D2ItemStatCost {
 
 export interface D2Skill {
 	skill: string;
+	Id: string;
 	"*Id": string;
 	skilldesc: string;
 	charclass: string;

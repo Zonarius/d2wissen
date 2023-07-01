@@ -130,18 +130,18 @@ export function unique<T>(arr: T[]) : T[] {
     return [...new Set(arr)]
 }
 
-export function getOrCreateObj<K extends keyof T, T>(orig: T, prop: K): T[K] {
+export function getOrCreateObj<K extends keyof T, T>(orig: T, prop: K): Defined<T[K]> {
     if (!orig[prop]) {
         orig[prop] = {} as any;
     }
-    return orig[prop];
+    return orig[prop] as any;
 }
 
-export function getOrCreateArr<K extends keyof T, T>(orig: T, prop: K): T[K] {
+export function getOrCreateArr<K extends keyof T, T>(orig: T, prop: K): Defined<T[K]> {
     if (!orig[prop]) {
         orig[prop] = [] as any;
     }
-    return orig[prop];
+    return orig[prop] as any;
 }
 
 export function times<T>(amount: number, supplier: () => T): T[];
@@ -163,4 +163,10 @@ export function lastElement<T>(arr: T[]): T {
 
 export function hrBoolean(val: any): string {
     return val !== "0" && val ? "Yes": "No"
+}
+
+export type Defined<T> = Exclude<T, undefined>
+
+export function entries<T extends object>(obj: T): Array<[keyof T, Defined<T[keyof T]>]> {
+    return Object.entries(obj) as any;
 }
