@@ -170,3 +170,7 @@ export type Defined<T> = Exclude<T, undefined>
 export function entries<T extends object>(obj: T): Array<[keyof T, Defined<T[keyof T]>]> {
     return Object.entries(obj) as any;
 }
+
+export type Mutable<T> = {
+    -readonly[P in keyof T]: T[P]
+};

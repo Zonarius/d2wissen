@@ -1,13 +1,13 @@
 import { D2Files } from "../lib/d2Parser"
 import { entries, getOrCreateArr, getOrCreateObj } from "../lib/util";
 
-type ColumnName<file extends ExcelFileName> = keyof Row<file>;
+export type ColumnName<file extends ExcelFileName> = keyof Row<file>;
 /** Id type of a file */
 /** @ts-ignore */
-type RowID<K extends ExcelFileName> = string | number;
+export type RowID<K extends ExcelFileName> = string | number;
 export type ExcelFileName = keyof D2Files["global"]["excel"];
 type ReferenceColumns = {
-  [file in ExcelFileName]?: {
+  [file in ExcelFileName]: {
     [column in ColumnName<file>]?: ExcelFileName;
   }
 }
@@ -18,7 +18,7 @@ type IdColumns = {
   [file in ExcelFileName]: ColumnName<file>;
 }
 
-const idColumns: IdColumns = {
+export const idColumns: IdColumns = {
   armor: "code",
   charstats: "class",
   itemstatcost: "ID",
@@ -36,11 +36,32 @@ const idColumns: IdColumns = {
   weapons: "code"
 } as const;
 
-const referenceColumns: ReferenceColumns = {
+export const referenceColumns: ReferenceColumns = {
+  armor: {
+    "type": "itemtypes"
+  },
+  charstats: {},
+  itemstatcost: {},
   itemtypes: {
     "Equiv1": "itemtypes",
-    "Equiv2": "itemtypes"
-  }
+    "Equiv2": "itemtypes",
+    "Quiver": "itemtypes"
+  },
+  magicprefix: {},
+  magicsuffix: {},
+  misc: {
+    "type": "itemtypes"
+  },
+  monstats: {},
+  properties: {},
+  runes: {},
+  setitems: {},
+  skilldesc: {},
+  skills: {},
+  uniqueitems: {},
+  weapons: {
+    "type": "itemtypes"
+  },
 }
 
 export type Reference<referencer extends ExcelFileName> = {

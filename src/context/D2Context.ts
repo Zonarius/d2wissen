@@ -1,8 +1,8 @@
 import { createContext } from "react";
-import { D2Charstat, D2Files, D2Misc, D2ItemStatCost, D2Monster, D2Property, D2Skill, D2Skilldesc, parseD2, D2Armor, D2Weapon, D2ItemType, D2Table } from "../lib/d2Parser";
+import { D2Charstat, D2Files, D2Misc, D2ItemStatCost, D2Monster, D2Property, D2Skill, D2Skilldesc, parseD2, D2Armor, D2Weapon, D2ItemType, D2Table, D2TableRow } from "../lib/d2Parser";
 import { AvailableLanguage, D2Translations, createTranslations } from "../lib/translation/translation";
 import { getModFiles } from "./staticContext";
-import { D2Ref2, ExcelFileName, Reference, Row, createReferences } from "./referenceBuilder";
+import { D2Ref2, ExcelFileName, Reference, Row, RowID, createReferences } from "./referenceBuilder";
 
 export interface D2Context {
     lang: AvailableLanguage;
@@ -46,7 +46,7 @@ export function createRefs(files: D2Files): D2ContextRefs {
     }
 }
 
-function createRef<T>(file: D2Table<T>, ...keys: string[]): Record<string, T> {
+function createRef<T extends D2TableRow>(file: D2Table<T>, ...keys: string[]): Record<string, T> {
     let output: Record<string, T> = {};
     for (const row of file.data) {
         for (const key of keys) {
@@ -60,7 +60,7 @@ function createRef<T>(file: D2Table<T>, ...keys: string[]): Record<string, T> {
     return output;
 }
 
-function createRefLower<T>(file: D2Table<T>, ...keys: string[]): Record<string, T> {
+function createRefLower<T extends D2TableRow>(file: D2Table<T>, ...keys: string[]): Record<string, T> {
     let output: Record<string, T> = {};
     for (const row of file.data) {
         for (const key of keys) {
@@ -88,4 +88,9 @@ export async function modLoader(mod: string): Promise<D2Context> {
 
 export function getRow<F extends ExcelFileName>(d2: D2Context, ref: Reference<F>): Row<F> {
     return d2.refs2[ref.referencerFile].rowById[ref.referencerId];
+}
+
+export type RowReference<F extends ExcelFileName> = {
+    file: F;
+    id: RowID<F>;
 }

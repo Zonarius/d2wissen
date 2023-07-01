@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { Params, RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import ErrorPage from './routes/error-page.tsx';
 import Root from './routes/root.tsx';
 import Mod from './routes/mod/mod.tsx';

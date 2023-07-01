@@ -2,9 +2,25 @@ import JSON5 from 'json5';
 import { readTbl } from './tblParser';
 import { Vendor } from './shopsimulator/shopsimulator-model';
 
+export type D2TableRow = 
+	| D2Charstat
+	| D2ItemStatCost
+	| D2Misc
+	| D2Monster
+	| D2Property
+	| D2Runeword
+	| D2Skill
+	| D2Skilldesc
+	| D2UniqueItem
+	| D2SetItem
+	| D2Weapon
+	| D2Armor
+	| D2ItemType
+	| D2Affix
+
 export type IndexedRows<T> = Array<{ _index: number } & T>
-export type D2Table<T> = {
-	columns: string[];
+export type D2Table<T extends D2TableRow> = {
+	columns: Array<keyof T>;
 	data: IndexedRows<T>;
 }
 export interface D2Files {
@@ -188,6 +204,7 @@ export interface D2ItemType {
 	Body: string;
 	BodyLoc1: string;
 	BodyLoc2: string;
+	Quiver: string;
 }
 
 export interface D2Affix {

@@ -1,4 +1,4 @@
-import { Link, Outlet, Params, useMatches, useNavigation } from "react-router-dom";
+import { Link, Outlet, useMatches, useNavigation } from "react-router-dom";
 
 function GlobalLoader() {
   const nav = useNavigation();
