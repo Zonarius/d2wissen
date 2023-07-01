@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 import { tableFiles } from "../../main";
+import { entries } from "../../lib/util";
 
 function Mod() {
     return (
         <div>
             <h2>Table Files</h2>
             <ul>
-                {Object.entries(tableFiles).map(([title, file]) => (
+                {entries(tableFiles).map(([file, {title}]) => (
                     <li><Link to={file}>{title}</Link></li>
                 ))}
             </ul>

@@ -7,15 +7,16 @@ import { Mutable } from "../lib/util";
 import { Link } from "react-router-dom";
 import { IndexedRows } from "../lib/d2Parser";
 
-export type EntityGridProps = {
-  file: ExcelFileName
+export type EntityGridProps<F extends ExcelFileName> = {
+  file: F
+  additionalIdColumns?: string[];
 }
 
-function EntityGrid({ file }: EntityGridProps) {
+function EntityGrid<F extends ExcelFileName>({ file, additionalIdColumns }: EntityGridProps<F>) {
   const d2 = useD2();
   const data: IndexedRows<any> = d2.data.global.excel[file].data;
   const filteredData = data.filter(row => row[idColumns[file]]);
-  const columns = createColumns(d2, file);
+  const columns = createColumns(d2, file, additionalIdColumns);
 
   return (
     <div className="d2-table">
@@ -33,26 +34,32 @@ function EntityGrid({ file }: EntityGridProps) {
   )
 }
 
-function createColumns<F extends ExcelFileName>(d2: D2Context, file: F): TypeColumn[] {
+function createColumns<F extends ExcelFileName>(d2: D2Context, file: F, additionalIdColumns?: string[]): TypeColumn[] {
   const cols = d2.data.global.excel[file].columns;
+  console.log(additionalIdColumns)
   return cols.map(colName => {
     const typeColumn: Mutable<TypeColumn> = {
-      name: colName
+      name: colName as string
     };
     let refFile: ExcelFileName | undefined = undefined;
+    let useThisId = false;
     const refCol = referenceColumns[file];
     if (colName === idColumns[file]) {
       refFile = file;
     } else if (colName in refCol) {
       refFile = refCol[colName as ColumnName<F>]!;
+    } else if (additionalIdColumns && additionalIdColumns.includes(colName)) {
+      refFile = file;
+      useThisId = true;
     }
     if (refFile) {
-      typeColumn.render = ({value}) => {
+      typeColumn.render = ({ data, value }) => {
         if (!value) {
           return value;
         }
+        const id = useThisId ? data[idColumns[file]] : value;
         return (
-          <Link to={`../${refFile}/${value}`}>{value}</Link>
+          <Link to={`../${refFile}/${id}`}>{value}</Link>
         )
       }
     }

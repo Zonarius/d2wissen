@@ -2,6 +2,7 @@ import { D2Files } from "../lib/d2Parser"
 import { entries, getOrCreateArr, getOrCreateObj } from "../lib/util";
 
 export type ColumnName<file extends ExcelFileName> = keyof Row<file>;
+
 /** Id type of a file */
 /** @ts-ignore */
 export type RowID<K extends ExcelFileName> = string | number;

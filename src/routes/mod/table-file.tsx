@@ -2,16 +2,18 @@ import EntityGrid from "../../components/entity-grid";
 import { ExcelFileName } from "../../context/referenceBuilder";
 
 export type TableFileProps = {
-  headline: string;
-  file: ExcelFileName
+  title: string;
+  file: ExcelFileName,
+  additionalIdColumns?: string[];
 }
 
-function TableFile({ headline, file }: TableFileProps) {
+function TableFile({ title, file, additionalIdColumns }: TableFileProps) {
   return (
     <div className="d2-table-page">
-      <h1>{headline}</h1>
+      <h1>{title}</h1>
       <EntityGrid
         file={file}
+        additionalIdColumns={additionalIdColumns}
       />
     </div>
   )
