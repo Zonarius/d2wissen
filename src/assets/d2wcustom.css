@@ -5,6 +5,8 @@ html, body {
 }
 
 #root {
+    display: flex;
+    flex-flow: column;
     height: 100%;
 }
 
@@ -51,4 +53,23 @@ html, body {
 
 dt::after {
     content: ": ";
+}
+
+dl {
+    display: flex;
+    column-gap: 10px;
+}
+
+.affix-level-selector {
+    appearance: textfield;
+    -moz-appearance: textfield;
+    width: 1.1em;
+    margin-left: 5px;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }

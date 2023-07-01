@@ -93,6 +93,7 @@ interface D2ItemFixed {
 	invwidth: string;
 	invheight: string;
 	type: string;
+	type2: string;
 	NightmareUpgrade: string;
 	HellUpgrade: string;
 }
@@ -229,6 +230,19 @@ export interface D2Affix {
 	mod3param: string;
 	mod3min: string;
 	mod3max: string;
+
+	itype1: string;
+	itype2: string;
+	itype3: string;
+	itype4: string;
+	itype5: string;
+	itype6: string;
+	itype7: string;
+	etype1: string;
+	etype2: string;
+	etype3: string;
+	etype4: string;
+	etype5: string;
 }
 
 export interface FileLike {
@@ -282,9 +296,11 @@ async function parseExcel(file: FileLike): Promise<D2Table<any>> {
 	const [headerLine, ...entries] = text.split("\n").filter(line => line.length > 0);
 	const header = headerLine.split("\t");
 
-	const data = entries.map(entry => {
+	const data = entries.map((entry, index) => {
 		const cells = entry.split("\t");
-		let entryObj: any = {};
+		let entryObj: any = {
+			_index: index
+		};
 		for (let i = 0; i < cells.length; i++) {
 			if (cells[i] !== "") {
 				entryObj[header[i]] = cells[i];

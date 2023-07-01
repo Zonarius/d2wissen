@@ -36,9 +36,25 @@ export const idColumns: IdColumns = {
   weapons: "code"
 } as const;
 
+const affixRefCols: ReferenceColumns["magicprefix"] = {
+  itype1: "itemtypes",
+	itype2: "itemtypes",
+	itype3: "itemtypes",
+	itype4: "itemtypes",
+	itype5: "itemtypes",
+	itype6: "itemtypes",
+	itype7: "itemtypes",
+	etype1: "itemtypes",
+	etype2: "itemtypes",
+	etype3: "itemtypes",
+	etype4: "itemtypes",
+	etype5: "itemtypes",
+}
+
 export const referenceColumns: ReferenceColumns = {
   armor: {
-    "type": "itemtypes"
+    "type": "itemtypes",
+    "type2": "itemtypes"
   },
   charstats: {},
   itemstatcost: {},
@@ -47,10 +63,11 @@ export const referenceColumns: ReferenceColumns = {
     "Equiv2": "itemtypes",
     "Quiver": "itemtypes"
   },
-  magicprefix: {},
-  magicsuffix: {},
+  magicprefix: affixRefCols,
+  magicsuffix: affixRefCols,
   misc: {
-    "type": "itemtypes"
+    "type": "itemtypes",
+    "type2": "itemtypes"
   },
   monstats: {},
   properties: {},
@@ -60,7 +77,8 @@ export const referenceColumns: ReferenceColumns = {
   skills: {},
   uniqueitems: {},
   weapons: {
-    "type": "itemtypes"
+    "type": "itemtypes",
+    "type2": "itemtypes"
   },
 }
 

@@ -8,9 +8,10 @@ import { modLoader } from './context/D2Context.ts';
 import GlobalLoader from './routes/global-loader.tsx';
 import Items from './routes/mod/items.tsx';
 import Shop from './routes/mod/shop.tsx';
-import ItemTypes from './routes/mod/item-types/item-types.tsx';
+import TableFile from './routes/mod/table-file.tsx';
 import { lastElement } from './lib/util.ts';
-import ItemType from './routes/mod/item-types/item-type.tsx';
+import ItemType from './routes/mod/item-type.tsx';
+import { ExcelFileName } from './context/referenceBuilder.ts';
 
 if (import.meta.hot) {
   import.meta.hot.on(
@@ -21,6 +22,21 @@ if (import.meta.hot) {
 
 const paramHandle = (id: string) => ({ params }: any) => params[id];
 const pathHandle = ({ pathname }: { pathname: string }) => lastElement(pathname.split("/"))
+
+export const tableFiles: Record<string, ExcelFileName> = {
+  "Item Types": "itemtypes",
+  "Weapons": "weapons",
+  "Armors": "armor",
+  "Misc. Items": "misc",
+  "Prefixes": "magicprefix",
+  "Suffixes": "magicsuffix"
+}
+const tableFileRoutes = Object.entries(tableFiles)
+  .map(([headline, file]) => ({
+      path: file,
+      handle: pathHandle,
+      children: [{ index: true, element: <TableFile {...{ headline, file}} /> }, { path: ":code", element: <ItemType />, handle: paramHandle("code") }]
+  }))
 
 const router = createBrowserRouter([
   {
@@ -47,11 +63,7 @@ const router = createBrowserRouter([
             handle: pathHandle,
             children: [{ index: true, element: <Shop />}]
           },
-          {
-            path: "itemtypes",
-            handle: pathHandle,
-            children: [{ index: true, element: <ItemTypes /> }, { path: ":code", element: <ItemType />, handle: paramHandle("code") }]
-          }
+          ...tableFileRoutes
         ]
       }
     ]

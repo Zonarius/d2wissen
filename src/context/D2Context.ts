@@ -82,7 +82,7 @@ export async function modLoader(mod: string): Promise<D2Context> {
         translations: createTranslations(d2Files),
         refs: createRefs(d2Files),
         data: d2Files,
-        refs2: createReferences(d2Files)
+        refs2: createReferences(d2Files),
     };
 }
 
