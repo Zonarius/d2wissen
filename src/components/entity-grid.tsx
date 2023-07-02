@@ -1,11 +1,11 @@
-import ReactDataGrid from "@inovua/reactdatagrid-community"
 import { ColumnName, ExcelFileName, Row, idColumns, referenceColumns } from "../context/referenceBuilder"
 import { useD2 } from "../lib/hooks";
-import { TypeColumn } from "@inovua/reactdatagrid-community/types";
 import { D2Context } from "../context/D2Context";
-import { Mutable, Predicate } from "../lib/util";
+import { Predicate } from "../lib/util";
 import { Link } from "react-router-dom";
 import { IndexedRows } from "../lib/d2Parser";
+import { AgGridReact } from "ag-grid-react";
+import { ColDef } from "ag-grid-community";
 
 export type EntityGridProps<F extends ExcelFileName> = {
   file: F
@@ -20,26 +20,26 @@ function EntityGrid<F extends ExcelFileName>({ file, filter, additionalIdColumns
   const columns = createColumns(d2, file, additionalIdColumns);
 
   return (
-    <div className="d2-table">
-      <ReactDataGrid
-        columns={columns}
-        dataSource={filteredData}
-        theme="default-dark"
-        idProperty="Code"
-        enableColumnAutosize={true}
-        style={{
-          height: "100%"
-        }}
+    <div className="d2-table ag-theme-balham-dark">
+      <AgGridReact
+        rowData={filteredData}
+        columnDefs={columns}
+        suppressColumnVirtualisation
+        onFirstDataRendered={ev => ev.columnApi.autoSizeAllColumns()}
       />
     </div>
   )
 }
 
-function createColumns<F extends ExcelFileName>(d2: D2Context, file: F, additionalIdColumns?: string[]): TypeColumn[] {
+function createColumns<F extends ExcelFileName>(d2: D2Context, file: F, additionalIdColumns?: string[]): ColDef[] {
   const cols = d2.data.global.excel[file].columns;
   return cols.map(colName => {
-    const typeColumn: Mutable<TypeColumn> = {
-      name: colName as string
+    const typeColumn: ColDef = {
+      headerName: colName,
+      field: colName,
+      resizable: true,
+      filter: true,
+      sortable: true
     };
     let refFile: ExcelFileName | ExcelFileName[] | undefined = undefined;
     let useThisId = false;
@@ -53,7 +53,7 @@ function createColumns<F extends ExcelFileName>(d2: D2Context, file: F, addition
       useThisId = true;
     }
     if (refFile) {
-      typeColumn.render = ({ data, value }) => {
+      typeColumn.cellRenderer = ({ data, value }: any) => {
         if (!value) {
           return value;
         }
@@ -65,7 +65,7 @@ function createColumns<F extends ExcelFileName>(d2: D2Context, file: F, addition
       }
     }
     if (colName.startsWith("*")) {
-      typeColumn.className = "comment-column";
+      typeColumn.cellClass = "comment-column";
     }
     return typeColumn;
   });

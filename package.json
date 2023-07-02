@@ -11,12 +11,12 @@
     "copymod": "node ./copymod"
   },
   "dependencies": {
-    "@babel/runtime": "^7.22.5",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@inovua/reactdatagrid-community": "^5.9.4",
     "@monaco-editor/react": "^4.5.1",
     "@mui/joy": "^5.0.0-alpha.85",
+    "ag-grid-community": "^30.0.2",
+    "ag-grid-react": "^30.0.2",
     "json5": "^2.2.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
