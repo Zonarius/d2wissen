@@ -8,12 +8,12 @@ import { useState } from "react";
 
 function ItemType() {
   const d2 = useD2();
-  const { code } = useParams();
+  const { id } = useParams();
   const [alvl, setAlvl] = useState(99);
-  if (!code) {
+  if (!id) {
     return null;
   }
-  const itemType = d2.refs.itemTypeByCode[code];
+  const itemType = d2.refs.itemTypeByCode[id];
   return (
     <>
       <h1>{itemType.ItemType}</h1>

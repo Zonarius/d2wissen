@@ -9,9 +9,11 @@ import GlobalLoader from './routes/global-loader.tsx';
 import Items from './routes/mod/items.tsx';
 import Shop from './routes/mod/shop.tsx';
 import TableFile from './routes/mod/table-file.tsx';
-import { entries, lastElement } from './lib/util.ts';
+import { Predicate, entries, lastElement } from './lib/util.ts';
 import ItemType from './routes/mod/item-type.tsx';
-import { ExcelFileName } from './context/referenceBuilder.ts';
+import { ExcelFileName, Row } from './context/referenceBuilder.ts';
+import Affix from './routes/mod/affix.tsx';
+import { D2Affix } from './lib/d2Parser.ts';
 
 if (import.meta.hot) {
   import.meta.hot.on(
@@ -23,12 +25,19 @@ if (import.meta.hot) {
 const paramHandle = (id: string) => ({ params }: any) => params[id];
 const pathHandle = ({ pathname }: { pathname: string }) => lastElement(pathname.split("/"))
 
-type TableFileParams = {
+type TableFileParams<F extends ExcelFileName> = {
   title: string;
   element?: React.ReactNode;
   additionalIdColumns?: string[];
+  filter?: Predicate<Row<F>>
 }
-export const tableFiles: Record<ExcelFileName, TableFileParams> = {
+
+const affixFilter: Predicate<D2Affix> = row => row.spawnable === "1" && row.frequency && Number(row.frequency) > 0;
+
+type TableFiles = {
+  [F in ExcelFileName]?: TableFileParams<F>;
+}
+export const tableFiles: TableFiles = {
   itemtypes: {
     title: "Item Types",
     element: <ItemType />
@@ -44,21 +53,25 @@ export const tableFiles: Record<ExcelFileName, TableFileParams> = {
   },
   magicprefix: {
     title: "Prefixes",
-    additionalIdColumns: ["Name"]
+    additionalIdColumns: ["Name"],
+    element: <Affix affixType="prefix" />,
+    filter: affixFilter
   },
   magicsuffix: {
     title: "Suffixes",
-    additionalIdColumns: ["Name"]
+    additionalIdColumns: ["Name"],
+    element: <Affix affixType="suffix" />,
+    filter: affixFilter
   }
-} as Record<ExcelFileName, TableFileParams>;
+};
 
 const tableFileRoutes = entries(tableFiles)
-  .map(([file, {title, element, additionalIdColumns }]) => ({
+  .map(([file, {title, element, additionalIdColumns, filter }]) => ({
       path: file,
       handle: pathHandle,
       children: [
-        { index: true, element: <TableFile {...{ title, file, additionalIdColumns }} /> },
-        { path: ":code", element: element || null, handle: paramHandle("code")}
+        { index: true, element: <TableFile {...{ title, file, additionalIdColumns, filter: filter as any }} /> },
+        { path: ":id", element: element || null, handle: paramHandle("id")}
       ]
   }))
 

@@ -1,21 +1,22 @@
 import ReactDataGrid from "@inovua/reactdatagrid-community"
-import { ColumnName, ExcelFileName, idColumns, referenceColumns } from "../context/referenceBuilder"
+import { ColumnName, ExcelFileName, Row, idColumns, referenceColumns } from "../context/referenceBuilder"
 import { useD2 } from "../lib/hooks";
 import { TypeColumn } from "@inovua/reactdatagrid-community/types";
 import { D2Context } from "../context/D2Context";
-import { Mutable } from "../lib/util";
+import { Mutable, Predicate } from "../lib/util";
 import { Link } from "react-router-dom";
 import { IndexedRows } from "../lib/d2Parser";
 
 export type EntityGridProps<F extends ExcelFileName> = {
   file: F
+  filter?: Predicate<Row<F>>;
   additionalIdColumns?: string[];
 }
 
-function EntityGrid<F extends ExcelFileName>({ file, additionalIdColumns }: EntityGridProps<F>) {
+function EntityGrid<F extends ExcelFileName>({ file, filter, additionalIdColumns }: EntityGridProps<F>) {
   const d2 = useD2();
   const data: IndexedRows<any> = d2.data.global.excel[file].data;
-  const filteredData = data.filter(row => row[idColumns[file]]);
+  const filteredData = data.filter(row => row[idColumns[file]] && (!filter || filter(row)));
   const columns = createColumns(d2, file, additionalIdColumns);
 
   return (

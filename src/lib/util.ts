@@ -173,4 +173,6 @@ export function entries<T extends object>(obj: T): Array<[keyof T, Defined<T[key
 
 export type Mutable<T> = {
     -readonly[P in keyof T]: T[P]
-};
+}
+
+export type Predicate<T> = (x: T) => any;
