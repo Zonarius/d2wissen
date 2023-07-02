@@ -85,7 +85,19 @@ export const referenceColumns: ReferenceColumns = {
     "type2": "itemtypes"
   },
   uniqueitems: {
-    "code": ["armor", "weapons", "misc"]
+    code: ["armor", "weapons", "misc"],
+    prop1: "properties",
+    prop2: "properties",
+    prop3: "properties",
+    prop4: "properties",
+    prop5: "properties",
+    prop6: "properties",
+    prop7: "properties",
+    prop8: "properties",
+    prop9: "properties",
+    prop10: "properties",
+    prop11: "properties",
+    prop12: "properties",
   },
 }
 
