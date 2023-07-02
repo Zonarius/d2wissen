@@ -33,8 +33,8 @@ export const idColumns: IdColumns = {
   setitems: "index",
   skilldesc: "skilldesc",
   skills: "Id",
+  weapons: "code",
   uniqueitems: "index",
-  weapons: "code"
 } as const;
 
 const affixRefCols: ReferenceColumns["magicprefix"] = {

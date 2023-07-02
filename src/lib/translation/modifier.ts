@@ -181,7 +181,7 @@ function adjustParams(prop: D2Property, param: string | undefined, min: number |
 }
 
 
-function stripColorCode(s: string): string {
+export function stripColorCode(s: string): string {
     return s.replace(/Ã¿c./g, "");
 }
 

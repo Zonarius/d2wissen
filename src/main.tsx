@@ -16,6 +16,8 @@ import Affix from './routes/mod/affix.tsx';
 import { D2Affix } from './lib/d2Parser.ts';
 import AffixGroup from './routes/mod/affix-group.tsx';
 import GheedHelper from './routes/mod/projectd2/gheed-helper.tsx';
+import { CssVarsProvider } from '@mui/joy/styles';
+import theme from './theme.ts';
 
 if (import.meta.hot) {
   import.meta.hot.on(
@@ -130,6 +132,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <CssVarsProvider defaultMode="dark" theme={theme}>
+      <RouterProvider router={router} />
+    </CssVarsProvider>
   </React.StrictMode>,
 )
