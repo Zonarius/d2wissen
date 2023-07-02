@@ -33,7 +33,7 @@ type TableFileParams<F extends ExcelFileName> = {
   filter?: Predicate<Row<F>>
 }
 
-const affixFilter: Predicate<D2Affix> = row => row.spawnable === "1" && row.frequency && Number(row.frequency) > 0;
+export const affixFilter: Predicate<D2Affix> = row => row.spawnable === "1" && row.frequency && Number(row.frequency) > 0;
 
 type TableFiles = {
   [F in ExcelFileName]?: TableFileParams<F>;

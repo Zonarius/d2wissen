@@ -4,6 +4,7 @@ import { Item } from "../components/filterItem";
 import { useItemMapper } from "./itemMapper";
 import { D2UniqueItem } from "./d2Parser";
 import { useEffect, useMemo, useState } from "react";
+import { ExcelFileName } from "../context/referenceBuilder";
 
 export function useD2() {
   return useRouteLoaderData("mod") as D2Context;
@@ -60,4 +61,10 @@ export function useEntityId() {
     throw new Error(`Could not find entity with id ${id}`)
   }
   return [d2, id] as const;
+}
+
+export function useEntity<F extends ExcelFileName>(file: F) {
+  const [d2, id] = useEntityId();
+  const entity = d2.refs2[file].rowById[id];
+  return [d2, entity] as const;
 }

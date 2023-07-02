@@ -1,5 +1,4 @@
-import { useParams } from "react-router-dom"
-import { useD2 } from "../../lib/hooks";
+import { useEntity } from "../../lib/hooks";
 import SimpleTableProp from "../../components/simpleTableProp";
 
 export type AffixType = "prefix" | "suffix"
@@ -8,12 +7,7 @@ export type AffixProps = {
 }
 
 function Affix({ affixType }: AffixProps) {
-  const d2 = useD2();
-  const { id } = useParams();
-  if (!id) {
-    return null;
-  }
-  const affix = d2.refs2[`magic${affixType}`].rowById[id];
+  const [d2, affix] = useEntity(`magic${affixType}`);
   return (
     <div>
       <h1>{affix.Name}</h1>

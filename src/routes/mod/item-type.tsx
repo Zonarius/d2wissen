@@ -1,5 +1,5 @@
-import { Link, useParams } from "react-router-dom";
-import { useD2 } from "../../lib/hooks";
+import { Link } from "react-router-dom";
+import { useEntity } from "../../lib/hooks";
 import { getTableArray, hrBoolean } from "../../lib/util";
 import { D2Context, getRow } from "../../context/D2Context";
 import { D2ItemType } from "../../lib/d2Parser";
@@ -7,13 +7,8 @@ import { typeCanHaveAffix } from "../../lib/itemTypeGraph";
 import { useState } from "react";
 
 function ItemType() {
-  const d2 = useD2();
-  const { id } = useParams();
+  const [d2, itemType] = useEntity("itemtypes");
   const [alvl, setAlvl] = useState(99);
-  if (!id) {
-    return null;
-  }
-  const itemType = d2.refs.itemTypeByCode[id];
   return (
     <>
       <h1>{itemType.ItemType}</h1>
