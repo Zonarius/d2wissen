@@ -41,6 +41,17 @@ export function getTableModifiers(tbl: any, codePref: string, paramPref: string,
         .filter(mod => mod.code);
 }
 
+export function getTableModifiersRev(tbl: any, codeSuf: string, paramSuf: string, minSuf: string, maxSuf: string, prefix: string = "", maxCount = 10): Property[] {
+    return range(1, maxCount + 1)
+        .map(n => ({
+            code: tbl[prefix + n + codeSuf],
+            param: tbl[prefix + n + paramSuf],
+            min: Number(tbl[prefix + n + minSuf]),
+            max: Number(tbl[prefix + n + maxSuf])
+        }))
+        .filter(mod => mod.code);
+}
+
 export function getTableStats(tbl: any): StatRef[] {
     return range(1, 8)
         .map(n => ({

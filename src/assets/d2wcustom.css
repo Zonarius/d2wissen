@@ -55,9 +55,22 @@ dt::after {
     content: ": ";
 }
 
-dl {
+.dl-flex {
     display: flex;
-    column-gap: 10px;
+    column-gap: 80px;
+}
+
+.dl-inner {
+    display: grid;
+    grid-template-columns: max-content auto;
+}
+
+.dl-inner > dt {
+    grid-column-start: 1;
+}
+
+.dl-inner > dd {
+    grid-column-start: 2;
 }
 
 .affix-level-selector {

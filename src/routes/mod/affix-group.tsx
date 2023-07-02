@@ -20,7 +20,7 @@ function AffixGroup() {
     <>
       <h1>Affix Group {id}</h1>
       <div>Show all: <input type="checkbox" checked={showAll} onChange={ev => setShowAll(ev.target.checked)} /></div>
-      <dl>
+      <dl className="dl-flex">
         <div className="dl-col">
           <dt>Affixes in this Group</dt>
           {

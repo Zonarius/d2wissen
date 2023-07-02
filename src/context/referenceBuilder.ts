@@ -22,7 +22,7 @@ type IdColumns = {
 export const idColumns: IdColumns = {
   armor: "code",
   charstats: "class",
-  itemstatcost: "ID",
+  itemstatcost: "Stat",
   itemtypes: "Code",
   magicprefix: "_index",
   magicsuffix: "_index",
@@ -38,6 +38,10 @@ export const idColumns: IdColumns = {
 } as const;
 
 const affixRefCols: ReferenceColumns["magicprefix"] = {
+  mod1code: "properties",
+  mod2code: "properties",
+  mod3code: "properties",
+
   itype1: "itemtypes",
 	itype2: "itemtypes",
 	itype3: "itemtypes",

@@ -13,7 +13,7 @@ function ItemType() {
     <>
       <h1>{itemType.ItemType}</h1>
       <AffixLevelSelector onChange={setAlvl} />
-      <dl>
+      <dl className="dl-flex">
         <div className="dl-col">
           <dt>Code</dt>
           <dd>{itemType.Code}</dd>

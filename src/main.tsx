@@ -63,6 +63,12 @@ export const tableFiles: TableFiles = {
     additionalIdColumns: ["Name"],
     element: <Affix affixType="suffix" />,
     filter: affixFilter
+  },
+  properties: {
+    title: "Properties",
+  },
+  itemstatcost: {
+    title: "Stats"
   }
 };
 

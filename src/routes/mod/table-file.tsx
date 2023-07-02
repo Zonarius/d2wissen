@@ -15,7 +15,9 @@ function TableFile<F extends ExcelFileName>({ title, file, filter, additionalIdC
   return (
     <div className="d2-table-page">
       <h1>{title}</h1>
-      <div>Show all: <input type="checkbox" checked={showAll} onChange={ev => setShowAll(ev.target.checked)} /></div>
+      { !filter ? null :
+        <div>Show all: <input type="checkbox" checked={showAll} onChange={ev => setShowAll(ev.target.checked)} /></div> 
+      }
       <EntityGrid
         file={file}
         filter={showAll ? undefined : filter}
