@@ -1,4 +1,4 @@
-import { useRouteLoaderData } from "react-router-dom";
+import { useParams, useRouteLoaderData } from "react-router-dom";
 import { D2Context } from "../context/D2Context";
 import { Item } from "../components/filterItem";
 import { useItemMapper } from "./itemMapper";
@@ -51,4 +51,13 @@ export function useDebounce<T>(value: T, delay?: number): T {
   }, [value, delay])
 
   return debouncedValue
+}
+
+export function useEntityId() {
+  const d2 = useD2();
+  const { id } = useParams();
+  if (!id) {
+    throw new Error(`Could not find entity with id ${id}`)
+  }
+  return [d2, id] as const;
 }

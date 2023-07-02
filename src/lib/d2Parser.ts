@@ -215,6 +215,8 @@ export interface D2Affix {
 	level: string;
 	maxlevel: string;
 	frequency: string;
+	levelreq: string;
+	group: string;
 	
 	mod1code: string;
 	mod1param: string;

@@ -22,6 +22,9 @@ function Affix({ affixType }: AffixProps) {
           <SimpleTableProp title="Level" prop={affix.level} />
           <SimpleTableProp title="Max. Level" prop={affix.maxlevel} />
           <SimpleTableProp title="Frequency" prop={affix.frequency} />
+          <SimpleTableProp title="Can appear on rare items" prop={affix.rare === "1"} />
+          <SimpleTableProp title="Level requirement" prop={affix.levelreq} />
+          <SimpleTableProp title="Affix Group" prop={affix.group} link={`../../affixgroup/${affix.group}`} />
         </div>
       </dl>
     </div>
