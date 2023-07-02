@@ -37,12 +37,11 @@ function EntityGrid<F extends ExcelFileName>({ file, filter, additionalIdColumns
 
 function createColumns<F extends ExcelFileName>(d2: D2Context, file: F, additionalIdColumns?: string[]): TypeColumn[] {
   const cols = d2.data.global.excel[file].columns;
-  console.log(additionalIdColumns)
   return cols.map(colName => {
     const typeColumn: Mutable<TypeColumn> = {
       name: colName as string
     };
-    let refFile: ExcelFileName | undefined = undefined;
+    let refFile: ExcelFileName | ExcelFileName[] | undefined = undefined;
     let useThisId = false;
     const refCol = referenceColumns[file];
     if (colName === idColumns[file]) {
@@ -58,9 +57,10 @@ function createColumns<F extends ExcelFileName>(d2: D2Context, file: F, addition
         if (!value) {
           return value;
         }
+        const actualRefFile = findRefFile(d2, refFile, value);
         const id = useThisId ? data[idColumns[file]] : value;
         return (
-          <Link to={`../${refFile}/${id}`}>{value}</Link>
+          <Link to={`../${actualRefFile}/${id}`}>{value}</Link>
         )
       }
     }
@@ -71,5 +71,11 @@ function createColumns<F extends ExcelFileName>(d2: D2Context, file: F, addition
   });
 }
 
+function findRefFile(d2: D2Context, file: ExcelFileName | ExcelFileName[] | undefined, id: string) {
+  if (!Array.isArray(file)) {
+    return file;
+  }
+  return file.find(f => d2.refs2[f].rowById[id]);
+}
 
 export default EntityGrid

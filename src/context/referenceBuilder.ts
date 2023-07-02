@@ -9,7 +9,7 @@ export type RowID<K extends ExcelFileName> = string | number;
 export type ExcelFileName = keyof D2Files["global"]["excel"];
 type ReferenceColumns = {
   [file in ExcelFileName]: {
-    [column in ColumnName<file>]?: ExcelFileName;
+    [column in ColumnName<file>]?: ExcelFileName | ExcelFileName[];
   }
 }
 
@@ -80,10 +80,12 @@ export const referenceColumns: ReferenceColumns = {
   setitems: {},
   skilldesc: {},
   skills: {},
-  uniqueitems: {},
   weapons: {
     "type": "itemtypes",
     "type2": "itemtypes"
+  },
+  uniqueitems: {
+    "code": ["armor", "weapons", "misc"]
   },
 }
 
@@ -123,21 +125,29 @@ export function createReferences(files: D2Files): D2Ref2 {
         continue;
       }
 
-      for (const [column, referencedFileName] of entries(refCols)) {
+      for (let [column, referencedFileNames] of entries(refCols)) {
         const refId = row[column]
         if (!refId) {
           continue;
         }
-        const referencedFile = getOrCreateObj(result, referencedFileName);
-        const referencedBy = getOrCreateObj(referencedFile, "referencedBy");
-        const referencedId = getOrCreateObj(referencedBy, refId);
-        const references = getOrCreateArr(referencedId, file);
-        const reference: Reference<typeof file> = {
-          referencerFile: file,
-          referencerId: id,
-          column: column,
+        if (!Array.isArray(referencedFileNames)) {
+          referencedFileNames = [referencedFileNames];
         }
-        references.push(reference as any);
+        for (const referencedFileName of referencedFileNames) {
+          if (referencedFileNames.length > 1 && !result[referencedFileName]?.rowById[refId]) {
+            continue;
+          }
+          const referencedFile = getOrCreateObj(result, referencedFileName);
+          const referencedBy = getOrCreateObj(referencedFile, "referencedBy");
+          const referencedId = getOrCreateObj(referencedBy, refId);
+          const references = getOrCreateArr(referencedId, file);
+          const reference: Reference<typeof file> = {
+            referencerFile: file,
+            referencerId: id,
+            column: column,
+          }
+          references.push(reference as any);
+        }
       }
     }
     const fileObj = getOrCreateObj(result, file);

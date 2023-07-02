@@ -70,6 +70,9 @@ export const tableFiles: TableFiles = {
   },
   itemstatcost: {
     title: "Stats"
+  },
+  uniqueitems: {
+    title: "Uniques"
   }
 };
 

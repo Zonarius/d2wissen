@@ -77,13 +77,16 @@ function createRefLower<T extends D2TableRow>(file: D2Table<T>, ...keys: string[
 
 export async function modLoader(mod: string): Promise<D2Context> {
     const d2Files = await parseD2(await getModFiles(mod));
-    return {
+    const context: D2Context = {
         lang: "enUS",
         translations: createTranslations(d2Files),
         refs: createRefs(d2Files),
         data: d2Files,
         refs2: createReferences(d2Files),
     };
+    // Nice for debugging
+    (globalThis as any).d2context = context;
+    return context;
 }
 
 export function getRow<F extends ExcelFileName>(d2: D2Context, ref: Reference<F>): Row<F> {
