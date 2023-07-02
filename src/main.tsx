@@ -15,6 +15,7 @@ import { ExcelFileName, Row } from './context/referenceBuilder.ts';
 import Affix from './routes/mod/affix.tsx';
 import { D2Affix } from './lib/d2Parser.ts';
 import AffixGroup from './routes/mod/affix-group.tsx';
+import GheedHelper from './routes/mod/projectd2/gheed-helper.tsx';
 
 if (import.meta.hot) {
   import.meta.hot.on(
@@ -111,6 +112,11 @@ const router = createBrowserRouter([
             path: "affixgroup",
             handle: pathHandle,
             children: [{ path: ":id", element: <AffixGroup />}]
+          },
+          {
+            path: "gheed",
+            handle: pathHandle,
+            children: [{ index: true, element: <GheedHelper />}]
           },
           ...tableFileRoutes
         ]
