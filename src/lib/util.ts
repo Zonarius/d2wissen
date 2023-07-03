@@ -199,3 +199,8 @@ export function toObject<T, K extends keyof T>(arr: T[], keyPicker: (t: T) => K)
 export function encodeId(id: string | number): string {
     return encodeURIComponent(encodeURIComponent(String(id)));
 }
+
+export function log<T>(x: T): T {
+    console.log(x);
+    return x;
+}

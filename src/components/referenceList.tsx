@@ -2,17 +2,19 @@ import { Link, useParams } from "react-router-dom";
 import { ExcelFileName, Reference, Row, idColumns } from "../context/referenceBuilder";
 import { useD2 } from "../lib/hooks";
 import { encodeId } from "../lib/util";
+import React from "react";
 
 export type ReferenceListProps<F extends ExcelFileName, RF extends ExcelFileName> = {
   title: string;
   file: F;
   entity: Row<F>;
   refFile: RF;
+  createColumn?: boolean;
   labelPicker?: (row: Row<RF>, ref: Reference<RF>) => React.ReactNode;
   refClass?: string;
 }
 
-function ReferenceList<F extends ExcelFileName, RF extends ExcelFileName>({ title, file, entity, refClass, refFile, labelPicker }: ReferenceListProps<F, RF>) {
+function ReferenceList<F extends ExcelFileName, RF extends ExcelFileName>({ title, file, entity, refClass, createColumn, refFile, labelPicker }: ReferenceListProps<F, RF>) {
   const d2 = useD2();
   const { mod } = useParams();
   const id = entity[idColumns[file]];
@@ -20,7 +22,8 @@ function ReferenceList<F extends ExcelFileName, RF extends ExcelFileName>({ titl
   if (!refs || refs.length === 0 || !mod) {
     return null;
   }
-  return <>
+  const Wrapper = createColumn ? ({children}: any) => <div className="dl-col">{children}</div> : React.Fragment;
+  return <Wrapper>
     <dt>{title}</dt>
     {refs.map(ref => (
       <dd key={ref.referencerId}>
@@ -31,7 +34,7 @@ function ReferenceList<F extends ExcelFileName, RF extends ExcelFileName>({ titl
         </Link>
       </dd>
     ))}
-  </>
+  </Wrapper>
 }
 
 export default ReferenceList;

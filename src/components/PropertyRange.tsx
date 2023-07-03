@@ -1,10 +1,15 @@
 export type PropertyRangeProps = {
+  code?: string;
   min?: number;
   max?: number;
 }
 
-function PropertyRange({min, max}: PropertyRangeProps) {
-  if (!min) {
+const exceptions = new Set([
+  "nofreeze"
+])
+
+function PropertyRange({code, min, max}: PropertyRangeProps) {
+  if (!min || (code && exceptions.has(code))) {
     return null;
   }
   const text = min === max ? String(min) : `${min}-${max}`;
