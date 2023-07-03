@@ -20,11 +20,14 @@ function ReferenceList<F extends ExcelFileName, RF extends ExcelFileName>({ titl
   const { mod } = useParams();
   const id = entity[idColumns[file]];
   let refs = d2.refs2[file].referencedBy[id]?.[refFile];
-  if (!refs || refs.length === 0 || !mod) {
+  if (!refs || !mod) {
     return null;
   }
   if (refFilter) {
     refs = refs.filter(refFilter) as typeof refs;
+  }
+  if (refs.length === 0) {
+    return null;
   }
   const Wrapper = createColumn ? ({children}: any) => <div className="dl-col">{children}</div> : React.Fragment;
   return <Wrapper>
