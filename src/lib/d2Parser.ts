@@ -58,12 +58,51 @@ export interface D2Runeword {
 	itype5: string;
 	itype6: string;
 
+	etype1: string;
+	etype2: string;
+	etype3: string;
+
 	Rune1: string;
 	Rune2: string;
 	Rune3: string;
 	Rune4: string;
 	Rune5: string;
 	Rune6: string;
+
+	T1Code1: string;
+	T1Param1: string;
+	T1Min1: string;
+	T1Max1: string;
+
+	T1Code2: string;
+	T1Param2: string;
+	T1Min2: string;
+	T1Max2: string;
+
+	T1Code3: string;
+	T1Param3: string;
+	T1Min3: string;
+	T1Max3: string;
+
+	T1Code4: string;
+	T1Param4: string;
+	T1Min4: string;
+	T1Max4: string;
+
+	T1Code5: string;
+	T1Param5: string;
+	T1Min5: string;
+	T1Max5: string;
+
+	T1Code6: string;
+	T1Param6: string;
+	T1Min6: string;
+	T1Max6: string;
+
+	T1Code7: string;
+	T1Param7: string;
+	T1Min7: string;
+	T1Max7: string;
 }
 
 export interface D2UniqueItem {

@@ -77,6 +77,9 @@ export const tableFiles: TableFiles = {
   },
   uniqueitems: {
     title: "Uniques"
+  },
+  runes: {
+    title: "Runewords",
   }
 };
 
