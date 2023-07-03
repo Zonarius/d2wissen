@@ -1,6 +1,6 @@
 import { useEntity } from "../../lib/hooks";
 import SimpleTableProp from "../../components/simpleTableProp";
-import { Property } from "../../components/filterItem";
+import { PropertyRef } from "../../components/filterItem";
 import { getTableModifiersRev } from "../../lib/util";
 import React from "react";
 
@@ -11,7 +11,7 @@ export type AffixProps = {
 
 function Affix({ affixType }: AffixProps) {
   const [, affix] = useEntity(`magic${affixType}`);
-  const properties: Property[] = getTableModifiersRev(affix, "code", "param", "min", "max", "mod", 3);
+  const properties: PropertyRef[] = getTableModifiersRev(affix, "code", "param", "min", "max", "mod", 3);
   return (
     <div>
       <h1>{affix.Name}</h1>

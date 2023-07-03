@@ -6,6 +6,7 @@ import { useState } from "react";
 import { D2Item } from "../../../lib/d2Parser";
 import { D2Context } from "../../../context/D2Context";
 import { Link } from "react-router-dom";
+import { encodeId } from "../../../lib/util";
 
 function GheedHelper() {
   const d2 = useD2();
@@ -85,7 +86,7 @@ function UniqueVersion({ versionName, versionCode }: { versionName?: string, ver
     <ul>
       {refs?.map(ref => (
         <li key={ref.referencerId}>
-          <Link className="uni" to={`../uniqueitems/${ref.referencerId}`}>{t(d2.refs2.uniqueitems.rowById[ref.referencerId].index)}</Link>
+          <Link className="uni" to={`../uniqueitems/${encodeId(ref.referencerId)}`}>{t(d2.refs2.uniqueitems.rowById[ref.referencerId].index)}</Link>
         </li>
       ))}
     </ul>

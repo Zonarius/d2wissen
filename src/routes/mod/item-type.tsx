@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useEntity } from "../../lib/hooks";
-import { getTableArray, hrBoolean } from "../../lib/util";
+import { encodeId, getTableArray, hrBoolean } from "../../lib/util";
 import { D2Context, getRow } from "../../context/D2Context";
 import { D2ItemType } from "../../lib/d2Parser";
 import { typeCanHaveAffix } from "../../lib/itemTypeGraph";
@@ -60,7 +60,7 @@ function Equivalents({ d2, itemType }: { d2: D2Context, itemType: D2ItemType }) 
     <>
       <dt>Also Counts As</dt>
       {equivalents.map(code => (
-        <dd key={code}><Link to={"../" + code}>{d2.refs.itemTypeByCode[code].ItemType}</Link></dd>
+        <dd key={code}><Link to={"../" + encodeId(code)}>{d2.refs.itemTypeByCode[code].ItemType}</Link></dd>
       ))}
     </>
   );
@@ -77,7 +77,7 @@ function SubTypes({ d2, itemType }: { d2: D2Context, itemType: D2ItemType }) {
       <dt>These types count as <b>{itemType.ItemType}</b></dt>
       {subTypes.map(ref => (
         <dd key={`${ref.referencerId}-${ref.column}`}>
-          <Link to={"../" + ref.referencerId}>{getRow(d2, ref).ItemType}</Link>
+          <Link to={"../" + encodeId(ref.referencerId)}>{getRow(d2, ref).ItemType}</Link>
         </dd>
       ))}
     </>
@@ -95,7 +95,7 @@ function BaseItems<F extends "armor" | "weapons" | "misc">({ file, text, d2, ite
       <dt>These {text} have this type</dt>
       {baseItems.map(ref => (
         <dd key={`${ref.referencerId}`}>
-          <Link to={`../../${file}/${ref.referencerId}`}>{getRow(d2, ref).name}</Link>
+          <Link to={`../../${file}/${encodeId(ref.referencerId)}`}>{getRow(d2, ref).name}</Link>
         </dd>
       ))}
     </>
@@ -123,7 +123,7 @@ function Affixes<F extends "magicprefix" | "magicsuffix">({ file, text, d2, item
       <dt>{text}</dt>
       {filteredAffixes.map(affix => (
         <dd key={`${affix._index}`}>
-          <Link to={`../../${file}/${affix._index}`}>{affix.Name}</Link>
+          <Link to={`../../${file}/${encodeId(affix._index)}`}>{affix.Name}</Link>
         </dd>
       ))}
     </>

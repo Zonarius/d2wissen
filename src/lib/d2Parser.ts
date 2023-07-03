@@ -18,10 +18,10 @@ export type D2TableRow =
 	| D2ItemType
 	| D2Affix
 
-export type IndexedRows<T> = Array<{ _index: number } & T>
+export type Indexed<T> = { _index: string } & T;
 export type D2Table<T extends D2TableRow> = {
 	columns: Array<keyof T>;
-	data: IndexedRows<T>;
+	data: Indexed<T>[];
 }
 export interface D2Files {
 	global: {
@@ -73,17 +73,64 @@ export interface D2UniqueItem {
   "lvl req": string;
 
 	prop1: string;
+	par1: string;
+	min1: string;
+	max1: string;
+
 	prop2: string;
+	par2: string;
+	min2: string;
+	max2: string;
+
 	prop3: string;
+	par3: string;
+	min3: string;
+	max3: string;
+
 	prop4: string;
+	par4: string;
+	min4: string;
+	max4: string;
+
 	prop5: string;
+	par5: string;
+	min5: string;
+	max5: string;
+
 	prop6: string;
+	par6: string;
+	min6: string;
+	max6: string;
+
 	prop7: string;
+	par7: string;
+	min7: string;
+	max7: string;
+
 	prop8: string;
+	par8: string;
+	min8: string;
+	max8: string;
+
 	prop9: string;
+	par9: string;
+	min9: string;
+	max9: string;
+
 	prop10: string;
+	par10: string;
+	min10: string;
+	max10: string;
+
 	prop11: string;
+	par11: string;
+	min11: string;
+	max11: string;
+
 	prop12: string;
+	par12: string;
+	min12: string;
+	max12: string;
 }
 
 export interface D2SetItem {
@@ -314,7 +361,7 @@ async function parseExcel(file: FileLike): Promise<D2Table<any>> {
 	const data = entries.map((entry, index) => {
 		const cells = entry.split("\t");
 		let entryObj: any = {
-			_index: index
+			_index: String(index)
 		};
 		for (let i = 0; i < cells.length; i++) {
 			if (cells[i] !== "") {

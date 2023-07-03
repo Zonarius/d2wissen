@@ -27,7 +27,7 @@ export interface Item {
   /**
    * The properties of the item.
    */
-  props: Property[];
+  props: PropertyRef[];
 
   /**
    * The properites that are active on this item when enough parts of the set are equipped.
@@ -95,7 +95,7 @@ export interface BaseItem {
   versionNum: 0 | 1 | 2;
 }
 
-export interface Property {
+export interface PropertyRef {
   code: string;
   param?: string;
   min?: number;
@@ -104,7 +104,7 @@ export interface Property {
 
 export interface SetProperty {
   requiredParts: number;
-  prop: Property;
+  prop: PropertyRef;
 }
 
 export interface Stats {

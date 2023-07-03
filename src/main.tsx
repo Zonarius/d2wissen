@@ -18,6 +18,7 @@ import AffixGroup from './routes/mod/affix-group.tsx';
 import GheedHelper from './routes/mod/projectd2/gheed-helper.tsx';
 import { CssVarsProvider } from '@mui/joy/styles';
 import theme from './theme.ts';
+import Property from './routes/mod/property.tsx';
 
 if (import.meta.hot) {
   import.meta.hot.on(
@@ -69,6 +70,7 @@ export const tableFiles: TableFiles = {
   },
   properties: {
     title: "Properties",
+    element: <Property />
   },
   itemstatcost: {
     title: "Stats"

@@ -1,4 +1,4 @@
-import { BaseItem, BaseItemVersion, Item, ItemSlot, Property, Rune, SetProperty } from "../components/filterItem";
+import { BaseItem, BaseItemVersion, Item, ItemSlot, PropertyRef, Rune, SetProperty } from "../components/filterItem";
 import { D2Context } from "../context/D2Context";
 import { D2Runeword, D2SetItem, D2UniqueItem } from "./d2Parser";
 import { useD2 } from "./hooks";
@@ -108,7 +108,7 @@ function getRunes(t: TFunc, rw: D2Runeword): Rune[] {
     .map(code => t(code + "L")) as Rune[];
 }
 
-function requiredLevel(d2: D2Context, rw: D2Runeword, props: Property[]): number {
+function requiredLevel(d2: D2Context, rw: D2Runeword, props: PropertyRef[]): number {
   const lreq = props.find(prop => prop.code === "levelreq");
   return Math.max(
       ...[

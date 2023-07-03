@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEntityId } from "../../lib/hooks";
 import { useState } from "react";
-import { Predicate } from "../../lib/util";
+import { Predicate, encodeId } from "../../lib/util";
 import { D2Affix } from "../../lib/d2Parser";
 import { affixFilter } from "../../main";
 
@@ -27,7 +27,7 @@ function AffixGroup() {
             filteredAffixes.flatMap(([type, affixes]) => (
               affixes.map(affix => (
                 <dd key={affix._index}>
-                  <Link to={`../../${type}/${affix._index}`}>{affix.Name}</Link>
+                  <Link to={`../../${type}/${encodeId(affix._index)}`}>{affix.Name}</Link>
                 </dd>
               ))
             ))

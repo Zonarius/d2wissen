@@ -1,5 +1,5 @@
 import { sprintf as spf } from "sprintf-js";
-import { Item, Property, SortOrder, SortProp, Sorter } from "../components/filterItem";
+import { Item, PropertyRef, SortOrder, SortProp, Sorter } from "../components/filterItem";
 
 export function range(end: number): number[];
 export function range(start: number, end: number): number[];
@@ -30,7 +30,7 @@ export interface StatRef {
     val?: string;
 }
 
-export function getTableModifiers(tbl: any, codePref: string, paramPref: string, minPref: string, maxPref: string, suffix: string = "", maxCount = 10): Property[] {
+export function getTableModifiers(tbl: any, codePref: string, paramPref: string, minPref: string, maxPref: string, suffix: string = "", maxCount = 10): PropertyRef[] {
     return range(1, maxCount + 1)
         .map(n => ({
             code: tbl[codePref + n + suffix],
@@ -41,7 +41,7 @@ export function getTableModifiers(tbl: any, codePref: string, paramPref: string,
         .filter(mod => mod.code);
 }
 
-export function getTableModifiersRev(tbl: any, codeSuf: string, paramSuf: string, minSuf: string, maxSuf: string, prefix: string = "", maxCount = 10): Property[] {
+export function getTableModifiersRev(tbl: any, codeSuf: string, paramSuf: string, minSuf: string, maxSuf: string, prefix: string = "", maxCount = 10): PropertyRef[] {
     return range(1, maxCount + 1)
         .map(n => ({
             code: tbl[prefix + n + codeSuf],
@@ -194,4 +194,8 @@ export function toObject<T, K extends keyof T>(arr: T[], keyPicker: (t: T) => K)
         result[keyPicker(x)] = x;
     }
     return result;
+}
+
+export function encodeId(id: string | number): string {
+    return encodeURIComponent(encodeURIComponent(String(id)));
 }

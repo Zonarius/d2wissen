@@ -1,4 +1,4 @@
-import { MinMaxStat, Property, Stats } from "../components/filterItem";
+import { MinMaxStat, PropertyRef, Stats } from "../components/filterItem";
 
 
 const defaultMinMax: MinMaxStat = {
@@ -13,7 +13,7 @@ function defaultStats(): Stats {
   };
 }
 
-function minMaxFallBackParam(prop?: Property): MinMaxStat {
+function minMaxFallBackParam(prop?: PropertyRef): MinMaxStat {
   if (!prop) {
     return defaultMinMax;
   }
@@ -33,7 +33,7 @@ const propFunction = {
   "dmg%": ["edam", minMaxFallBackParam]
 } as any;
 
-export function statsFromProps(props: Property[]): Stats {
+export function statsFromProps(props: PropertyRef[]): Stats {
   const ret = defaultStats() as any;
   for (const prop of props) {
     const propDesc = propFunction[prop.code];

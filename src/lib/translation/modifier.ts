@@ -3,14 +3,14 @@ import { AvailableLanguage, TFunc, useT } from "./translation";
 import { D2Context } from "../../context/D2Context";
 import { D2Property, D2ItemStatCost } from "../d2Parser";
 import { useRouteLoaderData } from "react-router-dom";
-import { Property } from "../../components/filterItem";
+import { PropertyRef } from "../../components/filterItem";
 
 export type PrioMod = {
     prio: number,
     mod: string;
 }
 
-export type ModifierTFunc = (mods: Property[]) => string[];
+export type ModifierTFunc = (mods: PropertyRef[]) => string[];
 export function useModifierT(lang?: AvailableLanguage): ModifierTFunc {
     const d2 = useRouteLoaderData("mod") as D2Context;
     const t = useT(lang);
