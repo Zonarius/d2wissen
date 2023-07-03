@@ -83,6 +83,9 @@ export const tableFiles: TableFiles = {
   },
   setitems: {
     title: "Set Items"
+  },
+  sets: {
+    title: "Sets"
   }
 };
 

@@ -13,6 +13,7 @@ export type D2TableRow =
 	| D2Skilldesc
 	| D2UniqueItem
 	| D2SetItem
+	| D2Set
 	| D2Weapon
 	| D2Armor
 	| D2ItemType
@@ -36,6 +37,7 @@ export interface D2Files {
 			skilldesc: D2Table<D2Skilldesc>;
 			uniqueitems: D2Table<D2UniqueItem>;
       setitems: D2Table<D2SetItem>;
+			sets: D2Table<D2Set>;
       weapons: D2Table<D2Weapon>;
       armor: D2Table<D2Armor>;
 			itemtypes: D2Table<D2ItemType>;
@@ -267,6 +269,87 @@ export interface D2SetItem {
 	apar5b: string;
 	amin5b: string;
 	amax5b: string;
+}
+
+export interface D2Set {
+	index: string;
+	name: string;
+
+	PCode2a: string;
+	PParam2a: string;
+	PMin2a: string;
+	PMax2a: string;
+	PCode2b: string;
+	PParam2b: string;
+	PMin2b: string;
+	PMax2b: string;
+
+	PCode3a: string;
+	PParam3a: string;
+	PMin3a: string;
+	PMax3a: string;
+	PCode3b: string;
+	PParam3b: string;
+	PMin3b: string;
+	PMax3b: string;
+
+	PCode4a: string;
+	PParam4a: string;
+	PMin4a: string;
+	PMax4a: string;
+	PCode4b: string;
+	PParam4b: string;
+	PMin4b: string;
+	PMax4b: string;
+
+	PCode5a: string;
+	PParam5a: string;
+	PMin5a: string;
+	PMax5a: string;
+	PCode5b: string;
+	PParam5b: string;
+	PMin5b: string;
+	PMax5b: string;
+
+	FCode1: string;
+	FParam1: string;
+	FMin1: string;
+	FMax1: string;
+
+	FCode2: string;
+	FParam2: string;
+	FMin2: string;
+	FMax2: string;
+
+	FCode3: string;
+	FParam3: string;
+	FMin3: string;
+	FMax3: string;
+
+	FCode4: string;
+	FParam4: string;
+	FMin4: string;
+	FMax4: string;
+
+	FCode5: string;
+	FParam5: string;
+	FMin5: string;
+	FMax5: string;
+
+	FCode6: string;
+	FParam6: string;
+	FMin6: string;
+	FMax6: string;
+
+	FCode7: string;
+	FParam7: string;
+	FMin7: string;
+	FMax7: string;
+
+	FCode8: string;
+	FParam8: string;
+	FMin8: string;
+	FMax8: string;
 }
 
 type VendorKeys = `${Vendor}${"Min" | "Max" | "MagicMin" | "MagicMax" | "MagicLvl"}`

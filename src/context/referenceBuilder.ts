@@ -30,11 +30,12 @@ export const idColumns: IdColumns = {
   monstats: "Id",
   properties: "code",
   runes: "_index",
-  setitems: "index",
   skilldesc: "skilldesc",
   skills: "Id",
   weapons: "code",
   uniqueitems: "_index",
+  sets: "index",
+  setitems: "index",
 } as const;
 
 const affixRefCols: ReferenceColumns["magicprefix"] = {
@@ -130,6 +131,28 @@ export const referenceColumns: ReferenceColumns = {
 
     aprop5a: "properties",
     aprop5b: "properties",
+  },
+  sets: {
+    PCode2a: "properties",
+    PCode2b: "properties",
+
+    PCode3a: "properties",
+    PCode3b: "properties",
+
+    PCode4a: "properties",
+    PCode4b: "properties",
+
+    PCode5a: "properties",
+    PCode5b: "properties",
+
+    FCode1: "properties",
+    FCode2: "properties",
+    FCode3: "properties",
+    FCode4: "properties",
+    FCode5: "properties",
+    FCode6: "properties",
+    FCode7: "properties",
+    FCode8: "properties",
   },
   skilldesc: {},
   skills: {},
