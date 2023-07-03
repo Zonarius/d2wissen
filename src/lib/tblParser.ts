@@ -74,7 +74,9 @@ function readTable(reader: Reader, hashEntries: HashEntry[]) {
     const key = reader.string();
     reader.seek(entry.strOffset);
     const val = reader.string();
-    result[key] = val;
+    if (!result[key]) {
+      result[key] = val;
+    }
   }
 
   return result;

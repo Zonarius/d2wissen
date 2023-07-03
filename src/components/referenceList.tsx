@@ -1,7 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { ExcelFileName, Reference, Row, idColumns } from "../context/referenceBuilder";
 import { useD2 } from "../lib/hooks";
-import { encodeId } from "../lib/util";
+import { Predicate, encodeId } from "../lib/util";
 import React from "react";
 
 export type ReferenceListProps<F extends ExcelFileName, RF extends ExcelFileName> = {
@@ -9,18 +9,22 @@ export type ReferenceListProps<F extends ExcelFileName, RF extends ExcelFileName
   file: F;
   entity: Row<F>;
   refFile: RF;
+  refFilter?: Predicate<Reference<RF>> | null;
   createColumn?: boolean;
   labelPicker?: (row: Row<RF>, ref: Reference<RF>) => React.ReactNode;
   refClass?: string;
 }
 
-function ReferenceList<F extends ExcelFileName, RF extends ExcelFileName>({ title, file, entity, refClass, createColumn, refFile, labelPicker }: ReferenceListProps<F, RF>) {
+function ReferenceList<F extends ExcelFileName, RF extends ExcelFileName>({ title, file, entity, refClass, createColumn, refFile, refFilter, labelPicker }: ReferenceListProps<F, RF>) {
   const d2 = useD2();
   const { mod } = useParams();
   const id = entity[idColumns[file]];
-  const refs = d2.refs2[file].referencedBy[id]?.[refFile];
+  let refs = d2.refs2[file].referencedBy[id]?.[refFile];
   if (!refs || refs.length === 0 || !mod) {
     return null;
+  }
+  if (refFilter) {
+    refs = refs.filter(refFilter) as typeof refs;
   }
   const Wrapper = createColumn ? ({children}: any) => <div className="dl-col">{children}</div> : React.Fragment;
   return <Wrapper>

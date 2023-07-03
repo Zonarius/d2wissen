@@ -397,14 +397,22 @@ function skillRand(stat: D2ItemStatCost, param: string, min: number, max: number
     return prioMod(stat.descpriority, `+${param} to Random ${skillRand} Skill`)
 }
 
-const classOrder = ["Amazon", "Sorceress", "Necromancer", "Paladin", "Barbarian", "Druid", "Assassin"]
+const classOrder = ["Amazon", "Sorceress", "Necromancer", "Paladin", "Barbarian", "Druid", "Assassin"] as const
 
-function skillTab({d2, stat, min, max, param, t}: DescFuncContext): PrioMod[] {
-    const p = Number(param);
-    const clsName = classOrder[Math.floor(p / 3)];
-    const tabI = (p % 3) + 1 as 1 | 2 | 3 ;
-    const tStr = t(d2.refs.charstatByClassname[clsName][`StrSkillTab${tabI}`]);
+function skillTab({d2, stat, min, max, param}: DescFuncContext): PrioMod[] {
+    const tStr = getSkillTabDescStrById(d2, param);
     return prioMod(stat.descpriority, sprintf(tStr, [min, max]));
+}
+
+export function getClassBySkillTabId(id: number | string) {
+    return classOrder[Math.floor(Number(id) / 3)];
+}
+
+export function getSkillTabDescStrById(d2: D2Context, id: number | string): string {
+    const p = Number(id);
+    const clsName = getClassBySkillTabId(p);
+    const tabI = (p % 3) + 1 as 1 | 2 | 3 ;
+    return d2.refs.charstatByClassname[clsName][`StrSkillTab${tabI}`];
 }
 
 function classSkills({d2, prop, stat, min, max, t, old}: DescFuncContext): PrioMod[] {
