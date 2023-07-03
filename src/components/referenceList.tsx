@@ -26,7 +26,7 @@ function ReferenceList<F extends ExcelFileName, RF extends ExcelFileName>({ titl
   return <Wrapper>
     <dt>{title}</dt>
     {refs.map(ref => (
-      <dd key={ref.referencerId}>
+      <dd key={`${ref.referencerId}-${String(ref.column)}`}>
         <Link className={refClass} to={`/${mod}/${refFile}/${encodeId(ref.referencerId)}`}>
           {!labelPicker ? ref.referencerId : 
             labelPicker(d2.refs2[refFile].rowById[ref.referencerId], ref)

@@ -104,7 +104,33 @@ export const referenceColumns: ReferenceColumns = {
     T1Code6: "properties",
     T1Code7: "properties",
   },
-  setitems: {},
+  setitems: {
+    item: ["armor", "weapons", "misc"],
+    prop1: "properties",
+    prop2: "properties",
+    prop3: "properties",
+    prop4: "properties",
+    prop5: "properties",
+    prop6: "properties",
+    prop7: "properties",
+    prop8: "properties",
+    prop9: "properties",
+    
+    aprop1a: "properties",
+    aprop1b: "properties",
+
+    aprop2a: "properties",
+    aprop2b: "properties",
+
+    aprop3a: "properties",
+    aprop3b: "properties",
+
+    aprop4a: "properties",
+    aprop4b: "properties",
+
+    aprop5a: "properties",
+    aprop5b: "properties",
+  },
   skilldesc: {},
   skills: {},
   weapons: {

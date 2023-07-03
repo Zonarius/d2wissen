@@ -80,6 +80,9 @@ export const tableFiles: TableFiles = {
   },
   runes: {
     title: "Runewords",
+  },
+  setitems: {
+    title: "Set Items"
   }
 };
 

@@ -177,6 +177,96 @@ export interface D2SetItem {
   set: string;
   item: string;
   "lvl req": string;
+
+	prop1: string;
+	par1: string;
+	min1: string;
+	max1: string;
+
+	prop2: string;
+	par2: string;
+	min2: string;
+	max2: string;
+
+	prop3: string;
+	par3: string;
+	min3: string;
+	max3: string;
+
+	prop4: string;
+	par4: string;
+	min4: string;
+	max4: string;
+
+	prop5: string;
+	par5: string;
+	min5: string;
+	max5: string;
+
+	prop6: string;
+	par6: string;
+	min6: string;
+	max6: string;
+
+	prop7: string;
+	par7: string;
+	min7: string;
+	max7: string;
+
+	prop8: string;
+	par8: string;
+	min8: string;
+	max8: string;
+
+	prop9: string;
+	par9: string;
+	min9: string;
+	max9: string;
+
+	aprop1a: string;
+	apar1a: string;
+	amin1a: string;
+	amax1a: string;
+	aprop1b: string;
+	apar1b: string;
+	amin1b: string;
+	amax1b: string;
+
+	aprop2a: string;
+	apar2a: string;
+	amin2a: string;
+	amax2a: string;
+	aprop2b: string;
+	apar2b: string;
+	amin2b: string;
+	amax2b: string;
+
+	aprop3a: string;
+	apar3a: string;
+	amin3a: string;
+	amax3a: string;
+	aprop3b: string;
+	apar3b: string;
+	amin3b: string;
+	amax3b: string;
+
+	aprop4a: string;
+	apar4a: string;
+	amin4a: string;
+	amax4a: string;
+	aprop4b: string;
+	apar4b: string;
+	amin4b: string;
+	amax4b: string;
+
+	aprop5a: string;
+	apar5a: string;
+	amin5a: string;
+	amax5a: string;
+	aprop5b: string;
+	apar5b: string;
+	amin5b: string;
+	amax5b: string;
 }
 
 type VendorKeys = `${Vendor}${"Min" | "Max" | "MagicMin" | "MagicMax" | "MagicLvl"}`
