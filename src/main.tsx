@@ -19,6 +19,7 @@ import GheedHelper from './routes/mod/projectd2/gheed-helper.tsx';
 import { CssVarsProvider } from '@mui/joy/styles';
 import theme from './theme.ts';
 import Property from './routes/mod/property.tsx';
+import Search from './routes/mod/search.tsx';
 
 if (import.meta.hot) {
   import.meta.hot.on(
@@ -133,6 +134,11 @@ const router = createBrowserRouter([
             path: "gheed",
             handle: pathHandle,
             children: [{ index: true, element: <GheedHelper />}]
+          },
+          {
+            path: "search",
+            handle: pathHandle,
+            children: [{ index: true, element: <Search />}]
           },
           ...tableFileRoutes
         ]
