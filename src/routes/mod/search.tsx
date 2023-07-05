@@ -5,6 +5,8 @@ import { SearchResult } from "minisearch";
 import { Link as RouterLink, useParams } from "react-router-dom";
 import { useUrlState } from "../../lib/hooks";
 import { ExcelFileName } from "../../context/referenceBuilder";
+import PD2Link from "../../components/pd2Link";
+import { EntityReference } from "../../context/context-util";
 
 function Search() {
   const { mod } = useParams();
@@ -26,6 +28,7 @@ function Search() {
               <Link component={RouterLink} to={`/${mod}/${result.file}/${result.id}`} overlay>
                 <span className={classByFile(result.file)}>{result.displayText}</span>
               </Link>
+              <PD2Link text="" entityRef={result as unknown as EntityReference} />
             </ListItemButton>
           </ListItem>
         ))}

@@ -3,6 +3,8 @@ import { TFunc } from "../lib/translation/translation";
 import { D2Context } from "./D2Context";
 import { ExcelFileName, Row } from "./referenceBuilder";
 
+export const baseItems = ["armor", "weapons", "misc"] as const;
+
 export function findItemIn<F extends ExcelFileName>(d2: D2Context, files: readonly F[], id: string): Row<F> {
   return findFileAndItemIn(d2, files, id)[1];
 }

@@ -21,6 +21,7 @@ import theme from './theme.ts';
 import Property from './routes/mod/property.tsx';
 import Search from './routes/mod/search.tsx';
 import Armor from './routes/mod/armor.tsx';
+import Unique from './routes/mod/unique.tsx';
 
 if (import.meta.hot) {
   import.meta.hot.on(
@@ -79,7 +80,8 @@ export const tableFiles: TableFiles = {
     title: "Stats"
   },
   uniqueitems: {
-    title: "Uniques"
+    title: "Uniques",
+    element: <Unique />
   },
   runes: {
     title: "Runewords",
