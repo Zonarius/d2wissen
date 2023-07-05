@@ -92,11 +92,17 @@ function UniqueVersion({ versionName, versionCode }: { versionName?: string, ver
       <h3>{versionName}</h3>
     }
     <ul>
-      {refs?.map(ref => (
-        <li key={ref.referencerId}>
-          <Link className="uni" to={`../uniqueitems/${encodeId(ref.referencerId)}`}>{t(d2.refs2.uniqueitems.rowById[ref.referencerId].index)}</Link>
-        </li>
-      ))}
+      {refs?.map(ref => {
+        const unique = d2.refs2.uniqueitems.rowById[ref.referencerId];
+        if (unique.enabled !== "1") {
+          return null;
+        }
+        return (
+          <li key={ref.referencerId}>
+            <Link className="uni" to={`../uniqueitems/${encodeId(ref.referencerId)}`}>{t(unique.index)}</Link>
+          </li>
+        );
+      })}
     </ul>
   </>
 }
