@@ -10,15 +10,15 @@ function Search() {
   const { mod } = useParams();
   const index = useSearchIndex();
 
-  const [term, setTerm] = useUrlState("term", "")
+  const [term, setTerm] = useUrlState("term")
   
   let searchResults: SearchResult[] = [];
-  if (term.length > 1) {
+  if (term && term.length > 1) {
     searchResults = index.search(term);
   }
   return (
     <>
-      <Input autoFocus size="lg" placeholder="Search here..." value={term} onChange={ev => setTerm(ev.target.value)} />
+      <Input autoFocus size="lg" placeholder="Search here..." value={term || ""} onChange={ev => setTerm(ev.target.value)} />
       <List>
         {searchResults.map(result => (
           <ListItem key={result.id}>

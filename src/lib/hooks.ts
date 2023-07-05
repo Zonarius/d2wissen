@@ -84,7 +84,7 @@ export function useUpdateQueryStringValueWithoutNavigation(
     } else {
       currentSearchParams.delete(queryKey)
     }
-    const newUrl = [window.location.pathname, currentSearchParams.toString()]
+    const newUrl = [window.location.pathname, encodeURI(decodeURIComponent(currentSearchParams.toString()))]
       .filter(Boolean)
       .join('?')
     // alright, let's talk about this...
@@ -99,10 +99,30 @@ export function useUpdateQueryStringValueWithoutNavigation(
   }, [queryKey, queryValue])
 }
 
-export function useUrlState(urlParam: string, initialState: string) {
+export type ParamMapper<S> = {
+  paramToState: (param: string | null) => S;
+  stateToParam: (state: S) => string;
+}
+
+export const stringArrayParamMapper: ParamMapper<string[]> = {
+  paramToState: param => !param ? [] : param.split(","),
+  stateToParam: state => state.join(",")
+}
+
+export function useUrlState(urlParam: string): [string | null, React.Dispatch<React.SetStateAction<string | null>>];
+export function useUrlState<S>(urlParam: string, paramMapper: ParamMapper<S>): [S, React.Dispatch<React.SetStateAction<S>>];
+export function useUrlState<S>(urlParam: string, paramMapper?: ParamMapper<S>) {
   const [urlSearch] = useSearchParams();
-  const [state, setState] = useState(urlSearch.get(urlParam) || initialState);
-  useUpdateQueryStringValueWithoutNavigation(urlParam, state);
+  const defaultValue = paramMapper
+    ? paramMapper.paramToState(urlSearch.get(urlParam))
+    : urlSearch.get(urlParam);
+
+  const [state, setState] = useState(defaultValue);
+  if (paramMapper) {
+    useUpdateQueryStringValueWithoutNavigation(urlParam, paramMapper.stateToParam(state as S));
+  } else {
+    useUpdateQueryStringValueWithoutNavigation(urlParam, state as string);
+  }
 
   return [state, setState] as const;
 }

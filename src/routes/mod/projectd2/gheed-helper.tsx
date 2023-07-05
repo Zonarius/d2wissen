@@ -1,17 +1,22 @@
 import { Autocomplete } from "@mui/joy";
-import { useD2 } from "../../../lib/hooks";
+import { useD2, useUrlState } from "../../../lib/hooks";
 import { useT } from "../../../lib/translation/translation";
 import { stripColorCode } from "../../../lib/translation/modifier";
-import { useState } from "react";
-import { D2Item } from "../../../lib/d2Parser";
-import { D2Context } from "../../../context/D2Context";
 import { Link } from "react-router-dom";
 import { encodeId } from "../../../lib/util";
+import { findFileOf, findItemIn } from "../../../lib/context-util";
+import { D2Item } from "../../../lib/d2Parser";
+
+const baseItemFiles = ["armor", "weapons", "misc"] as const;
 
 function GheedHelper() {
   const d2 = useD2();
   const t = useT();
-  const [selectedItems, setSelectedItems] = useState<D2Item[]>([]);
+  const [selectedItems, setSelectedItems] = useUrlState<D2Item[]>("sells", {
+    stateToParam: items => items.map(item => item.code).join(","),
+    paramToState: codes => !codes ? [] : codes.split(",")
+      .map(code => findItemIn(d2, baseItemFiles, code))
+  });
 
   const normalArmors = d2.data.global.excel.armor.data
     .filter(armor => armor.code && armor.code === armor.normcode);
@@ -27,6 +32,7 @@ function GheedHelper() {
       multiple
       placeholder="Type base item name here"
       options={allItems}
+      value={selectedItems}
       getOptionLabel={item => `${stripColorCode(t(item.namestr))} (${item.code})`}
       onChange={(_ev, value) => setSelectedItems(value)}
     />
@@ -45,15 +51,17 @@ function PossibleUniques({ items }: { items: D2Item[] }) {
   )
 }
 
+const versions = [
+  ["Normal", "normcode"],
+  ["Exceptional", "ubercode"],
+  ["Elite", "ultracode"]
+] as const;
+
 function UniqueColumn({ item }: { item: D2Item }) {
   const d2 = useD2();
   const t = useT();
-  const versions = [
-    ["Normal", "normcode"],
-    ["Exceptional", "ubercode"],
-    ["Elite", "ultracode"]
-  ] as const;
-  if (getItemType(d2, item.code) === "misc") {
+
+  if (findFileOf(d2, baseItemFiles, item.code) === "misc") {
     return (
       <div key={item.code}>
         <h2 className="uni">{t(item.namestr)}</h2>
@@ -74,7 +82,7 @@ function UniqueColumn({ item }: { item: D2Item }) {
 function UniqueVersion({ versionName, versionCode }: { versionName?: string, versionCode: string }) {
   const d2 = useD2();
   const t = useT();
-  const itemType = getItemType(d2, versionCode);
+  const itemType = findFileOf(d2, baseItemFiles, versionCode);
   const refs = d2.refs2[itemType].referencedBy[versionCode]?.uniqueitems
   if (!refs || refs.length === 0) {
     return null;
@@ -91,11 +99,6 @@ function UniqueVersion({ versionName, versionCode }: { versionName?: string, ver
       ))}
     </ul>
   </>
-}
-
-function getItemType(d2: D2Context, code: string): "armor" | "weapons" | "misc" {
-  const types = ["armor", "weapons", "misc"] as const;
-  return types.find(type => d2.refs2[type].rowById[code])!
 }
 
 export default GheedHelper
