@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useD2 } from "../../lib/hooks";
-import ShopWorker from "./shop-worker?worker"
+import ShopWorker from "../../lib/shop-worker?worker"
 import { ShopOptions } from "../../lib/shopsimulator/shopsimulator-model";
 import { times } from "../../lib/util";
-import { ShopWorkerMessage, StartMessage } from "./shop-worker";
+import { ShopWorkerMessage, StartMessage } from "../../lib/shop-worker";
 
 type Result = {
   running: boolean;

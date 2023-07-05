@@ -24,7 +24,7 @@ function Search() {
           <ListItem key={result.id}>
             <ListItemButton>
               <Link component={RouterLink} to={`/${mod}/${result.file}/${result.id}`} overlay>
-                <span className={classByFile(result.file)}>{result.text}</span>
+                <span className={classByFile(result.file)}>{result.displayText}</span>
               </Link>
             </ListItemButton>
           </ListItem>
@@ -47,6 +47,8 @@ function classByFile(file: ExcelFileName) {
     case "weapons":
     case "misc":
       return "nrm";
+    case "runes":
+      return "rw"
   }
   return "";
 }

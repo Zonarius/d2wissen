@@ -14,7 +14,7 @@ import ItemType from './routes/mod/item-type.tsx';
 import { ExcelFileName, Row } from './context/referenceBuilder.ts';
 import Affix from './routes/mod/affix.tsx';
 import { D2Affix } from './lib/d2Parser.ts';
-import AffixGroup from './routes/mod/affix-group.tsx';
+import AffixGroup from './components/affix-group.tsx';
 import GheedHelper from './routes/mod/projectd2/gheed-helper.tsx';
 import { CssVarsProvider } from '@mui/joy/styles';
 import theme from './theme.ts';

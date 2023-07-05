@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import { useEntityId } from "../../lib/hooks";
+import { useEntityId } from "../lib/hooks";
 import { useState } from "react";
-import { Predicate, encodeId } from "../../lib/util";
-import { D2Affix } from "../../lib/d2Parser";
-import { affixFilter } from "../../main";
+import { Predicate, encodeId } from "../lib/util";
+import { D2Affix } from "../lib/d2Parser";
+import { affixFilter } from "../main";
 
 function AffixGroup() {
   const [d2, id] = useEntityId();

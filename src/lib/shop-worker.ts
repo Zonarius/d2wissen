@@ -1,6 +1,6 @@
-import { D2Context } from "../../context/D2Context";
-import { ShopGenerator } from "../../lib/shopsimulator/shopsimulator";
-import { ShopOptions, ShopResult } from "../../lib/shopsimulator/shopsimulator-model";
+import { D2Context } from "../context/D2Context";
+import { ShopGenerator } from "./shopsimulator/shopsimulator";
+import { ShopOptions, ShopResult } from "./shopsimulator/shopsimulator-model";
 
 export type ShopWorkerMessage = StartMessage | StopMessage;
 
