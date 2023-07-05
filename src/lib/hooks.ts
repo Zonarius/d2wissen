@@ -72,7 +72,7 @@ export function useEntity<F extends ExcelFileName>(file: F) {
 // Workaround, see https://github.com/remix-run/react-router/discussions/9851
 export function useUpdateQueryStringValueWithoutNavigation(
   queryKey: string,
-  queryValue: string,
+  queryValue: string | undefined | null,
 ) {
   useEffect(() => {
     const currentSearchParams = new URLSearchParams(window.location.search)
@@ -101,7 +101,7 @@ export function useUpdateQueryStringValueWithoutNavigation(
 
 export type ParamMapper<S> = {
   paramToState: (param: string | null) => S;
-  stateToParam: (state: S) => string;
+  stateToParam: (state: S) => string | undefined | null;
 }
 
 export const stringArrayParamMapper: ParamMapper<string[]> = {

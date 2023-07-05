@@ -188,7 +188,7 @@ export type Mutable<T> = {
 
 export type Predicate<T> = (x: T) => any;
 
-export function toObject<T, K extends keyof T>(arr: T[], keyPicker: (t: T) => K): Record<K, T> {
+export function toObject<T, K extends string | number | symbol>(arr: T[], keyPicker: (t: T) => K): Record<K, T> {
     const result: Record<K, T> = {} as any;
     for (const x of arr) {
         result[keyPicker(x)] = x;
