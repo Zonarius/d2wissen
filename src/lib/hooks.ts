@@ -5,6 +5,8 @@ import { useItemMapper } from "./itemMapper";
 import { D2UniqueItem } from "./d2Parser";
 import { useEffect, useMemo, useState } from "react";
 import { ExcelFileName } from "../context/referenceBuilder";
+import { useT } from "./translation/translation";
+import { EntityReference, displayName } from "../context/context-util";
 
 export function useD2() {
   return useRouteLoaderData("mod") as D2Context;
@@ -125,4 +127,12 @@ export function useUrlState<S>(urlParam: string, paramMapper?: ParamMapper<S>) {
   }
 
   return [state, setState] as const;
+}
+
+export function useDisplayNameT() {
+  const d2 = useD2();
+  const t = useT();
+  return useMemo(() => (ref: EntityReference) => (
+    displayName(d2, t, ref)
+  ), [d2, t]);
 }

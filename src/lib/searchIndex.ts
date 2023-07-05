@@ -27,6 +27,9 @@ const searchColumns: SearchColumns = {
   ...translateColumn("setitems", "index"),
   ...translateColumn("magicprefix", "Name"),
   ...translateColumn("magicsuffix", "Name"),
+  ...translateColumn("armor", "code"),
+  ...translateColumn("weapons", "code"),
+  ...translateColumn("misc", "code"),
 }
 
 export function useSearchIndex() {

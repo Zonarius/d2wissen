@@ -356,6 +356,9 @@ type VendorKeys = `${Vendor}${"Min" | "Max" | "MagicMin" | "MagicMax" | "MagicLv
 interface D2ItemFixed {
 	name: string;
   code: string;
+	minac: string;
+	maxac: string;
+	reqstr: string;
 	level: string;
 	levelreq: string;
   namestr: string;

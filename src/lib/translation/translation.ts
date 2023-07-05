@@ -1,6 +1,8 @@
 import { D2Context } from "../../context/D2Context";
 import { D2Files } from "../d2Parser";
 import { useRouteLoaderData } from "react-router-dom";
+import { useD2 } from "../hooks";
+import { useMemo } from "react";
 
 const itemTypeTranslations = createItemTypeTranslations();
 
@@ -102,12 +104,13 @@ function createItemTypeTranslations(): TranslationStrings {
 export type TFunc = (key: string, ...params: string[]) => string;
 
 export function useT(lang?: AvailableLanguage): TFunc {
-    const d2 = useRouteLoaderData("mod") as D2Context;
+    const d2 = useD2();
     const defLang = useLanguage(lang);
-    return (key: string) => d2.translations.strings[key]
+    return useMemo(() => (key: string) => (
+        d2.translations.strings[key]
         ? d2.translations.strings[key][defLang]
-        : `!t-err(${key})!`;
-        // : (() => {throw Error(key)})();
+            : `!t-err(${key})!`
+    ), [d2, defLang])
 }
 
 export function useItemTypeT(lang?: AvailableLanguage): TFunc {

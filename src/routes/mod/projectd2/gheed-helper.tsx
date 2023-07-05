@@ -4,7 +4,7 @@ import { useT } from "../../../lib/translation/translation";
 import { stripColorCode } from "../../../lib/translation/modifier";
 import { Link } from "react-router-dom";
 import { encodeId } from "../../../lib/util";
-import { findFileOf, findItemIn } from "../../../lib/context-util";
+import { findFileOf, findItemIn } from "../../../context/context-util";
 import { D2Item } from "../../../lib/d2Parser";
 
 const baseItemFiles = ["armor", "weapons", "misc"] as const;

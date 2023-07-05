@@ -14,7 +14,7 @@ function Search() {
   
   let searchResults: SearchResult[] = [];
   if (term && term.length > 1) {
-    searchResults = index.search(term);
+    searchResults = index.search(term).slice(0, 19);
   }
   return (
     <>
@@ -43,6 +43,10 @@ function classByFile(file: ExcelFileName) {
     case "magicprefix":
     case "magicsuffix":
       return "mag";
+    case "armor":
+    case "weapons":
+    case "misc":
+      return "nrm";
   }
   return "";
 }
