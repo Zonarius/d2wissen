@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { Link } from "@mui/joy";
 import { useD2 } from "../lib/hooks";
 import { EntityReference, baseItems, findItemIn, getEntity } from "../context/context-util";
-import { D2UniqueItem, Indexed } from "../lib/d2Parser";
+import { D2Runeword, D2UniqueItem, Indexed } from "../lib/d2Parser";
 import { typeIsOneOf } from "../lib/itemTypeGraph";
 import { useT } from "../lib/translation/translation";
 import Launch from '@mui/icons-material/Launch';
@@ -44,6 +44,13 @@ const uniqueItemTypes: Record<string, string> = {
   jew: "Charms"
 }
 
+const runeWordItemTypes: Record<string, string> = {
+  "helm": "RWHelms",
+  "tors": "RWChests",
+  "shie": "RWShields",
+  "weap": "RWWeapons",
+}
+
 function PD2Link({ entityRef: ref, text }: PD2LinkProps) {
   const d2 = useD2();
   const t = useT();
@@ -75,6 +82,20 @@ function PD2Link({ entityRef: ref, text }: PD2LinkProps) {
       page = uniqueItemTypes[otherItem.foundType];
     }
     hash = t(entity.index);
+  } else if (ref.file === "runes") {
+    console.log(ref);
+    const entity = getEntity(d2, ref) as Indexed<D2Runeword>;
+    const type = getEntity(d2, { file: "itemtypes", id: entity.itype1 });
+    if (!type) {
+      throw new Error(`Could not find item type with id ${entity.itype1}`);
+    }
+    const rwType = typeIsOneOf(d2, type, Object.keys(runeWordItemTypes), []);
+    if (!rwType) {
+      console.error(`Unknown item type ${type}`)
+      return null;
+    }
+    page = runeWordItemTypes[rwType.foundType];
+    hash = t(entity.Name);
   } else {
     // TODO Implement other items
     return null;

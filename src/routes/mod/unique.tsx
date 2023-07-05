@@ -3,7 +3,7 @@ import { useEntity } from "../../lib/hooks";
 import { useT } from "../../lib/translation/translation";
 
 function Unique() {
-  const [d2, unique] = useEntity("uniqueitems");
+  const [, unique] = useEntity("uniqueitems");
   const t = useT();
   return <>
     <h1>{t(unique.index)}</h1>

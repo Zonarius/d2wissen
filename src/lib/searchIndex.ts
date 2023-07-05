@@ -76,10 +76,10 @@ class SearchIndex {
       fields: ["searchText"],
       storeFields: ["id", "file", "displayText"]
     });
-    this.addUniques()
+    this.addItems()
   }
 
-  private addUniques(): void {
+  private addItems(): void {
     for (const [file, textMapper] of entries(searchColumns)) {
       for (const row of this.d2.data.global.excel[file].data) {
         const id = (row as any)[idColumns[file]]
