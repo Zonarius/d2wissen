@@ -204,3 +204,10 @@ export function log<T>(x: T): T {
     console.log(x);
     return x;
 }
+
+export function If<T extends React.ReactElement>({ cond, children }: { cond: any, children: T }): T | null {
+    if (!cond) {
+        return null;
+    }
+    return children;
+}

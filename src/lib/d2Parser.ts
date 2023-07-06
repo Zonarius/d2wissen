@@ -356,9 +356,6 @@ type VendorKeys = `${Vendor}${"Min" | "Max" | "MagicMin" | "MagicMax" | "MagicLv
 interface D2ItemFixed {
 	name: string;
   code: string;
-	minac: string;
-	maxac: string;
-	reqstr: string;
 	durability: string;
 	level: string;
 	levelreq: string;
@@ -383,10 +380,21 @@ export interface D2Misc extends D2Item {
 }
 
 export interface D2Weapon extends D2Item {
+	mindam: string;
+	maxdam: string;
+	"2handmindam": string;
+	"2handmaxdam": string;
+	minmisdam: string;
+	maxmisdam: string;
+	reqstr: string;
+	reqdex: string;
 	"magic lvl": string;
 }
 
 export interface D2Armor extends D2Item {
+	reqstr: string;
+	minac: string;
+	maxac: string;
 	"magic lvl": string;
 }
 

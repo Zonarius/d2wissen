@@ -9,7 +9,7 @@ export type DevComponent = {
 function DevComponent({}: DevComponent) {
   const d2 = useD2();
   return (<>
-        <ItemInstanceTooltipContent item={createVariableItem(d2, {file: "armor", id: "utp"})}/>
+        <ItemInstanceTooltipContent item={createVariableItem(d2, {file: "weapons", id: "7ja"})}/>
   </>
   );
 }

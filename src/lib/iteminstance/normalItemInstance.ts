@@ -31,7 +31,3 @@ export function createVariableNormalItem(file: BaseItemType, item: D2Item): Norm
     baseItem
   };
 }
-
-export function isArmorBaseItem(x: BaseItemData): x is ArmorData {
-  return (x as any).defense;
-}
