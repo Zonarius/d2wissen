@@ -1,5 +1,5 @@
 import { Tooltip } from "@mui/joy";
-import { ItemInstance } from "../../lib/iteminstance/itemInstance";
+import { ItemInstance, ItemQuality, isExtendedItem } from "../../lib/iteminstance/itemInstance";
 import { isNormalItem } from "../../lib/iteminstance/normalItemInstance";
 import NormalItemTooltip from "./normalItemTooltip";
 
@@ -7,7 +7,13 @@ export type ItemInstanceTooltipProps = {
   item?: ItemInstance
 }
 
+const supportedTypes = new Set([ItemQuality.NORMAL])
+
 function ItemInstanceTooltip(props: ItemInstanceTooltipProps & { children: React.ReactElement }) {
+  // TODO Support more items
+  if (!props.item || !isExtendedItem(props.item) || !supportedTypes.has(props.item.quality)) {
+    return props.children;
+  }
   return (
     <Tooltip
       enterDelay={0}

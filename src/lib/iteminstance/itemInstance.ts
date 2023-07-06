@@ -26,6 +26,10 @@ export interface ExtendedItem extends SimpleItem {
   quality: ItemQuality
 }
 
+export function isExtendedItem(x: ItemInstance): x is ExtendedItem {
+  return x && "quality" in x;
+}
+
 export type VariableProperty = VariableNumber;
 export type VariableNumber = number | Range
 

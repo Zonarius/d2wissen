@@ -22,6 +22,7 @@ const uniqueItemTypes: Record<string, string> = {
   axe: "Axes",
   mace: "Maces",
   hamm: "Maces",
+  club: "Maces",
   swor: "Swords",
   knif: "Daggers",
   thro: "Throwing",

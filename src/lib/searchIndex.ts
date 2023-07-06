@@ -6,6 +6,7 @@ import { TFunc, useT } from "./translation/translation";
 import MiniSearch, { SearchResult } from "minisearch";
 import { Predicate, entries, range } from "./util";
 import { D2Runeword, Indexed } from "./d2Parser";
+import { stripColorCode } from "./translation/modifier";
 
 type SearchDocument = {
   _searchId: string;
@@ -23,7 +24,7 @@ type SearchColumns = {
 }
 
 const translateColumn = <F extends ExcelFileName>(file: F, col: keyof Row<F>) => ({
-  [file]: (row: Indexed<Row<any>>, t: TFunc) => createText(t(row[col]))
+  [file]: (row: Indexed<Row<any>>, t: TFunc) => createText(stripColorCode(t(row[col])))
 })
 
 function createText(txt: string) {
