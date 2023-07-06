@@ -3,9 +3,8 @@ import { useD2 } from "../lib/hooks";
 import { D2Context } from "../context/D2Context";
 import { Predicate, encodeId } from "../lib/util";
 import { Link } from "react-router-dom";
-import { AgGridReact } from "ag-grid-react";
-import { ColDef } from "ag-grid-community";
 import { Indexed } from "../lib/d2Parser";
+import TableGrid, { ColumnDef } from "./tableGrid";
 
 export type EntityGridProps<F extends ExcelFileName> = {
   file: F
@@ -20,26 +19,20 @@ function EntityGrid<F extends ExcelFileName>({ file, filter, additionalIdColumns
   const columns = createColumns(d2, file, additionalIdColumns);
 
   return (
-    <div className="d2-table ag-theme-balham-dark">
-      <AgGridReact
-        rowData={filteredData}
-        columnDefs={columns}
-        suppressColumnVirtualisation
-        onFirstDataRendered={ev => ev.columnApi.autoSizeAllColumns()}
+      <TableGrid
+        data={filteredData}
+        columns={columns}
+        idCol={idColumns[file]}
       />
-    </div>
   )
 }
 
-function createColumns<F extends ExcelFileName>(d2: D2Context, file: F, additionalIdColumns?: string[]): ColDef[] {
+function createColumns<F extends ExcelFileName>(d2: D2Context, file: F, additionalIdColumns?: string[]): ColumnDef[] {
   const cols = d2.data.global.excel[file].columns;
   return cols.map(colName => {
-    const typeColumn: ColDef = {
+    const typeColumn: ColumnDef = {
       headerName: colName,
-      field: colName,
-      resizable: true,
-      filter: true,
-      sortable: true
+      field: colName
     };
     let refFile: ExcelFileName | ExcelFileName[] | undefined = undefined;
     let useThisId = false;

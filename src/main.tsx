@@ -81,6 +81,7 @@ export const tableFiles: TableFiles = {
   },
   uniqueitems: {
     title: "Uniques",
+    additionalIdColumns: ["index"],
     element: <Unique />
   },
   runes: {
