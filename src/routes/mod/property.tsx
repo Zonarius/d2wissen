@@ -10,9 +10,8 @@ import PropertyFilter from "../../components/propertyFilter";
 import { useState } from "react";
 import { getPropertyFromReference } from "../../lib/property-ref";
 
-const NOT_LOADED = Symbol("NOT_LOADED");
 function Property() {
-  const [propertyFilter, setPropertyFilter] = useState<Predicate<PropertyRef> | null | typeof NOT_LOADED>(NOT_LOADED);
+  const [propertyFilter, setPropertyFilter] = useState<Predicate<PropertyRef> | null>(null);
   const t = useT();
   const [d2 ,property] = useEntity("properties");
   const stats = getTableArray(property, "stat", 7)
@@ -28,7 +27,7 @@ function Property() {
             <dd key={stat}><Link to={`../../itemstatcost/${encodeId(stat)}`}>{stat}</Link></dd>
           ))}
         </div>
-        {propertyFilter === NOT_LOADED ? null : <>
+        {<>
           <ReferenceList
             createColumn
             title="Property is found on these prefixes"
