@@ -22,6 +22,7 @@ import Property from './routes/mod/property.tsx';
 import Search from './routes/mod/search.tsx';
 import Armor from './routes/mod/armor.tsx';
 import Unique from './routes/mod/unique.tsx';
+import DevComponent from './routes/mod/devcomponent.tsx';
 
 if (import.meta.hot) {
   import.meta.hot.on(
@@ -144,6 +145,11 @@ const router = createBrowserRouter([
             path: "search",
             handle: pathHandle,
             children: [{ index: true, element: <Search />}]
+          },
+          {
+            path: "_dev",
+            handle: pathHandle,
+            children: [{ index: true, element: <DevComponent />}]
           },
           ...tableFileRoutes
         ]

@@ -3,12 +3,15 @@ import { useSearchIndex } from "../../lib/searchIndex";
 import { Link, List, ListItem, ListItemButton } from "@mui/joy";
 import { SearchResult } from "minisearch";
 import { Link as RouterLink, useParams } from "react-router-dom";
-import { useUrlState } from "../../lib/hooks";
+import { useD2, useUrlState } from "../../lib/hooks";
 import { ExcelFileName } from "../../context/referenceBuilder";
 import PD2Link from "../../components/pd2Link";
 import { EntityReference } from "../../context/context-util";
+import ItemInstanceTooltip from "../../components/iteminstance/itemInstanceTooltip";
+import { createVariableItem } from "../../lib/iteminstance/itemInstance";
 
 function Search() {
+  const d2 = useD2();
   const { mod } = useParams();
   const index = useSearchIndex();
 
@@ -25,9 +28,11 @@ function Search() {
         {searchResults.map(result => (
           <ListItem key={`${result.file}-${result.id}`}>
             <ListItemButton>
-              <Link component={RouterLink} to={`/${mod}/${result.file}/${result.id}`} overlay>
-                <span className={classByFile(result.file)}>{result.displayText}</span>
-              </Link>
+              <ItemInstanceTooltip item={createVariableItem(d2, result as any)}>
+                <Link component={RouterLink} to={`/${mod}/${result.file}/${result.id}`} overlay>
+                  <span className={classByFile(result.file)}>{result.displayText}</span>
+                </Link>
+              </ItemInstanceTooltip>
               <PD2Link text="" entityRef={result as unknown as EntityReference} />
             </ListItemButton>
           </ListItem>

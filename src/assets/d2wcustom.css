@@ -92,3 +92,25 @@ input::-webkit-inner-spin-button {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
 }
+
+@font-face {
+    font-family: Exocet;
+    src: url(./exocet.otf);
+}
+
+.MuiTooltip-root.item-tooltip-root {
+    background-color: #000000c0;
+    box-shadow: none;
+    border-radius: 0;
+}
+
+.item-tooltip {
+    text-align: center;
+    font-family: Exocet;
+    font-size: 19pt;
+    padding: 5px;
+}
+
+.item-tooltip p {
+    margin: 0;
+}

@@ -359,6 +359,7 @@ interface D2ItemFixed {
 	minac: string;
 	maxac: string;
 	reqstr: string;
+	durability: string;
 	level: string;
 	levelreq: string;
   namestr: string;

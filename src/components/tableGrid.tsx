@@ -28,8 +28,8 @@ function TableHead({cols}: { cols: ColumnDef<any>[] }) {
   return (
     <thead>
       <tr>
-        {cols.map(col => (
-          <th className={col.cellClass} key={col.headerName}>{col.headerName}</th>
+        {cols.map((col, i) => (
+          <th className={col.cellClass} key={col.headerName + i}>{col.headerName}</th>
         ))}
       </tr>
     </thead>
@@ -55,8 +55,8 @@ type TableRowProps<T> = {
 function TableRow<T>({ row, columns }: TableRowProps<T>) {
   return (
     <tr>
-      {columns.map(col => (
-        <td key={col.headerName}>
+      {columns.map((col, i) => (
+        <td key={col.headerName + i}>
           {!col.cellRenderer ? row[col.field] as any :
             <col.cellRenderer data={row} value={row[col.field]} />
           }

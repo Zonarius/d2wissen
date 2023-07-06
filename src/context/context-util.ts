@@ -3,6 +3,7 @@ import { TFunc } from "../lib/translation/translation";
 import { D2Context } from "./D2Context";
 import { ExcelFileName, Row } from "./referenceBuilder";
 
+export type BaseItemType = typeof baseItems[number];
 export const baseItems = ["armor", "weapons", "misc"] as const;
 
 export function findItemIn<F extends ExcelFileName>(d2: D2Context, files: readonly F[], id: string): Row<F> {
@@ -42,8 +43,17 @@ const displayNames: DisplayNames = {
   ...translateColumn("itemtypes", "ItemType"),
 }
 
-export function getEntity<F extends ExcelFileName>(d2: D2Context, {file, id}: {file: F, id: string}): Indexed<Row<F>> | undefined {
-  return d2.refs2[file].rowById[id];
+export function getEntity<F extends ExcelFileName>(d2: D2Context, file: F, id: string): Indexed<Row<F>> | undefined;
+export function getEntity<F extends ExcelFileName>(d2: D2Context, {file, id}: {file: F, id: string}): Indexed<Row<F>> | undefined;
+export function getEntity<F extends ExcelFileName>(d2: D2Context, refOrFile: F | EntityReference, id?: string): Indexed<Row<F>> | undefined {
+  let file: F;
+  if (typeof refOrFile === "object") {
+    file = refOrFile.file as F;
+    id = refOrFile.id;
+  } else {
+    file = refOrFile;
+  }
+  return d2.refs2[file].rowById[id as string];
 }
 
 export function displayName(d2: D2Context, t: TFunc, ref: EntityReference): string {
