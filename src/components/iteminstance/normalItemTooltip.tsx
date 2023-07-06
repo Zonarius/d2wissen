@@ -5,7 +5,7 @@ import { useD2 } from "../../lib/hooks";
 import { baseItems, findFileOf, getEntity } from "../../context/context-util";
 import { D2Context } from "../../context/D2Context";
 import { ArmorData, BaseItemData, WeaponData } from "../../lib/iteminstance/baseItemData";
-import { D2Item, D2Weapon } from "../../lib/d2Parser";
+import { D2Weapon } from "../../lib/d2Parser";
 import { If } from "../../lib/util";
 
 export type NormalItemTooltipProps = {
@@ -64,11 +64,11 @@ function SpecificData({ item }: NormalItemTooltipProps) {
   }
 }
 
-function isArmorBaseItem(d2: D2Context, item: NormalItemInstance, baseItem: BaseItemData): baseItem is ArmorData {
+function isArmorBaseItem(d2: D2Context, item: NormalItemInstance, _baseItem: BaseItemData): _baseItem is ArmorData {
   return findFileOf(d2, baseItems, item.itemType) === "armor"
 }
 
-function isWeaponBaseItem(d2: D2Context, item: NormalItemInstance, baseItem: BaseItemData): baseItem is WeaponData {
+function isWeaponBaseItem(d2: D2Context, item: NormalItemInstance, _baseItem: BaseItemData): _baseItem is WeaponData {
   return findFileOf(d2, baseItems, item.itemType) === "weapons"
 }
 

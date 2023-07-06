@@ -1,6 +1,6 @@
 import { BaseItemType } from "../../context/context-util";
-import { D2Item } from "../d2Parser";
-import { ArmorData, BaseItemData } from "./baseItemData";
+import { D2Armor, D2Item } from "../d2Parser";
+import { BaseItemData } from "./baseItemData";
 import { ExtendedItem, ItemQuality } from "./itemInstance";
 
 export interface NormalItemInstance extends ExtendedItem {
@@ -14,9 +14,10 @@ export function isNormalItem(x: any): x is NormalItemInstance {
 export function createVariableNormalItem(file: BaseItemType, item: D2Item): NormalItemInstance {
   let baseItem: BaseItemData;
   if (file === "armor") {
+    const armor = item as D2Armor
     baseItem = {
-      defense: [Number(item.minac), Number(item.maxac)],
-      durability: Number(item.durability)
+      defense: [Number(armor.minac), Number(armor.maxac)],
+      durability: Number(armor.durability)
     }
   } else if (file === "weapons") {
     baseItem = {
