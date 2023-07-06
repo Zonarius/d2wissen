@@ -83,7 +83,6 @@ function PD2Link({ entityRef: ref, text }: PD2LinkProps) {
     }
     hash = t(entity.index);
   } else if (ref.file === "runes") {
-    console.log(ref);
     const entity = getEntity(d2, ref) as Indexed<D2Runeword>;
     const type = getEntity(d2, { file: "itemtypes", id: entity.itype1 });
     if (!type) {

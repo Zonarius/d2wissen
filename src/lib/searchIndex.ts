@@ -4,7 +4,7 @@ import { ExcelFileName, Row, idColumns } from "../context/referenceBuilder";
 import { D2Context } from "../context/D2Context";
 import { TFunc, useT } from "./translation/translation";
 import MiniSearch, { SearchResult } from "minisearch";
-import { entries, range } from "./util";
+import { Predicate, entries, range } from "./util";
 import { D2Runeword, Indexed } from "./d2Parser";
 
 type SearchDocument = {
@@ -66,6 +66,12 @@ export function useSearchIndex() {
   return useMemo(() => new SearchIndex(d2, t), [d2]);
 }
 
+type RowFilters = {
+  [K in ExcelFileName]?: Predicate<Row<K>>;
+}
+const rowFilters: RowFilters = {
+  runes: row => row.complete === "1"
+}
 
 class SearchIndex {
   private index: MiniSearch<SearchDocument>;
@@ -82,6 +88,10 @@ class SearchIndex {
   private addItems(): void {
     for (const [file, textMapper] of entries(searchColumns)) {
       for (const row of this.d2.data.global.excel[file].data) {
+        const filter = rowFilters[file]
+        if (filter && !filter(row as any)) {
+          continue;
+        }
         const id = (row as any)[idColumns[file]]
         this.index.add({
           _searchId: `${file}.${id}`,
