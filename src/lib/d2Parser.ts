@@ -386,9 +386,14 @@ export interface D2Weapon extends D2Item {
 	"2handmaxdam": string;
 	minmisdam: string;
 	maxmisdam: string;
+	speed: string;
 	reqstr: string;
 	reqdex: string;
 	"magic lvl": string;
+	stackable: string;
+	minstack: string;
+	maxstack: string;
+	spawnstack: string;
 }
 
 export interface D2Armor extends D2Item {

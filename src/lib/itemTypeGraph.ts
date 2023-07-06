@@ -18,7 +18,7 @@ export type IsOneOfResult = {
   depth: "direct" | "indirect"
 }
 
-export function typeIsOneOf(d2: D2Context, code: D2ItemType, included: ItemTypeCode[], excluded: ItemTypeCode[]): IsOneOfResult | false {
+export function typeIsOneOf(d2: D2Context, code: D2ItemType, included: ItemTypeCode[], excluded: ItemTypeCode[] = []): IsOneOfResult | false {
   return typeIsOneOfRec(d2, code, new Set(included), new Set(excluded));
 }
 
