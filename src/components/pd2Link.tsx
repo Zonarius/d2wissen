@@ -21,6 +21,7 @@ const uniqueItemTypes: Record<string, string> = {
   
   axe: "Axes",
   mace: "Maces",
+  hamm: "Maces",
   swor: "Swords",
   knif: "Daggers",
   thro: "Throwing",
@@ -62,11 +63,15 @@ function PD2Link({ entityRef: ref, text }: PD2LinkProps) {
   let hash: string;
   if (ref.file === "uniqueitems") {
     const entity = getEntity(d2, ref) as Indexed<D2UniqueItem>;
+    if (!entity.code) {
+      return null;
+    }
     const classTypes = ["amaz", "assn", "sorc"];
     const base = findItemIn(d2, baseItems, entity.code);
     const type = getEntity(d2, { file: "itemtypes", id: base.type });
     if (!type) {
-      throw new Error(`Could not find item type with id ${base.code}`);
+      console.error(`Could not find item type with id ${base.code}`)
+      return null;
     }
     const isClassItem = typeIsOneOf(d2, type, classTypes, []);
     if (isClassItem) {
@@ -76,7 +81,7 @@ function PD2Link({ entityRef: ref, text }: PD2LinkProps) {
         .filter(key => !classTypes.includes(key))
       const otherItem = typeIsOneOf(d2, type, otherTypes, []);
       if (!otherItem) {
-        console.error(`Unknown item type ${type}`)
+        console.error(`Unknown item type`, type)
         return null;
       }
       page = uniqueItemTypes[otherItem.foundType];
@@ -86,11 +91,12 @@ function PD2Link({ entityRef: ref, text }: PD2LinkProps) {
     const entity = getEntity(d2, ref) as Indexed<D2Runeword>;
     const type = getEntity(d2, { file: "itemtypes", id: entity.itype1 });
     if (!type) {
-      throw new Error(`Could not find item type with id ${entity.itype1}`);
+      console.error(`Could not find item type with id ${entity.itype1}`)
+      return null;
     }
     const rwType = typeIsOneOf(d2, type, Object.keys(runeWordItemTypes), []);
     if (!rwType) {
-      console.error(`Unknown item type ${type}`)
+      console.error(`Unknown item type`, type)
       return null;
     }
     page = runeWordItemTypes[rwType.foundType];

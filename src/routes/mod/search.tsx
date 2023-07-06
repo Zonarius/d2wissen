@@ -23,7 +23,7 @@ function Search() {
       <Input autoFocus size="lg" placeholder="Search here..." value={term || ""} onChange={ev => setTerm(ev.target.value)} />
       <List>
         {searchResults.map(result => (
-          <ListItem key={result.id}>
+          <ListItem key={`${result.file}-${result.id}`}>
             <ListItemButton>
               <Link component={RouterLink} to={`/${mod}/${result.file}/${result.id}`} overlay>
                 <span className={classByFile(result.file)}>{result.displayText}</span>
